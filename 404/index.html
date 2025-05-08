@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>تسجيل طالب جديد - المجمع القرآني حمزة بن عبدالمطلب</title>
+    <title>التسجيلات مغلقة - المجمع القرآني حمزة بن عبدالمطلب</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="icon" href="https://i.ibb.co/jZrxhFsf/1-min.png" type="image/png">
@@ -17,7 +17,6 @@
             --light-bg: #f9f9f7;
             --gold-color: #d4af37;
             --error-color: #e74c3c;
-            --success-color: #2ecc71;
         }
 
         * {
@@ -70,24 +69,29 @@
             padding: 0 1.5rem;
         }
 
-        .registration-form {
+        .message-card {
             background: white;
             border-radius: 15px;
             padding: 2.5rem;
             box-shadow: 0 5px 20px rgba(0,0,0,0.1);
-            position: relative;
+            text-align: center;
         }
 
-        .form-title {
+        .message-icon {
+            font-size: 4rem;
+            color: var(--gold-color);
+            margin-bottom: 1.5rem;
+        }
+
+        .message-title {
             color: var(--primary-color);
-            text-align: center;
-            margin-bottom: 2rem;
+            margin-bottom: 1.5rem;
             font-size: 1.8rem;
             font-weight: 800;
             position: relative;
         }
 
-        .form-title::after {
+        .message-title::after {
             content: '';
             position: absolute;
             bottom: -10px;
@@ -99,72 +103,51 @@
             border-radius: 3px;
         }
 
-        .form-group {
-            margin-bottom: 1.5rem;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 0.5rem;
-            font-weight: 600;
-            color: var(--primary-dark);
-        }
-
-        .form-control {
-            width: 100%;
-            padding: 0.8rem 1rem;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            font-size: 1rem;
-            transition: all 0.3s;
-        }
-
-        .form-control:focus {
-            border-color: var(--primary-color);
-            outline: none;
-            box-shadow: 0 0 0 3px rgba(26, 77, 46, 0.2);
-        }
-
-        .error-message {
-            color: var(--error-color);
-            font-size: 0.9rem;
-            margin-top: 0.3rem;
-            display: none;
-        }
-
-        .submit-btn {
-            background: var(--primary-color);
-            color: white;
-            border: none;
-            padding: 1rem 2rem;
-            border-radius: 50px;
+        .message-content {
+            margin-bottom: 2rem;
             font-size: 1.1rem;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.3s;
-            display: block;
-            width: 100%;
+            color: var(--text-color);
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
             margin-top: 2rem;
         }
 
-        .submit-btn:hover {
+        .social-link {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 50px;
+            height: 50px;
+            background: var(--primary-color);
+            color: white;
+            border-radius: 50%;
+            font-size: 1.5rem;
+            transition: all 0.3s;
+            text-decoration: none;
+        }
+
+        .social-link:hover {
             background: var(--primary-dark);
             transform: translateY(-3px);
             box-shadow: 0 5px 15px rgba(0,0,0,0.2);
         }
 
-        .submit-btn:disabled {
-            background: #ccc;
-            cursor: not-allowed;
-            transform: none;
-            box-shadow: none;
+        .return-link {
+            display: inline-block;
+            margin-top: 2rem;
+            color: var(--primary-color);
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s;
         }
 
-        .form-note {
-            text-align: center;
-            margin-top: 1.5rem;
-            color: #666;
-            font-size: 0.9rem;
+        .return-link:hover {
+            color: var(--primary-dark);
+            text-decoration: underline;
         }
 
         footer {
@@ -180,113 +163,13 @@
             color: #ccc;
         }
 
-        /* Modal styles */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0,0,0,0.7);
-            z-index: 1000;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .modal-content {
-            background-color: white;
-            padding: 2rem;
-            border-radius: 10px;
-            max-width: 500px;
-            width: 90%;
-            text-align: center;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
-            animation: modalFadeIn 0.3s ease-out;
-        }
-
-        @keyframes modalFadeIn {
-            from { opacity: 0; transform: translateY(-20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .modal-icon {
-            font-size: 4rem;
-            margin-bottom: 1rem;
-        }
-
-        .success-icon {
-            color: var(--success-color);
-        }
-
-        .error-icon {
-            color: var(--error-color);
-        }
-
-        .modal-title {
-            font-size: 1.5rem;
-            margin-bottom: 1rem;
-            color: var(--primary-dark);
-        }
-
-        .modal-message {
-            margin-bottom: 1.5rem;
-            font-size: 1.1rem;
-        }
-
-        .modal-btn {
-            background: var(--primary-color);
-            color: white;
-            border: none;
-            padding: 0.8rem 1.5rem;
-            border-radius: 50px;
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        .modal-btn:hover {
-            background: var(--primary-dark);
-        }
-
-        /* Loading spinner */
-        .spinner {
-            display: none;
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: rgba(255,255,255,0.8);
-            z-index: 100;
-            border-radius: 15px;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .spinner-inner {
-            width: 50px;
-            height: 50px;
-            border: 5px solid #f3f3f3;
-            border-top: 5px solid var(--primary-color);
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        /* Responsive styles */
         @media (max-width: 768px) {
             .container {
                 margin: 2rem auto;
                 padding: 0 1rem;
             }
             
-            .registration-form {
+            .message-card {
                 padding: 1.5rem;
             }
             
@@ -294,7 +177,7 @@
                 font-size: 1.5rem;
             }
             
-            .form-title {
+            .message-title {
                 font-size: 1.5rem;
             }
         }
@@ -303,91 +186,35 @@
 <body>
     <header>
         <img src="https://i.ibb.co/jZrxhFsf/1-min.png" alt="شعار المدرسة" class="logo">
-        <h1>تسجيل طالب جديد</h1>
+        <h1>التسجيلات في المجمع القرآني</h1>
     </header>
 
     <main class="container">
-        <form class="registration-form" id="studentRegistration">
-            <div class="spinner" id="formSpinner">
-                <div class="spinner-inner"></div>
+        <div class="message-card">
+            <div class="message-icon">
+                <i class="fas fa-calendar-times"></i>
+            </div>
+            <h2 class="message-title">التسجيلات غير متاحة حالياً</h2>
+            <div class="message-content">
+                <p>نعتذر لكم، التسجيلات في المجمع القرآني حمزة بن عبدالمطلب مغلقة حالياً.</p>
+                <p>يمكنكم متابعة صفحتنا على الفيسبوك للاطلاع على مواعيد فتح التسجيلات الجديدة وأخر الأخبار.</p>
             </div>
             
-            <h2 class="form-title">استمارة تسجيل برعم ماقبل التمدرس</h2>
-            
-            <!-- معلومات الطالب -->
-            <div class="form-group">
-                <label for="firstName">اسم المتمدرس <span class="required">*</span></label>
-                <input type="text" id="firstName" class="form-control" required>
-                <div class="error-message" id="firstNameError">يجب إدخال اسم المتمدرس</div>
+            <div class="social-links">
+                <a href="https://facebook.com/yourpage" class="social-link" target="_blank">
+                    <i class="fab fa-facebook-f"></i>
+                </a>
+                <a href="https://instagram.com/yourpage" class="social-link" target="_blank">
+                    <i class="fab fa-instagram"></i>
+                </a>
+                <a href="https://youtube.com/yourchannel" class="social-link" target="_blank">
+                    <i class="fab fa-youtube"></i>
+                </a>
             </div>
             
-            <div class="form-group">
-                <label for="lastName">لقب المتمدرس <span class="required">*</span></label>
-                <input type="text" id="lastName" class="form-control" required>
-                <div class="error-message" id="lastNameError">يجب إدخال لقب المتمدرس</div>
-            </div>
-            
-            <div class="form-group">
-                <label for="birthDate">تاريخ الميلاد (يجب أن يكون سنة 2020) <span class="required">*</span></label>
-                <input type="date" id="birthDate" class="form-control" required>
-                <div class="error-message" id="birthDateError">يجب أن يكون تاريخ الميلاد في سنة 2020</div>
-            </div>
-            
-            <!-- معلومات ولي الأمر -->
-            <div class="form-group">
-                <label for="parentName">اسم ولي الأمر <span class="required">*</span></label>
-                <input type="text" id="parentName" class="form-control" required>
-                <div class="error-message" id="parentNameError">يجب إدخال اسم ولي الأمر</div>
-            </div>
-            
-            <div class="form-group">
-                <label for="parentId">رقم التعريف الوطني لولي الأمر <span class="required">*</span></label>
-                <input type="text" id="parentId" class="form-control" required pattern="[0-9]{8,12}">
-                <div class="error-message" id="parentIdError">يجب إدخال رقم تعريف وطني صحيح (8-12 رقم)</div>
-            </div>
-            
-            <div class="form-group">
-                <label for="phone">رقم الهاتف <span class="required">*</span></label>
-                <input type="tel" id="phone" class="form-control" required pattern="[0-9]{8,15}">
-                <div class="error-message" id="phoneError">يجب إدخال رقم هاتف صحيح (8-15 رقم)</div>
-            </div>
-            
-            <div class="form-group">
-                <label for="address">عنوان السكن <span class="required">*</span></label>
-                <textarea id="address" class="form-control" rows="3" required></textarea>
-                <div class="error-message" id="addressError">يجب إدخال عنوان السكن</div>
-            </div>
-            
-            <div class="form-group">
-                <label for="notes">ملاحظات إضافية (اختياري)</label>
-                <textarea id="notes" class="form-control" rows="2"></textarea>
-            </div>
-            
-            <button type="submit" class="submit-btn" id="submitBtn">تسجيل المتمدرس</button>
-            
-            <p class="form-note">سيتم مراجعة طلب التسجيل وإعلامكم بالنتيجة خلال 3 أيام عمل</p>
-        </form>
+            <a href="/" class="return-link">العودة إلى الصفحة الرئيسية</a>
+        </div>
     </main>
-
-    <!-- Success Modal -->
-    <div class="modal" id="successModal">
-        <div class="modal-content">
-            <i class="fas fa-check-circle modal-icon success-icon"></i>
-            <h3 class="modal-title">تم التسجيل بنجاح</h3>
-            <p class="modal-message" id="successMessage">تم تسجيل الطالب بنجاح وسيتم التواصل معكم قريباً</p>
-            <button class="modal-btn" id="successBtn">حسناً</button>
-        </div>
-    </div>
-
-    <!-- Error Modal -->
-    <div class="modal" id="errorModal">
-        <div class="modal-content">
-            <i class="fas fa-times-circle modal-icon error-icon"></i>
-            <h3 class="modal-title">حدث خطأ</h3>
-            <p class="modal-message" id="errorMessage">حدث خطأ أثناء محاولة التسجيل، يرجى المحاولة مرة أخرى</p>
-            <button class="modal-btn" id="errorBtn">حسناً</button>
-        </div>
-    </div>
 
     <footer>
         <div class="copyright">
@@ -395,237 +222,10 @@
         </div>
     </footer>
 
-    <!-- Firebase Libraries -->
-    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-database-compat.js"></script>
-
     <script>
-        // Firebase configuration
-        const firebaseConfig = {
-            apiKey: "AIzaSyAzx-JlJBJxtVZT2cXDtJiHbs6s9K-3hEY",
-            authDomain: "tahdiri-dc608.firebaseapp.com",
-            databaseURL: "https://tahdiri-dc608-default-rtdb.firebaseio.com",
-            projectId: "tahdiri-dc608",
-            storageBucket: "tahdiri-dc608.firebasestorage.app",
-            messagingSenderId: "795586531700",
-            appId: "1:795586531700:web:d693fd56f4bed6aed4dc21",
-            measurementId: "G-H57ECZPTT7"
-        };
-
-        // Initialize Firebase
-        const app = firebase.initializeApp(firebaseConfig);
-        const database = firebase.database();
-
         document.addEventListener('DOMContentLoaded', function() {
-            // Set current year in footer
+            // إضافة السنة الحالية في الفوتر
             document.getElementById('year').textContent = new Date().getFullYear();
-            
-            // Form elements
-            const form = document.getElementById('studentRegistration');
-            const submitBtn = document.getElementById('submitBtn');
-            const formSpinner = document.getElementById('formSpinner');
-            
-            // Modal elements
-            const successModal = document.getElementById('successModal');
-            const errorModal = document.getElementById('errorModal');
-            const successBtn = document.getElementById('successBtn');
-            const errorBtn = document.getElementById('errorBtn');
-            const successMessage = document.getElementById('successMessage');
-            const errorMessage = document.getElementById('errorMessage');
-            
-            // Validate birth date (must be 2020)
-            const birthDateInput = document.getElementById('birthDate');
-            birthDateInput.addEventListener('change', function() {
-                validateBirthDate();
-            });
-            
-            // Validate parent ID (must be 8-12 digits)
-            const parentIdInput = document.getElementById('parentId');
-            parentIdInput.addEventListener('input', function() {
-                validateParentId();
-            });
-            
-            // Validate phone number
-            const phoneInput = document.getElementById('phone');
-            phoneInput.addEventListener('input', function() {
-                validatePhone();
-            });
-            
-            // Show modal functions
-            function showSuccessModal(message) {
-                if (message) successMessage.textContent = message;
-                successModal.style.display = 'flex';
-            }
-            
-            function showErrorModal(message) {
-                if (message) errorMessage.textContent = message;
-                errorModal.style.display = 'flex';
-            }
-            
-            // Close modal buttons
-            successBtn.addEventListener('click', function() {
-                successModal.style.display = 'none';
-            });
-            
-            errorBtn.addEventListener('click', function() {
-                errorModal.style.display = 'none';
-            });
-            
-            // Click outside modal to close
-            window.addEventListener('click', function(event) {
-                if (event.target === successModal) {
-                    successModal.style.display = 'none';
-                }
-                if (event.target === errorModal) {
-                    errorModal.style.display = 'none';
-                }
-            });
-            
-            // Validation functions
-            function validateBirthDate() {
-                const selectedDate = new Date(birthDateInput.value);
-                const selectedYear = selectedDate.getFullYear();
-                const errorElement = document.getElementById('birthDateError');
-                
-                if (selectedYear !== 2020 || isNaN(selectedYear)) {
-                    errorElement.style.display = 'block';
-                    birthDateInput.setCustomValidity('يجب أن يكون تاريخ الميلاد في سنة 2020');
-                    return false;
-                } else {
-                    errorElement.style.display = 'none';
-                    birthDateInput.setCustomValidity('');
-                    return true;
-                }
-            }
-            
-            function validateParentId() {
-                const errorElement = document.getElementById('parentIdError');
-                
-                if (!parentIdInput.checkValidity()) {
-                    errorElement.style.display = 'block';
-                    return false;
-                } else {
-                    errorElement.style.display = 'none';
-                    return true;
-                }
-            }
-            
-            function validatePhone() {
-                const errorElement = document.getElementById('phoneError');
-                
-                if (!phoneInput.checkValidity()) {
-                    errorElement.style.display = 'block';
-                    return false;
-                } else {
-                    errorElement.style.display = 'none';
-                    return true;
-                }
-            }
-            
-            function validateRequiredFields() {
-                let isValid = true;
-                
-                const requiredFields = ['firstName', 'lastName', 'parentName', 'address'];
-                requiredFields.forEach(field => {
-                    const input = document.getElementById(field);
-                    const error = document.getElementById(field + 'Error');
-                    
-                    if (!input.value.trim()) {
-                        error.style.display = 'block';
-                        isValid = false;
-                    } else {
-                        error.style.display = 'none';
-                    }
-                });
-                
-                return isValid;
-            }
-            
-            // Show error messages when leaving required fields empty
-            const inputs = form.querySelectorAll('input[required], textarea[required]');
-            inputs.forEach(input => {
-                input.addEventListener('blur', function() {
-                    const errorId = this.id + 'Error';
-                    const errorElement = document.getElementById(errorId);
-                    
-                    if (this.required && !this.value.trim()) {
-                        errorElement.style.display = 'block';
-                    }
-                });
-            });
-            
-            // Form submission
-            form.addEventListener('submit', function(e) {
-                e.preventDefault();
-                
-                // Validate all fields
-                const isBirthDateValid = validateBirthDate();
-                const isParentIdValid = validateParentId();
-                const isPhoneValid = validatePhone();
-                const isRequiredFieldsValid = validateRequiredFields();
-                
-                const isValid = isBirthDateValid && isParentIdValid && isPhoneValid && isRequiredFieldsValid;
-                
-                if (isValid) {
-                    // Show loading spinner
-                    formSpinner.style.display = 'flex';
-                    submitBtn.disabled = true;
-                    
-                    // Prepare form data
-                    const formData = {
-                        firstName: document.getElementById('firstName').value.trim(),
-                        lastName: document.getElementById('lastName').value.trim(),
-                        birthDate: document.getElementById('birthDate').value,
-                        parentName: document.getElementById('parentName').value.trim(),
-                        parentId: document.getElementById('parentId').value.trim(),
-                        phone: document.getElementById('phone').value.trim(),
-                        address: document.getElementById('address').value.trim(),
-                        notes: document.getElementById('notes').value.trim(),
-                        registrationDate: new Date().toISOString(),
-                        status: 'pending'
-                    };
-                    
-                    // Save to Firebase
-                    database.ref('students/' + formData.parentId).set(formData)
-                        .then(() => {
-                            // Hide spinner
-                            formSpinner.style.display = 'none';
-                            
-                            // Show success message with student name
-                            const studentName = formData.firstName + ' ' + formData.lastName;
-                            showSuccessModal(`تم تسجيل الطالب ${studentName} بنجاح وسيتم التواصل معكم قريباً`);
-                            
-                            // Reset form
-                            form.reset();
-                            submitBtn.disabled = false;
-                        })
-                        .catch((error) => {
-                            // Hide spinner
-                            formSpinner.style.display = 'none';
-                            submitBtn.disabled = false;
-                            
-                            // Show error message
-                            showErrorModal('حدث خطأ أثناء حفظ البيانات: ' + error.message);
-                        });
-                } else {
-                    // Scroll to first error
-                    const firstError = document.querySelector('.error-message[style="display: block;"]');
-                    if (firstError) {
-                        firstError.previousElementSibling.scrollIntoView({
-                            behavior: 'smooth',
-                            block: 'center'
-                        });
-                    }
-                }
-            });
-            
-            // Set max date for birth date (must be born in 2020)
-            const currentYear = new Date().getFullYear();
-            const maxDate = new Date('2020-12-31');
-            const minDate = new Date('2020-01-01');
-            
-            birthDateInput.max = maxDate.toISOString().split('T')[0];
-            birthDateInput.min = minDate.toISOString().split('T')[0];
         });
     </script>
 </body>
