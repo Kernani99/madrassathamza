@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>الطاقم التربوي - المجمع القرآني حمزة بن عبدالمطلب</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="icon" href="https://i.ibb.co/jZrxhFsf/1-min.png" type="image/png">
+    <style>
+        :root {
+            --primary-color: #1a4d2e;
+            --primary-dark: #0e3a23;
+            --secondary-color: #f5f5dc;
+            --accent-color: #4a7856;
+            --text-color: #333;
+            --light-bg: #f9f9f7;
+            --gold-color: #d4af37;
+            --silver-color: #c0c0c0;
+            --bronze-color: #cd7f32;
+            --error-color: #e74c3c;
+            --success-color: #2ecc71;
+            --volunteer-color: #3498db;
+            --employee-color: #9b59b6;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Cairo', sans-serif;
+        }
+
+        body {
+            background-color: var(--light-bg);
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+
+        header {
+            background: linear-gradient(rgba(26, 77, 46, 0.95), rgba(26, 77, 46, 0.95)),
+                        url('https://img.freepik.com/free-vector/abstract-islamic-golden-pattern-backdrop-ethnic-style_1017-54276.jpg') center/cover;
+            color: white;
+            padding: 2rem 1rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            min-height: 200px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            width: 100%;
+            border-radius: 0 0 15px 15px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .logo {
+            width: 150px;
+            margin: 0.5rem auto;
+            filter: drop-shadow(0 2px 5px rgba(0,0,0,0.3));
+        }
+
+        header h1 {
+            margin: 0.5rem 0;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+            font-size: 1.8rem;
+            line-height: 1.3;
+            font-weight: 700;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 3rem auto;
+            padding: 0 1.5rem;
+        }
+
+        .staff-section {
+            background: white;
+            border-radius: 15px;
+            padding: 2.5rem;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+
+        .section-title {
+            color: var(--primary-color);
+            text-align: center;
+            margin-bottom: 2rem;
+            font-size: 1.8rem;
+            font-weight: 800;
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            right: 50%;
+            transform: translateX(50%);
+            width: 80px;
+            height: 4px;
+            background: var(--gold-color);
+            border-radius: 3px;
+        }
+
+        .director-card {
+            display: flex;
+            align-items: center;
+            background: linear-gradient(to right, #f9f9f7, #e8f5e9);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 3rem;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            border-right: 5px solid var(--gold-color);
+        }
+
+        .director-img {
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 5px solid var(--gold-color);
+            margin-left: 2rem;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .director-info {
+            flex: 1;
+        }
+
+        .director-name {
+            color: var(--primary-dark);
+            font-size: 1.6rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .director-title {
+            color: var(--gold-color);
+            font-weight: 700;
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+        }
+
+        .director-bio {
+            color: #555;
+            line-height: 1.8;
+        }
+
+        .category-title {
+            color: var(--primary-dark);
+            margin: 2rem 0 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--gold-color);
+            font-size: 1.3rem;
+            text-align: center;
+        }
+
+        .staff-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+        }
+
+        .staff-table th {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 12px;
+            text-align: center;
+        }
+
+        .staff-table td {
+            padding: 12px;
+            text-align: center;
+            border-bottom: 1px solid #eee;
+        }
+
+        .staff-table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        .staff-table tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        .teacher-name {
+            text-align: right;
+            padding-right: 20px;
+        }
+
+        .volunteer {
+            color: var(--volunteer-color);
+            font-weight: bold;
+        }
+
+        .employee {
+            color: var(--employee-color);
+            font-weight: bold;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+
+        .badge-volunteer {
+            background-color: rgba(52, 152, 219, 0.2);
+            color: var(--volunteer-color);
+        }
+
+        .badge-employee {
+            background-color: rgba(155, 89, 182, 0.2);
+            color: var(--employee-color);
+        }
+
+        footer {
+            background-color: var(--primary-dark);
+            color: white;
+            padding: 2rem 0;
+            text-align: center;
+            margin-top: 3rem;
+        }
+
+        .copyright {
+            font-size: 0.9rem;
+            color: #ccc;
+        }
+
+        /* Responsive styles */
+        @media (max-width: 768px) {
+            .container {
+                margin: 2rem auto;
+                padding: 0 1rem;
+            }
+            
+            .staff-section {
+                padding: 1.5rem;
+            }
+            
+            header h1 {
+                font-size: 1.5rem;
+            }
+            
+            .section-title {
+                font-size: 1.5rem;
+            }
+            
+            .director-card {
+                flex-direction: column;
+                text-align: center;
+                padding: 1.5rem;
+            }
+            
+            .director-img {
+                margin-left: 0;
+                margin-bottom: 1.5rem;
+                width: 150px;
+                height: 150px;
+            }
+            
+            .staff-table {
+                font-size: 0.9rem;
+            }
+            
+            .staff-table th, 
+            .staff-table td {
+                padding: 8px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <img src="https://i.ibb.co/jZrxhFsf/1-min.png" alt="شعار المدرسة" class="logo">
+        <h1>الطاقم التربوي للمجمع القرآني</h1>
+    </header>
+
+    <main class="container">
+        <div class="staff-section">
+            <h2 class="section-title">المشرف على المدرسة القرآنية</h2>
+            
+            <div class="director-card">
+                <img src="https://i.ibb.co/0jQ2JYz/director.jpg" alt="صورة المشرف" class="director-img">
+                <div class="director-info">
+                    <h3 class="director-name">الشيخ محمد بن عبد الرحمن الحسيني</h3>
+                    <p class="director-title">مشرف عام المجمع القرآني</p>
+                    <p class="director-bio">
+                        حاصل على إجازة في القراءات العشر من الأزهر الشريف، ومتخصص في علوم القرآن الكريم. 
+                        يشرف على المجمع القرآني منذ تأسيسه عام 2010، وله جهود كبيرة في تعليم القرآن الكريم 
+                        وتحفيظه للأجيال. يتميز بحسن الخلق والاهتمام البالغ بطلاب العلم، ويشرف شخصياً على 
+                        البرامج التعليمية والتربوية في المجمع.
+                    </p>
+                </div>
+            </div>
+            
+            <!-- معلمو التعليم القرآني -->
+            <h3 class="category-title">معلمو التعليم القرآني</h3>
+            <table class="staff-table">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>اسم المعلم</th>
+                        <th>المؤهل العلمي</th>
+                        <th>سنوات الخبرة</th>
+                        <th>الصفة</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>1</td>
+                        <td class="teacher-name">أحمد بن محمد الشنقيطي</td>
+                        <td>إجازة في القراءات العشر</td>
+                        <td>15</td>
+                        <td><span class="badge badge-employee">موظف</span></td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td class="teacher-name">عبد الله بن علي الجزائري</td>
+                        <td>ليسانس في الدراسات الإسلامية</td>
+                        <td>8</td>
+                        <td><span class="badge badge-employee">موظف</span></td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td class="teacher-name">يوسف بن إبراهيم التونسي</td>
+                        <td>دكتوراه في التفسير وعلوم القرآن</td>
+                        <td>12</td>
+                        <td><span class="badge badge-volunteer">متطوع</span></td>
+                    </tr>
+                    <tr>
+                        <td>4</td>
+                        <td class="teacher-name">خالد بن مصطفى المغربي</td>
+                        <td>ماجستير في القراءات</td>
+                        <td>10</td>
+                        <td><span class="badge badge-employee">موظف</span></td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <!-- معلمو ما قبل التمدرس -->
+            <h3 class="category-title">معلمو ما قبل التمدرس</h3>
+            <table class="staff-table">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>اسم المعلم</th>
+                        <th>التخصص</th>
+                        <th>سنوات الخبرة</th>
+                        <th>الصفة</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>1</td>
+                        <td class="teacher-name">سارة بنت محمد الأمين</td>
+                        <td>رياض الأطفال</td>
+                        <td>7</td>
+                        <td><span class="badge badge-employee">موظف</span></td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td class="teacher-name">فاطمة بنت أحمد الزهراني</td>
+                        <td>تربية خاصة</td>
+                        <td>5</td>
+                        <td><span class="badge badge-volunteer">متطوع</span></td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td class="teacher-name">أمينة بنت عبد الرحمن السعدي</td>
+                        <td>تعليم أساسي</td>
+                        <td>9</td>
+                        <td><span class="badge badge-employee">موظف</span></td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <!-- معلمات محو الأمية -->
+            <h3 class="category-title">معلمات محو الأمية</h3>
+            <table class="staff-table">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>اسم المعلمة</th>
+                        <th>التخصص</th>
+                        <th>سنوات الخبرة</th>
+                        <th>الصفة</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>1</td>
+                        <td class="teacher-name">حليمة بنت يوسف القاسمي</td>
+                        <td>تربية وتعليم الكبار</td>
+                        <td>11</td>
+                        <td><span class="badge badge-employee">موظف</span></td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td class="teacher-name">مريم بنت خالد الفاروقي</td>
+                        <td>لغة عربية</td>
+                        <td>6</td>
+                        <td><span class="badge badge-volunteer">متطوع</span></td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td class="teacher-name">زينب بنت عمر الأنصاري</td>
+                        <td>تعليم أساسي</td>
+                        <td>8</td>
+                        <td><span class="badge badge-volunteer">متطوع</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </main>
+
+    <footer>
+        <div class="copyright">
+            <p>جميع الحقوق محفوظة &copy; المجمع القرآني حمزة بن عبدالمطلب <span id="year"></span></p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Set current year in footer
+            document.getElementById('year').textContent = new Date().getFullYear();
+        });
+    </script>
+</body>
+</html>
