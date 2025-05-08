@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مكتبتنا - المجمع القرآني حمزة بن عبدالمطلب</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="icon" href="https://i.ibb.co/jZrxhFsf/1-min.png" type="image/png">
+    <style>
+        :root {
+            --primary-color: #1a4d2e;
+            --primary-dark: #0e3a23;
+            --secondary-color: #f5f5dc;
+            --accent-color: #4a7856;
+            --text-color: #333;
+            --light-bg: #f9f9f7;
+            --gold-color: #d4af37;
+            --silver-color: #c0c0c0;
+            --bronze-color: #cd7f32;
+            --book-color: #8e44ad;
+            --hadith-color: #27ae60;
+            --tafsir-color: #2980b9;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Cairo', sans-serif;
+        }
+
+        body {
+            background-color: var(--light-bg);
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+
+        header {
+            background: linear-gradient(rgba(26, 77, 46, 0.95), rgba(26, 77, 46, 0.95)),
+                        url('https://img.freepik.com/free-vector/abstract-islamic-golden-pattern-backdrop-ethnic-style_1017-54276.jpg') center/cover;
+            color: white;
+            padding: 2rem 1rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            min-height: 200px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            width: 100%;
+            border-radius: 0 0 15px 15px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .logo {
+            width: 150px;
+            margin: 0.5rem auto;
+            filter: drop-shadow(0 2px 5px rgba(0,0,0,0.3));
+        }
+
+        header h1 {
+            margin: 0.5rem 0;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+            font-size: 1.8rem;
+            line-height: 1.3;
+            font-weight: 700;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 3rem auto;
+            padding: 0 1.5rem;
+        }
+
+        .library-section {
+            background: white;
+            border-radius: 15px;
+            padding: 2.5rem;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+
+        .section-title {
+            color: var(--primary-color);
+            text-align: center;
+            margin-bottom: 2rem;
+            font-size: 1.8rem;
+            font-weight: 800;
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            right: 50%;
+            transform: translateX(50%);
+            width: 80px;
+            height: 4px;
+            background: var(--gold-color);
+            border-radius: 3px;
+        }
+
+        .library-intro {
+            text-align: center;
+            margin-bottom: 3rem;
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: #555;
+        }
+
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #f9f9f7 0%, #e8f5e9 100%);
+            border-radius: 12px;
+            padding: 2rem;
+            text-align: center;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            border-top: 5px solid var(--primary-color);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+        }
+
+        .stat-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: var(--primary-color);
+        }
+
+        .stat-number {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: var(--primary-dark);
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            font-size: 1.1rem;
+            color: #666;
+        }
+
+        .category-title {
+            color: var(--primary-dark);
+            margin: 3rem 0 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--gold-color);
+            font-size: 1.5rem;
+            text-align: center;
+        }
+
+        .books-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .book-card {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            border-bottom: 4px solid var(--primary-color);
+        }
+
+        .book-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+        }
+
+        .book-cover {
+            height: 200px;
+            background-size: cover;
+            background-position: center;
+            position: relative;
+        }
+
+        .book-cover::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.3) 100%);
+        }
+
+        .book-info {
+            padding: 1.5rem;
+        }
+
+        .book-category {
+            display: inline-block;
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            margin-bottom: 0.8rem;
+        }
+
+        .category-tafsir {
+            background-color: rgba(41, 128, 185, 0.2);
+            color: var(--tafsir-color);
+        }
+
+        .category-hadith {
+            background-color: rgba(39, 174, 96, 0.2);
+            color: var(--hadith-color);
+        }
+
+        .category-general {
+            background-color: rgba(142, 68, 173, 0.2);
+            color: var(--book-color);
+        }
+
+        .book-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--primary-dark);
+            margin-bottom: 0.5rem;
+            line-height: 1.4;
+        }
+
+        .book-author {
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+
+        .book-meta {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.85rem;
+            color: #888;
+        }
+
+        .services-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .service-card {
+            background: white;
+            border-radius: 10px;
+            padding: 1.5rem;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            border-right: 4px solid var(--primary-color);
+            transition: all 0.3s ease;
+        }
+
+        .service-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+        }
+
+        .service-icon {
+            font-size: 2rem;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+
+        .service-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--primary-dark);
+            margin-bottom: 1rem;
+        }
+
+        .service-desc {
+            color: #666;
+            line-height: 1.7;
+        }
+
+        .testimonials {
+            margin-top: 4rem;
+        }
+
+        .testimonial-card {
+            background: linear-gradient(to right, #f9f9f7, #e8f5e9);
+            border-radius: 12px;
+            padding: 2rem;
+            margin: 1.5rem 0;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            border-left: 5px solid var(--gold-color);
+        }
+
+        .testimonial-text {
+            font-style: italic;
+            color: #555;
+            line-height: 1.8;
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+
+        .testimonial-text::before {
+            content: '"';
+            font-size: 4rem;
+            color: rgba(26, 77, 46, 0.1);
+            position: absolute;
+            top: -1.5rem;
+            right: -0.5rem;
+            font-family: serif;
+        }
+
+        .testimonial-author {
+            font-weight: 700;
+            color: var(--primary-dark);
+            text-align: left;
+        }
+
+        footer {
+            background-color: var(--primary-dark);
+            color: white;
+            padding: 2rem 0;
+            text-align: center;
+            margin-top: 3rem;
+        }
+
+        .copyright {
+            font-size: 0.9rem;
+            color: #ccc;
+        }
+
+        /* Responsive styles */
+        @media (max-width: 768px) {
+            .container {
+                margin: 2rem auto;
+                padding: 0 1rem;
+            }
+            
+            .library-section {
+                padding: 1.5rem;
+            }
+            
+            header h1 {
+                font-size: 1.5rem;
+            }
+            
+            .section-title {
+                font-size: 1.5rem;
+            }
+            
+            .stats-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .books-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <img src="https://i.ibb.co/jZrxhFsf/1-min.png" alt="شعار المدرسة" class="logo">
+        <h1>مكتبتنا القرآنية</h1>
+    </header>
+
+    <main class="container">
+        <div class="library-section">
+            <h2 class="section-title">كنوز المعرفة في مكتبتنا</h2>
+            
+            <div class="library-intro">
+                <p>
+                    مكتبتنا القرآنية تضم بين جنباتها كنوزاً من المعرفة والعلم، حيث تحتوي على أكثر من 15,000 كتاب و23,000 عنوان في مختلف العلوم الشرعية واللغوية. 
+                    تأسست المكتبة عام 2005 بهدف خدمة طلاب العلم والباحثين، وتحتوي على مخطوطات نادرة وطبعات حديثة محققة.
+                </p>
+            </div>
+            
+            <div class="stats-container">
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-book-open"></i>
+                    </div>
+                    <div class="stat-number">15,000+</div>
+                    <div class="stat-label">كتاب ورقي</div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-tags"></i>
+                    </div>
+                    <div class="stat-number">23,000+</div>
+                    <div class="stat-label">عنوان مختلف</div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-scroll"></i>
+                    </div>
+                    <div class="stat-number">150+</div>
+                    <div class="stat-label">مخطوطة نادرة</div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="stat-number">3,500+</div>
+                    <div class="stat-label">باحث سنوياً</div>
+                </div>
+            </div>
+            
+            <h3 class="category-title">أبرز الكتب والمخطوطات</h3>
+            
+            <div class="books-grid">
+                <div class="book-card">
+                    <div class="book-cover" style="background-image: url('https://i.ibb.co/0nX7J0T/tafsir.jpg');">
+                    </div>
+                    <div class="book-info">
+                        <span class="book-category category-tafsir">تفسير القرآن</span>
+                        <h4 class="book-title">تفسير القرآن العظيم (ابن كثير)</h4>
+                        <p class="book-author">للامام عماد الدين ابن كثير</p>
+                        <div class="book-meta">
+                            <span>الطبعة: المحققة</span>
+                            <span>8 مجلدات</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="book-card">
+                    <div class="book-cover" style="background-image: url('https://i.ibb.co/4WYy2Jh/hadith.jpg');">
+                    </div>
+                    <div class="book-info">
+                        <span class="book-category category-hadith">الحديث النبوي</span>
+                        <h4 class="book-title">صحيح البخاري (المطبوع مع شرحه فتح الباري)</h4>
+                        <p class="book-author">للإمام البخاري - شرح ابن حجر</p>
+                        <div class="book-meta">
+                            <span>الطبعة: السلطانية</span>
+                            <span>14 مجلد</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="book-card">
+                    <div class="book-cover" style="background-image: url('https://i.ibb.co/0XJQJZy/fiqh.jpg');">
+                    </div>
+                    <div class="book-info">
+                        <span class="book-category category-general">الفقه الإسلامي</span>
+                        <h4 class="book-title">المغني في فقه الإمام أحمد بن حنبل</h4>
+                        <p class="book-author">لابن قدامة المقدسي</p>
+                        <div class="book-meta">
+                            <span>الطبعة: الحديثة</span>
+                            <span>12 مجلد</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <h3 class="category-title">خدمات المكتبة</h3>
+            
+            <div class="services-container">
+                <div class="service-card">
+                    <div class="service-icon">
+                        <i class="fas fa-book-reader"></i>
+                    </div>
+                    <h4 class="service-title">القراءة الداخلية</h4>
+                    <p class="service-desc">
+                        توفر المكتبة قاعات مريحة للقراءة والبحث، مع إمكانية الوصول إلى جميع الكتب والمصادر مباشرة من الأرفف.
+                    </p>
+                </div>
+                
+                <div class="service-card">
+                    <div class="service-icon">
+                        <i class="fas fa-exchange-alt"></i>
+                    </div>
+                    <h4 class="service-title">الإعارة الخارجية</h4>
+                    <p class="service-desc">
+                        خدمة إعارة الكتب للأعضاء المسجلين، مع إمكانية تجديد الإعارة إلكترونياً عبر موقع المكتبة.
+                    </p>
+                </div>
+                
+                <div class="service-card">
+                    <div class="service-icon">
+                        <i class="fas fa-search"></i>
+                    </div>
+                    <h4 class="service-title">البحث العلمي</h4>
+                    <p class="service-desc">
+                        دعم الباحثين في الوصول إلى المصادر والمراجع، مع توفير أدوات البحث والتصوير للمخطوطات النادرة.
+                    </p>
+                </div>
+            </div>
+            
+            <div class="testimonials">
+                <h3 class="category-title">كلمات الزوار</h3>
+                
+                <div class="testimonial-card">
+                    <p class="testimonial-text">
+                        مكتبة غنية بمصادرها، نظيفة ومنظمة، العاملون متعاونون ويقدمون الدعم الكامل للباحثين. وجدت فيها مخطوطات نادرة لم أجدها في مكتبات أخرى.
+                    </p>
+                    <p class="testimonial-author">د. خالد بن أحمد - أستاذ الدراسات الإسلامية</p>
+                </div>
+                
+                <div class="testimonial-card">
+                    <p class="testimonial-text">
+                        من أفضل المكتبات المتخصصة في العلوم الشرعية، تحتوي على أحدث الطبعات المحققة للكتب، كما أن نظام الإعارة سهل وميسر.
+                    </p>
+                    <p class="testimonial-author">أ. محمد بن عبد الله - باحث ماجستير</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="copyright">
+            <p>جميع الحقوق محفوظة &copy; المجمع القرآني حمزة بن عبدالمطلب <span id="year"></span></p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Set current year in footer
+            document.getElementById('year').textContent = new Date().getFullYear();
+            
+            // Animation for stat cards
+            const statCards = document.querySelectorAll('.stat-card');
+            statCards.forEach((card, index) => {
+                setTimeout(() => {
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, index * 200);
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                card.style.transition = 'all 0.5s ease';
+            });
+        });
+    </script>
+</body>
+</html>
