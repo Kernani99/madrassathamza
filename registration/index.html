@@ -99,6 +99,14 @@
             border-radius: 3px;
         }
 
+        .section-title {
+            color: var(--primary-dark);
+            margin: 2rem 0 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--gold-color);
+            font-size: 1.3rem;
+        }
+
         .form-group {
             margin-bottom: 1.5rem;
         }
@@ -123,6 +131,21 @@
             border-color: var(--primary-color);
             outline: none;
             box-shadow: 0 0 0 3px rgba(26, 77, 46, 0.2);
+        }
+
+        .radio-group {
+            display: flex;
+            gap: 1rem;
+            margin-top: 0.5rem;
+        }
+
+        .radio-option {
+            display: flex;
+            align-items: center;
+        }
+
+        .radio-option input {
+            margin-left: 0.5rem;
         }
 
         .error-message {
@@ -314,15 +337,17 @@
             
             <h2 class="form-title">استمارة تسجيل برعم ماقبل التمدرس</h2>
             
-            <!-- معلومات الطالب -->
+            <!-- معلومات المتمدرس -->
+            <h3 class="section-title">معلومات عن المتمدرس</h3>
+            
             <div class="form-group">
-                <label for="firstName">اسم المتمدرس <span class="required">*</span></label>
+                <label for="firstName">الاسم <span class="required">*</span></label>
                 <input type="text" id="firstName" class="form-control" required>
                 <div class="error-message" id="firstNameError">يجب إدخال اسم المتمدرس</div>
             </div>
             
             <div class="form-group">
-                <label for="lastName">لقب المتمدرس <span class="required">*</span></label>
+                <label for="lastName">اللقب <span class="required">*</span></label>
                 <input type="text" id="lastName" class="form-control" required>
                 <div class="error-message" id="lastNameError">يجب إدخال لقب المتمدرس</div>
             </div>
@@ -333,29 +358,96 @@
                 <div class="error-message" id="birthDateError">يجب أن يكون تاريخ الميلاد في سنة 2020</div>
             </div>
             
-            <!-- معلومات ولي الأمر -->
             <div class="form-group">
-                <label for="parentName">اسم ولي الأمر <span class="required">*</span></label>
-                <input type="text" id="parentName" class="form-control" required>
-                <div class="error-message" id="parentNameError">يجب إدخال اسم ولي الأمر</div>
+                <label for="birthPlace">مكان الميلاد <span class="required">*</span></label>
+                <input type="text" id="birthPlace" class="form-control" required>
+                <div class="error-message" id="birthPlaceError">يجب إدخال مكان الميلاد</div>
             </div>
             
             <div class="form-group">
-                <label for="parentId">رقم التعريف الوطني لولي الأمر <span class="required">*</span></label>
-                <input type="text" id="parentId" class="form-control" required pattern="[0-9]{8,12}">
-                <div class="error-message" id="parentIdError">يجب إدخال رقم تعريف وطني صحيح (8-12 رقم)</div>
+                <label for="fatherName">اسم الأب <span class="required">*</span></label>
+                <input type="text" id="fatherName" class="form-control" required>
+                <div class="error-message" id="fatherNameError">يجب إدخال اسم الأب</div>
             </div>
             
             <div class="form-group">
-                <label for="phone">رقم الهاتف <span class="required">*</span></label>
-                <input type="tel" id="phone" class="form-control" required pattern="[0-9]{8,15}">
-                <div class="error-message" id="phoneError">يجب إدخال رقم هاتف صحيح (8-15 رقم)</div>
+                <label for="motherName">اسم ولقب الأم <span class="required">*</span></label>
+                <input type="text" id="motherName" class="form-control" required>
+                <div class="error-message" id="motherNameError">يجب إدخال اسم ولقب الأم</div>
             </div>
             
             <div class="form-group">
-                <label for="address">عنوان السكن <span class="required">*</span></label>
+                <label for="address">العنوان <span class="required">*</span></label>
                 <textarea id="address" class="form-control" rows="3" required></textarea>
-                <div class="error-message" id="addressError">يجب إدخال عنوان السكن</div>
+                <div class="error-message" id="addressError">يجب إدخال العنوان</div>
+            </div>
+            
+            <div class="form-group">
+                <label>الحالة الاجتماعية <span class="required">*</span></label>
+                <div class="radio-group">
+                    <div class="radio-option">
+                        <input type="radio" id="socialStatusNormal" name="socialStatus" value="عادية" required>
+                        <label for="socialStatusNormal">عادية</label>
+                    </div>
+                    <div class="radio-option">
+                        <input type="radio" id="socialStatusOrphan" name="socialStatus" value="يتيم">
+                        <label for="socialStatusOrphan">يتيم</label>
+                    </div>
+                    <div class="radio-option">
+                        <input type="radio" id="socialStatusDivorced" name="socialStatus" value="مطلق">
+                        <label for="socialStatusDivorced">مطلق</label>
+                    </div>
+                </div>
+                <div class="error-message" id="socialStatusError">يجب اختيار الحالة الاجتماعية</div>
+            </div>
+            
+            <div class="form-group">
+                <label for="parentPhone">رقم هاتف الأب أو الأم <span class="required">*</span></label>
+                <input type="tel" id="parentPhone" class="form-control" required pattern="[0-9]{8,15}">
+                <div class="error-message" id="parentPhoneError">يجب إدخال رقم هاتف صحيح (8-15 رقم)</div>
+            </div>
+            
+            <div class="form-group" id="guardianGroup" style="display: none;">
+                <label for="guardianName">اسم الوصي في حالة غياب الولي</label>
+                <input type="text" id="guardianName" class="form-control">
+            </div>
+            
+            <!-- معلومات طبية -->
+            <h3 class="section-title">معلومات طبية</h3>
+            
+            <div class="form-group">
+                <label>هل ابنكم مريض؟ <span class="required">*</span></label>
+                <div class="radio-group">
+                    <div class="radio-option">
+                        <input type="radio" id="isSickYes" name="isSick" value="نعم" required>
+                        <label for="isSickYes">نعم</label>
+                    </div>
+                    <div class="radio-option">
+                        <input type="radio" id="isSickNo" name="isSick" value="لا">
+                        <label for="isSickNo">لا</label>
+                    </div>
+                </div>
+                <div class="error-message" id="isSickError">يجب اختيار الإجابة</div>
+            </div>
+            
+            <div class="form-group" id="sicknessTypeGroup" style="display: none;">
+                <label for="sicknessType">إذا كان مريض، ما نوع المرض</label>
+                <input type="text" id="sicknessType" class="form-control">
+            </div>
+            
+            <div class="form-group">
+                <label>هل يتناول أدوية؟ <span class="required">*</span></label>
+                <div class="radio-group">
+                    <div class="radio-option">
+                        <input type="radio" id="takesMedicineYes" name="takesMedicine" value="نعم" required>
+                        <label for="takesMedicineYes">نعم</label>
+                    </div>
+                    <div class="radio-option">
+                        <input type="radio" id="takesMedicineNo" name="takesMedicine" value="لا">
+                        <label for="takesMedicineNo">لا</label>
+                    </div>
+                </div>
+                <div class="error-message" id="takesMedicineError">يجب اختيار الإجابة</div>
             </div>
             
             <div class="form-group">
@@ -406,7 +498,7 @@
             authDomain: "tahdiri-dc608.firebaseapp.com",
             databaseURL: "https://tahdiri-dc608-default-rtdb.firebaseio.com",
             projectId: "tahdiri-dc608",
-            storageBucket: "tahdiri-dc608.firebasestorage.app",
+            storageBucket: "tahdiri-dc608.appspot.com",
             messagingSenderId: "795586531700",
             appId: "1:795586531700:web:d693fd56f4bed6aed4dc21",
             measurementId: "G-H57ECZPTT7"
@@ -433,21 +525,46 @@
             const successMessage = document.getElementById('successMessage');
             const errorMessage = document.getElementById('errorMessage');
             
+            // Conditional fields
+            const socialStatusRadios = document.querySelectorAll('input[name="socialStatus"]');
+            const guardianGroup = document.getElementById('guardianGroup');
+            
+            const isSickRadios = document.querySelectorAll('input[name="isSick"]');
+            const sicknessTypeGroup = document.getElementById('sicknessTypeGroup');
+            
+            // Show/hide guardian field based on social status
+            socialStatusRadios.forEach(radio => {
+                radio.addEventListener('change', function() {
+                    if (this.value === 'يتيم' || this.value === 'مطلق') {
+                        guardianGroup.style.display = 'block';
+                    } else {
+                        guardianGroup.style.display = 'none';
+                        document.getElementById('guardianName').value = '';
+                    }
+                });
+            });
+            
+            // Show/hide sickness type based on isSick
+            isSickRadios.forEach(radio => {
+                radio.addEventListener('change', function() {
+                    if (this.value === 'نعم') {
+                        sicknessTypeGroup.style.display = 'block';
+                    } else {
+                        sicknessTypeGroup.style.display = 'none';
+                        document.getElementById('sicknessType').value = '';
+                    }
+                });
+            });
+            
             // Validate birth date (must be 2020)
             const birthDateInput = document.getElementById('birthDate');
             birthDateInput.addEventListener('change', function() {
                 validateBirthDate();
             });
             
-            // Validate parent ID (must be 8-12 digits)
-            const parentIdInput = document.getElementById('parentId');
-            parentIdInput.addEventListener('input', function() {
-                validateParentId();
-            });
-            
             // Validate phone number
-            const phoneInput = document.getElementById('phone');
-            phoneInput.addEventListener('input', function() {
+            const parentPhoneInput = document.getElementById('parentPhone');
+            parentPhoneInput.addEventListener('input', function() {
                 validatePhone();
             });
             
@@ -498,22 +615,10 @@
                 }
             }
             
-            function validateParentId() {
-                const errorElement = document.getElementById('parentIdError');
-                
-                if (!parentIdInput.checkValidity()) {
-                    errorElement.style.display = 'block';
-                    return false;
-                } else {
-                    errorElement.style.display = 'none';
-                    return true;
-                }
-            }
-            
             function validatePhone() {
-                const errorElement = document.getElementById('phoneError');
+                const errorElement = document.getElementById('parentPhoneError');
                 
-                if (!phoneInput.checkValidity()) {
+                if (!parentPhoneInput.checkValidity()) {
                     errorElement.style.display = 'block';
                     return false;
                 } else {
@@ -525,12 +630,32 @@
             function validateRequiredFields() {
                 let isValid = true;
                 
-                const requiredFields = ['firstName', 'lastName', 'parentName', 'address'];
+                // Validate text fields
+                const requiredFields = ['firstName', 'lastName', 'birthPlace', 'fatherName', 'motherName', 'address'];
                 requiredFields.forEach(field => {
                     const input = document.getElementById(field);
                     const error = document.getElementById(field + 'Error');
                     
                     if (!input.value.trim()) {
+                        error.style.display = 'block';
+                        isValid = false;
+                    } else {
+                        error.style.display = 'none';
+                    }
+                });
+                
+                // Validate radio groups
+                const requiredRadios = [
+                    {name: 'socialStatus', errorId: 'socialStatusError'},
+                    {name: 'isSick', errorId: 'isSickError'},
+                    {name: 'takesMedicine', errorId: 'takesMedicineError'}
+                ];
+                
+                requiredRadios.forEach(radio => {
+                    const checked = document.querySelector(`input[name="${radio.name}"]:checked`);
+                    const error = document.getElementById(radio.errorId);
+                    
+                    if (!checked) {
                         error.style.display = 'block';
                         isValid = false;
                     } else {
@@ -560,11 +685,10 @@
                 
                 // Validate all fields
                 const isBirthDateValid = validateBirthDate();
-                const isParentIdValid = validateParentId();
                 const isPhoneValid = validatePhone();
                 const isRequiredFieldsValid = validateRequiredFields();
                 
-                const isValid = isBirthDateValid && isParentIdValid && isPhoneValid && isRequiredFieldsValid;
+                const isValid = isBirthDateValid && isPhoneValid && isRequiredFieldsValid;
                 
                 if (isValid) {
                     // Show loading spinner
@@ -573,20 +697,34 @@
                     
                     // Prepare form data
                     const formData = {
+                        // Student info
                         firstName: document.getElementById('firstName').value.trim(),
                         lastName: document.getElementById('lastName').value.trim(),
                         birthDate: document.getElementById('birthDate').value,
-                        parentName: document.getElementById('parentName').value.trim(),
-                        parentId: document.getElementById('parentId').value.trim(),
-                        phone: document.getElementById('phone').value.trim(),
+                        birthPlace: document.getElementById('birthPlace').value.trim(),
+                        fatherName: document.getElementById('fatherName').value.trim(),
+                        motherName: document.getElementById('motherName').value.trim(),
                         address: document.getElementById('address').value.trim(),
+                        socialStatus: document.querySelector('input[name="socialStatus"]:checked').value,
+                        parentPhone: document.getElementById('parentPhone').value.trim(),
+                        
+                        // Medical info
+                        isSick: document.querySelector('input[name="isSick"]:checked').value,
+                        sicknessType: document.getElementById('sicknessType').value.trim(),
+                        takesMedicine: document.querySelector('input[name="takesMedicine"]:checked').value,
+                        
+                        // Additional info
+                        guardianName: document.getElementById('guardianName').value.trim(),
                         notes: document.getElementById('notes').value.trim(),
+                        
+                        // System info
                         registrationDate: new Date().toISOString(),
                         status: 'pending'
                     };
                     
                     // Save to Firebase
-                    database.ref('students/' + formData.parentId).set(formData)
+                    const studentId = formData.firstName + '_' + formData.lastName + '_' + new Date().getTime();
+                    database.ref('students/' + studentId).set(formData)
                         .then(() => {
                             // Hide spinner
                             formSpinner.style.display = 'none';
@@ -598,6 +736,8 @@
                             // Reset form
                             form.reset();
                             submitBtn.disabled = false;
+                            guardianGroup.style.display = 'none';
+                            sicknessTypeGroup.style.display = 'none';
                         })
                         .catch((error) => {
                             // Hide spinner
