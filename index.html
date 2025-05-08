@@ -1194,7 +1194,7 @@
     <div class="alert-bar" id="registrationAlert">
         <span class="close-alert" onclick="closeAlert()">×</span>
         <div class="alert-content">
-            <a href="#registration" class="alert-btn">سجل الآن</a>
+            <a href="registration" class="alert-btn">سجل الآن</a>
             <span>التسجيلات مفتوحة الآن لبراعم التحضيري (مواليد 2020) - الفرص محدودة</span>
             <i class="fas fa-bell alert-icon"></i>
         </div>
@@ -1248,19 +1248,7 @@
         <p>↞ تعليم قرآني مميز منذ 2006م ↠</p>
     </header>
 
-    <nav>
-        <button class="mobile-menu-btn">
-            القائمة الرئيسية
-            <i class="fas fa-chevron-down"></i>
-        </button>
-        <div class="nav-container">
-            <a href="#stats">الإحصائيات</a>
-            <a href="#programs">البرامج</a>
-            <a href="#gallery">المعرض</a>
-            <a href="#about">عن المدرسة</a>
-            <a href="#contact">اتصل بنا</a>
-        </div>
-    </nav>
+    
 
     <main class="container">
         <!-- قسم الإحصائيات -->
@@ -1511,9 +1499,7 @@
     </main>
 
     <footer id="contact">
-        <div class="footer-wave wave1"></div>
-        <div class="footer-wave wave2"></div>
-        <div class="footer-wave wave3"></div>
+       
         
         <div class="footer-content">
             <div class="footer-column">
@@ -1623,7 +1609,7 @@
             const navContainer = document.querySelector('.nav-container');
             if(navContainer) {
                 const registerLink = document.createElement('a');
-                registerLink.href = '#registration';
+                registerLink.href = 'registration';
                 registerLink.innerHTML = '<i class="fas fa-user-plus" style="margin-left: 5px;"></i> تسجيل جديد';
                 registerLink.style.color = '#d4af37';
                 registerLink.style.fontWeight = '800';
