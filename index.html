@@ -33,6 +33,78 @@
             position: relative;
         }
 
+        /* شريط تنبيه التسجيلات */
+        .alert-bar {
+            background: linear-gradient(135deg, #d4af37, #f5f5dc);
+            color: #1a4d2e;
+            padding: 12px 0;
+            text-align: center;
+            font-weight: 700;
+            font-size: 1.1rem;
+            position: relative;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            z-index: 999;
+            animation: pulse 2s infinite;
+            border-bottom: 2px solid #1a4d2e;
+        }
+        
+        .alert-content {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        .alert-icon {
+            margin-left: 15px;
+            font-size: 1.5rem;
+            animation: bounce 2s infinite;
+        }
+        
+        .alert-btn {
+            background-color: #1a4d2e;
+            color: white;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 50px;
+            margin-right: 20px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        .alert-btn:hover {
+            background-color: #0e3a23;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+        
+        .close-alert {
+            position: absolute;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            font-size: 1.2rem;
+            color: #1a4d2e;
+        }
+        
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(26, 77, 46, 0.4); }
+            70% { box-shadow: 0 0 0 10px rgba(26, 77, 46, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(26, 77, 46, 0); }
+        }
+        
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {transform: translateY(0);}
+            40% {transform: translateY(-10px);}
+            60% {transform: translateY(-5px);}
+        }
+
         /* نافذة منبثقة ترحيبية */
         .welcome-popup {
             position: fixed;
@@ -1068,6 +1140,23 @@
                 animation: ticker-mobile 20s linear infinite;
             }
 
+            /* تعديلات شريط التنبيه للجوال */
+            .alert-bar {
+                font-size: 0.9rem;
+                padding: 8px 0;
+            }
+            
+            .alert-btn {
+                padding: 5px 12px;
+                font-size: 0.8rem;
+                margin-right: 10px;
+            }
+            
+            .alert-icon {
+                font-size: 1.2rem;
+                margin-left: 8px;
+            }
+
             @keyframes ticker-mobile {
                 0% { transform: translateX(0); }
                 100% { transform: translateX(-150%); }
@@ -1101,6 +1190,16 @@
     </style>
 </head>
 <body>
+    <!-- شريط تنبيه التسجيلات -->
+    <div class="alert-bar" id="registrationAlert">
+        <span class="close-alert" onclick="closeAlert()">×</span>
+        <div class="alert-content">
+            <a href="#registration" class="alert-btn">سجل الآن</a>
+            <span>التسجيلات مفتوحة الآن لبراعم التحضيري (مواليد 2020) - الفرص محدودة</span>
+            <i class="fas fa-bell alert-icon"></i>
+        </div>
+    </div>
+
     <div class="loader">
         <div class="spinner"></div>
         <div class="loader-text">جاري التحميل...</div>
@@ -1140,7 +1239,6 @@
             <div class="news-item">وجب أن يكون من مواليد 2020</div>
             <div class="news-item">التسجيل الكتروني والتأكيد يكون في ادارة المدرسة</div>
             <div class="news-item">بعد اكتمال العدد من المحتمل فتح تسجيلات استثنائية لمواليد 2021</div>
-
         </div>
     </div>
 
@@ -1150,7 +1248,19 @@
         <p>↞ تعليم قرآني مميز منذ 2006م ↠</p>
     </header>
 
-  
+    <nav>
+        <button class="mobile-menu-btn">
+            القائمة الرئيسية
+            <i class="fas fa-chevron-down"></i>
+        </button>
+        <div class="nav-container">
+            <a href="#stats">الإحصائيات</a>
+            <a href="#programs">البرامج</a>
+            <a href="#gallery">المعرض</a>
+            <a href="#about">عن المدرسة</a>
+            <a href="#contact">اتصل بنا</a>
+        </div>
+    </nav>
 
     <main class="container">
         <!-- قسم الإحصائيات -->
@@ -1401,7 +1511,9 @@
     </main>
 
     <footer id="contact">
-        
+        <div class="footer-wave wave1"></div>
+        <div class="footer-wave wave2"></div>
+        <div class="footer-wave wave3"></div>
         
         <div class="footer-content">
             <div class="footer-column">
@@ -1492,6 +1604,31 @@
 
         document.querySelector('.popup-btn').addEventListener('click', function() {
             document.querySelector('.welcome-popup').classList.remove('active');
+        });
+
+        // دالة لإغلاق تنبيه التسجيلات
+        function closeAlert() {
+            document.getElementById('registrationAlert').style.display = 'none';
+            // حفظ في localStorage لمنع الظهور مرة أخرى
+            localStorage.setItem('alertClosed', 'true');
+        }
+        
+        // التحقق مما إذا كان المستخدم قد أغلق التنبيه مسبقاً
+        window.addEventListener('DOMContentLoaded', () => {
+            if(localStorage.getItem('alertClosed') === 'true') {
+                document.getElementById('registrationAlert').style.display = 'none';
+            }
+            
+            // إضافة زر التسجيل في القائمة إذا لزم الأمر
+            const navContainer = document.querySelector('.nav-container');
+            if(navContainer) {
+                const registerLink = document.createElement('a');
+                registerLink.href = '#registration';
+                registerLink.innerHTML = '<i class="fas fa-user-plus" style="margin-left: 5px;"></i> تسجيل جديد';
+                registerLink.style.color = '#d4af37';
+                registerLink.style.fontWeight = '800';
+                navContainer.appendChild(registerLink);
+            }
         });
 
         // عداد الأرقام المتطور
