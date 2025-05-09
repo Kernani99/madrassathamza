@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>نظام إدارة الطلاب - المجمع القرآني حمزة بن عبدالمطلب</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="icon" href="https://i.ibb.co/jZrxhFsf/1-min.png" type="image/png">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
+    <style>
+        /* أنماط CSS تبقى كما هي */
+        :root {
+            --primary-color: #1a4d2e;
+            --primary-dark: #0e3a23;
+            --secondary-color: #f5f5dc;
+            --accent-color: #4a7856;
+            --text-color: #333;
+            --light-bg: #f9f9f7;
+            --gold-color: #d4af37;
+            --error-color: #e74c3c;
+            --success-color: #2ecc71;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Cairo', sans-serif;
+        }
+
+        body {
+            background-color: var(--light-bg);
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+
+        header {
+            background: linear-gradient(rgba(26, 77, 46, 0.95), rgba(26, 77, 46, 0.95)),
+                        url('https://img.freepik.com/free-vector/abstract-islamic-golden-pattern-backdrop-ethnic-style_1017-54276.jpg') center/cover;
+            color: white;
+            padding: 2rem 1rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            min-height: 200px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            width: 100%;
+            border-radius: 0 0 15px 15px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .logo {
+            width: 150px;
+            margin: 0.5rem auto;
+            filter: drop-shadow(0 2px 5px rgba(0,0,0,0.3));
+        }
+
+        header h1 {
+            margin: 0.5rem 0;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+            font-size: 1.8rem;
+            line-height: 1.3;
+            font-weight: 700;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 3rem auto;
+            padding: 0 1.5rem;
+        }
+
+        .upload-section {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .upload-title {
+            color: var(--primary-color);
+            margin-bottom: 1.5rem;
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .upload-box {
+            border: 2px dashed var(--primary-color);
+            border-radius: 10px;
+            padding: 2rem;
+            margin-bottom: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .upload-box:hover {
+            background-color: rgba(26, 77, 46, 0.05);
+        }
+
+        .upload-icon {
+            font-size: 3rem;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+
+        .upload-text {
+            margin-bottom: 1rem;
+        }
+
+        .file-input {
+            display: none;
+        }
+
+        .file-name {
+            margin-top: 1rem;
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .upload-btn {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 1rem;
+        }
+
+        .upload-btn:hover {
+            background: var(--primary-dark);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .upload-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .students-list {
+            background: white;
+            border-radius: 15px;
+            padding: 1.5rem;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            display: none;
+        }
+
+        .student-card {
+            border: 1px solid #eee;
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            transition: all 0.3s;
+        }
+
+        .student-card:hover {
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transform: translateY(-3px);
+        }
+
+        .student-name {
+            color: var(--primary-dark);
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .student-info {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .info-item {
+            flex: 1 1 200px;
+        }
+
+        .info-label {
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+
+        .student-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 1rem;
+        }
+
+        .action-btn {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .action-btn:hover {
+            background: var(--primary-dark);
+        }
+
+        .action-btn.secondary {
+            background: var(--gold-color);
+            color: var(--primary-dark);
+        }
+
+        .action-btn.secondary:hover {
+            background: #c9a227;
+        }
+
+        .spinner {
+            display: none;
+            justify-content: center;
+            align-items: center;
+            margin: 2rem 0;
+        }
+
+        .spinner-inner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid var(--primary-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .no-students {
+            text-align: center;
+            padding: 2rem;
+            color: #666;
+        }
+
+        footer {
+            background-color: var(--primary-dark);
+            color: white;
+            padding: 2rem 0;
+            text-align: center;
+            margin-top: 3rem;
+        }
+
+        .copyright {
+            font-size: 0.9rem;
+            color: #ccc;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                margin: 2rem auto;
+                padding: 0 1rem;
+            }
+            
+            .upload-section {
+                padding: 1.5rem;
+            }
+            
+            header h1 {
+                font-size: 1.5rem;
+            }
+            
+            .student-actions {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+            
+            .action-btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <img src="https://i.ibb.co/jZrxhFsf/1-min.png" alt="شعار المجمع" class="logo">
+        <h1>نظام إدارة الطلاب</h1>
+    </header>
+
+    <main class="container">
+        <section class="upload-section">
+            <h2 class="upload-title">رفع ملف بيانات الطلاب</h2>
+            
+            <div class="upload-box" id="uploadBox">
+                <i class="fas fa-file-upload upload-icon"></i>
+                <p class="upload-text">انقر لاختيار ملف JSON أو اسحبه وأسقطه هنا</p>
+                <input type="file" id="jsonFile" class="file-input" accept=".json">
+                <div class="file-name" id="fileName">لم يتم اختيار أي ملف</div>
+            </div>
+            
+            <button class="upload-btn" id="uploadBtn" disabled>تحميل البيانات</button>
+            
+            <div class="spinner" id="loadingSpinner">
+                <div class="spinner-inner"></div>
+            </div>
+        </section>
+        
+        <section class="students-list" id="studentsList">
+            <!-- سيتم ملء هذه القائمة بعد رفع الملف -->
+        </section>
+    </main>
+
+    <footer>
+        <div class="copyright">
+            <p>جميع الحقوق محفوظة &copy; المجمع القرآني حمزة بن عبدالمطلب <span id="year"></span></p>
+        </div>
+    </footer>
+
+    <script>
+        // تحميل مكتبة jsPDF بشكل صحيح
+        const { jsPDF } = window.jspdf;
+
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('year').textContent = new Date().getFullYear();
+            
+            const uploadBox = document.getElementById('uploadBox');
+            const jsonFileInput = document.getElementById('jsonFile');
+            const fileName = document.getElementById('fileName');
+            const uploadBtn = document.getElementById('uploadBtn');
+            const loadingSpinner = document.getElementById('loadingSpinner');
+            const studentsList = document.getElementById('studentsList');
+            
+            let studentsData = [];
+            
+            // عند النقر على منطقة الرفع
+            uploadBox.addEventListener('click', function() {
+                jsonFileInput.click();
+            });
+            
+            // عند تغيير اختيار الملف
+            jsonFileInput.addEventListener('change', function() {
+                if (this.files.length > 0) {
+                    fileName.textContent = this.files[0].name;
+                    uploadBtn.disabled = false;
+                } else {
+                    fileName.textContent = 'لم يتم اختيار أي ملف';
+                    uploadBtn.disabled = true;
+                }
+            });
+            
+            // عند سحب وإسقاط الملف
+            uploadBox.addEventListener('dragover', function(e) {
+                e.preventDefault();
+                this.style.backgroundColor = 'rgba(26, 77, 46, 0.1)';
+            });
+            
+            uploadBox.addEventListener('dragleave', function() {
+                this.style.backgroundColor = '';
+            });
+            
+            uploadBox.addEventListener('drop', function(e) {
+                e.preventDefault();
+                this.style.backgroundColor = '';
+                
+                if (e.dataTransfer.files.length > 0) {
+                    const file = e.dataTransfer.files[0];
+                    if (file.type === 'application/json' || file.name.endsWith('.json')) {
+                        jsonFileInput.files = e.dataTransfer.files;
+                        fileName.textContent = file.name;
+                        uploadBtn.disabled = false;
+                    } else {
+                        fileName.textContent = 'الرجاء اختيار ملف JSON فقط';
+                        uploadBtn.disabled = true;
+                    }
+                }
+            });
+            
+            // عند النقر على زر تحميل البيانات
+            uploadBtn.addEventListener('click', function() {
+                const file = jsonFileInput.files[0];
+                if (!file) return;
+                
+                loadingSpinner.style.display = 'flex';
+                studentsList.style.display = 'none';
+                
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    try {
+                        const data = JSON.parse(e.target.result);
+                        
+                        if (data.students && typeof data.students === 'object') {
+                            studentsData = Object.values(data.students);
+                            
+                            if (studentsData.length > 0) {
+                                renderStudentsList();
+                                studentsList.style.display = 'block';
+                            } else {
+                                showNoStudents();
+                            }
+                        } else {
+                            throw new Error('هيكلة الملف غير صحيحة. يجب أن يحتوي على كائن students');
+                        }
+                    } catch (error) {
+                        console.error('Error parsing JSON:', error);
+                        fileName.textContent = 'خطأ في قراءة الملف: ' + error.message;
+                        showNoStudents();
+                    } finally {
+                        loadingSpinner.style.display = 'none';
+                    }
+                };
+                
+                reader.onerror = function() {
+                    loadingSpinner.style.display = 'none';
+                    fileName.textContent = 'حدث خطأ أثناء قراءة الملف';
+                    showNoStudents();
+                };
+                
+                reader.readAsText(file);
+            });
+            
+            // عرض قائمة الطلاب
+            function renderStudentsList() {
+                studentsList.innerHTML = '';
+                
+                studentsData.forEach((student, index) => {
+                    const studentCard = document.createElement('div');
+                    studentCard.className = 'student-card';
+                    
+                    studentCard.innerHTML = `
+                        <h3 class="student-name">${student.firstName} ${student.lastName}</h3>
+                        <div class="student-info">
+                            <div class="info-item">
+                                <span class="info-label">رقم التسجيل:</span>
+                                <span>${student.registrationNumber || 'غير متوفر'}</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">تاريخ الميلاد:</span>
+                                <span>${formatDate(student.birthDate)}</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">مكان الميلاد:</span>
+                                <span>${student.birthPlace}</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">اسم الأب:</span>
+                                <span>${student.fatherName}</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">رقم الهاتف:</span>
+                                <span>${student.parentPhone}</span>
+                            </div>
+                        </div>
+                        <div class="student-actions">
+                            <button class="action-btn secondary print-btn" data-index="${index}">
+                                <i class="fas fa-print"></i> طباعة الاستمارة
+                            </button>
+                        </div>
+                    `;
+                    
+                    studentsList.appendChild(studentCard);
+                });
+                
+                // إضافة معالجات الأحداث لأزرار الطباعة بعد إنشاء جميع البطاقات
+                document.querySelectorAll('.print-btn').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const studentIndex = this.getAttribute('data-index');
+                        printStudentForm(studentsData[studentIndex]);
+                    });
+                });
+            }
+            
+            // طباعة استمارة الطالب (الوظيفة المعدلة)
+            function printStudentForm(student) {
+                // إنشاء مستند PDF جديد
+                const doc = new jsPDF({
+                    orientation: 'portrait',
+                    unit: 'mm',
+                    format: 'a4'
+                });
+                
+                // إضافة الخط العربي
+                doc.addFont('https://cdn.jsdelivr.net/gh/arabic-fonts/amiri-font@1.0.0/Amiri-Regular.ttf', 'Amiri', 'normal');
+                doc.addFont('https://cdn.jsdelivr.net/gh/arabic-fonts/amiri-font@1.0.0/Amiri-Bold.ttf', 'Amiri', 'bold');
+                doc.setFont('Amiri');
+
+                // رأس الصفحة
+                const logoUrl = 'https://i.ibb.co/jZrxhFsf/1-min.png';
+                doc.addImage(logoUrl, 'PNG', 15, 15, 40, 40);
+                
+                doc.setFontSize(18);
+                doc.setTextColor(26, 77, 46);
+                doc.setFont('Amiri', 'bold');
+                doc.text('المجمع القرآني حمزة بن عبدالمطلب', 105, 25, { align: 'center' });
+                doc.setFontSize(16);
+                doc.text('استمارة التسجيل الأولية', 105, 35, { align: 'center' });
+                
+                doc.setFontSize(10);
+                doc.setTextColor(100);
+                doc.text(`رقم التسجيل: ${student.registrationNumber || 'غير متوفر'}`, 190, 20, { align: 'right' });
+                doc.text(`تاريخ التسجيل: ${formatDate(student.registrationDate)}`, 190, 30, { align: 'right' });
+                
+                doc.setDrawColor(214, 175, 55);
+                doc.setLineWidth(0.5);
+                doc.line(15, 45, 195, 45);
+                
+                // معلومات الطالب
+                doc.setFontSize(12);
+                doc.setTextColor(0);
+                doc.setFont('Amiri', 'bold');
+                doc.text('معلومات المتمدرس:', 15, 55);
+                doc.setFont('Amiri', 'normal');
+                
+                const studentInfo = [
+                    ['الاسم الكامل:', `${student.firstName} ${student.lastName}`],
+                    ['تاريخ الميلاد:', formatDate(student.birthDate)],
+                    ['مكان الميلاد:', student.birthPlace],
+                    ['اسم الأب:', student.fatherName],
+                    ['اسم الأم:', student.motherName],
+                    ['العنوان:', student.address],
+                    ['الحالة الاجتماعية:', student.socialStatus || 'عادية'],
+                    ['رقم هاتف ولي الأمر:', student.parentPhone],
+                    ['الوصي (إن وجد):', student.guardianName || 'لا يوجد']
+                ];
+                
+                doc.autoTable({
+                    startY: 60,
+                    body: studentInfo,
+                    theme: 'grid',
+                    headStyles: { fillColor: [26, 77, 46], textColor: 255, font: 'Amiri', fontStyle: 'bold', halign: 'right' },
+                    columnStyles: { 0: { fontStyle: 'bold', cellWidth: 50, font: 'Amiri' }, 1: { font: 'Amiri' } },
+                    margin: { right: 15 },
+                    styles: { font: 'Amiri', fontStyle: 'normal', halign: 'right', cellPadding: 3 }
+                });
+                
+                // المعلومات الطبية
+                doc.setFont('Amiri', 'bold');
+                doc.text('المعلومات الطبية:', 15, doc.autoTable.previous.finalY + 10);
+                doc.setFont('Amiri', 'normal');
+                
+                const medicalInfo = [
+                    ['الحالة الصحية:', student.isSick === 'نعم' ? `مريض (${student.sicknessType || 'غير محدد'})` : 'سليم'],
+                    ['يتناول أدوية:', student.takesMedicine],
+                    ['الزمرة الدموية:', student.bloodType || 'غير محدد'],
+                    ['ملاحظات إضافية:', student.notes || 'لا يوجد']
+                ];
+                
+                doc.autoTable({
+                    startY: doc.autoTable.previous.finalY + 15,
+                    body: medicalInfo,
+                    theme: 'grid',
+                    columnStyles: { 0: { fontStyle: 'bold', cellWidth: 50, font: 'Amiri' }, 1: { font: 'Amiri' } },
+                    margin: { right: 15 },
+                    styles: { font: 'Amiri', fontStyle: 'normal', halign: 'right', cellPadding: 3 }
+                });
+                
+                // قسم الإدارة
+                const footerY = doc.autoTable.previous.finalY + 20;
+                doc.setDrawColor(214, 175, 55);
+                doc.setLineWidth(0.5);
+                doc.line(15, footerY, 195, footerY);
+                
+                doc.setFont('Amiri', 'bold');
+                doc.text('قسم الإدارة:', 15, footerY + 10);
+                doc.setFont('Amiri', 'normal');
+                
+                const adminInfo = [
+                    ['حقوق اشتراك الولي السنوية:', '________________________'],
+                    ['مصادقة الإدارة:', '________________________'],
+                    ['إمضاء الولي على صحة المعلومات:', '________________________'],
+                    ['تاريخ:', '________________________']
+                ];
+                
+                doc.autoTable({
+                    startY: footerY + 15,
+                    body: adminInfo,
+                    theme: 'grid',
+                    columnStyles: { 0: { fontStyle: 'bold', cellWidth: 70, font: 'Amiri' }, 1: { font: 'Amiri', cellWidth: 70 } },
+                    margin: { right: 15 },
+                    styles: { font: 'Amiri', fontStyle: 'normal', halign: 'right', cellPadding: 5 }
+                });
+                
+                // تذييل الصفحة
+                doc.setFontSize(10);
+                doc.setTextColor(100);
+                doc.text('شكراً لتسجيلكم في المجمع القرآني حمزة بن عبدالمطلب', 105, 285, { align: 'center' });
+                doc.text('سيتم التواصل معكم خلال 3 أيام عمل', 105, 290, { align: 'center' });
+                
+                // حفظ الملف وفتحه في نافذة جديدة
+                const pdfData = doc.output('blob');
+                const pdfUrl = URL.createObjectURL(pdfData);
+                window.open(pdfUrl, '_blank');
+            }
+            
+            // عرض رسالة عدم وجود طلاب
+            function showNoStudents() {
+                studentsList.innerHTML = `
+                    <div class="no-students">
+                        <i class="fas fa-users-slash" style="font-size: 3rem; color: #ccc; margin-bottom: 1rem;"></i>
+                        <p>لا توجد بيانات طلاب لعرضها</p>
+                        <p>الرجاء رفع ملف JSON يحتوي على بيانات الطلاب</p>
+                    </div>
+                `;
+                studentsList.style.display = 'block';
+            }
+            
+            // تنسيق التاريخ
+            function formatDate(dateString) {
+                if (!dateString) return 'غير محدد';
+                const date = new Date(dateString);
+                return date.toLocaleDateString('ar-EG');
+            }
+        });
+    </script>
+</body>
+</html>
