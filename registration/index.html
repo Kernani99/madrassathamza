@@ -10,7 +10,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
     <style>
-        /* أنماط CSS السابقة تبقى كما هي */
         :root {
             --primary-color: #1a4d2e;
             --primary-dark: #0e3a23;
@@ -224,6 +223,27 @@
 
         .download-btn:hover {
             background: #c9a227;
+            transform: translateY(-2px);
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        }
+
+        .print-btn {
+            background: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: inline-block;
+            margin: 1rem 0.5rem 0;
+            text-decoration: none;
+        }
+
+        .print-btn:hover {
+            background: #3a6a4a;
             transform: translateY(-2px);
             box-shadow: 0 3px 10px rgba(0,0,0,0.1);
         }
@@ -556,6 +576,9 @@
             <a href="#" class="download-btn" id="downloadBtn" style="display: none;">
                 <i class="fas fa-download"></i> تحميل استمارة التسجيل
             </a>
+            <button class="print-btn" id="printBtn" style="display: none;">
+                <i class="fas fa-print"></i> طباعة الاستمارة
+            </button>
         </div>
     </div>
 
@@ -607,6 +630,7 @@
             const successMessage = document.getElementById('successMessage');
             const errorMessage = document.getElementById('errorMessage');
             const downloadBtn = document.getElementById('downloadBtn');
+            const printBtn = document.getElementById('printBtn');
             const recoverySection = document.getElementById('recoverySection');
             const recoveryBtn = document.getElementById('recoveryBtn');
             const recoveryNumber = document.getElementById('recoveryNumber');
@@ -719,116 +743,118 @@
 
             // إنشاء ملف PDF
             function generateRegistrationPDF(data = studentData, regNumber = registrationNumber) {
-                const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
-                
-                // إضافة الخط العربي
-                doc.addFont('https://cdn.jsdelivr.net/gh/arabic-fonts/amiri-font@1.0.0/Amiri-Regular.ttf', 'Amiri', 'normal');
-                doc.addFont('https://cdn.jsdelivr.net/gh/arabic-fonts/amiri-font@1.0.0/Amiri-Bold.ttf', 'Amiri', 'bold');
-                doc.setFont('Amiri');
+                return new Promise((resolve) => {
+                    const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
+                    
+                    // إضافة الخط العربي
+                    doc.addFont('https://cdn.jsdelivr.net/gh/arabic-fonts/amiri-font@1.0.0/Amiri-Regular.ttf', 'Amiri', 'normal');
+                    doc.addFont('https://cdn.jsdelivr.net/gh/arabic-fonts/amiri-font@1.0.0/Amiri-Bold.ttf', 'Amiri', 'bold');
+                    doc.setFont('Amiri');
 
-                // رأس الصفحة
-                const logoUrl = 'https://i.ibb.co/jZrxhFsf/1-min.png';
-                doc.addImage(logoUrl, 'PNG', 15, 15, 40, 40);
-                
-                doc.setFontSize(18);
-                doc.setTextColor(26, 77, 46);
-                doc.setFont('Amiri', 'bold');
-                doc.text('المجمع القرآني حمزة بن عبدالمطلب', 105, 25, { align: 'center' });
-                doc.setFontSize(16);
-                doc.text('استمارة التسجيل الأولية', 105, 35, { align: 'center' });
-                
-                doc.setFontSize(10);
-                doc.setTextColor(100);
-                doc.text(`رقم التسجيل: ${regNumber}`, 190, 20, { align: 'right' });
-                doc.text(`تاريخ التسجيل: ${new Date(data.registrationDate).toLocaleDateString('ar-EG')}`, 190, 30, { align: 'right' });
-                
-                doc.setDrawColor(214, 175, 55);
-                doc.setLineWidth(0.5);
-                doc.line(15, 45, 195, 45);
-                
-                // معلومات الطالب
-                doc.setFontSize(12);
-                doc.setTextColor(0);
-                doc.setFont('Amiri', 'bold');
-                doc.text('معلومات المتمدرس:', 15, 55);
-                doc.setFont('Amiri', 'normal');
-                
-                const studentInfo = [
-                    ['الاسم الكامل:', `${data.firstName} ${data.lastName}`],
-                    ['تاريخ الميلاد:', formatArabicDate(data.birthDate)],
-                    ['مكان الميلاد:', data.birthPlace],
-                    ['اسم الأب:', data.fatherName],
-                    ['اسم الأم:', data.motherName],
-                    ['العنوان:', data.address],
-                    ['الحالة الاجتماعية:', data.socialStatus],
-                    ['رقم هاتف ولي الأمر:', data.parentPhone],
-                    ['الوصي (إن وجد):', data.guardianName || 'لا يوجد']
-                ];
-                
-                doc.autoTable({
-                    startY: 60,
-                    body: studentInfo,
-                    theme: 'grid',
-                    headStyles: { fillColor: [26, 77, 46], textColor: 255, font: 'Amiri', fontStyle: 'bold', halign: 'right' },
-                    columnStyles: { 0: { fontStyle: 'bold', cellWidth: 50, font: 'Amiri' }, 1: { font: 'Amiri' } },
-                    margin: { right: 15 },
-                    styles: { font: 'Amiri', fontStyle: 'normal', halign: 'right', cellPadding: 3 }
+                    // رأس الصفحة
+                    const logoUrl = 'https://i.ibb.co/jZrxhFsf/1-min.png';
+                    doc.addImage(logoUrl, 'PNG', 15, 15, 40, 40);
+                    
+                    doc.setFontSize(18);
+                    doc.setTextColor(26, 77, 46);
+                    doc.setFont('Amiri', 'bold');
+                    doc.text('المجمع القرآني حمزة بن عبدالمطلب', 105, 25, { align: 'center' });
+                    doc.setFontSize(16);
+                    doc.text('استمارة التسجيل الأولية', 105, 35, { align: 'center' });
+                    
+                    doc.setFontSize(10);
+                    doc.setTextColor(100);
+                    doc.text(`رقم التسجيل: ${regNumber}`, 190, 20, { align: 'right' });
+                    doc.text(`تاريخ التسجيل: ${new Date(data.registrationDate).toLocaleDateString('ar-EG')}`, 190, 30, { align: 'right' });
+                    
+                    doc.setDrawColor(214, 175, 55);
+                    doc.setLineWidth(0.5);
+                    doc.line(15, 45, 195, 45);
+                    
+                    // معلومات الطالب
+                    doc.setFontSize(12);
+                    doc.setTextColor(0);
+                    doc.setFont('Amiri', 'bold');
+                    doc.text('معلومات المتمدرس:', 15, 55);
+                    doc.setFont('Amiri', 'normal');
+                    
+                    const studentInfo = [
+                        ['الاسم الكامل:', `${data.firstName} ${data.lastName}`],
+                        ['تاريخ الميلاد:', formatArabicDate(data.birthDate)],
+                        ['مكان الميلاد:', data.birthPlace],
+                        ['اسم الأب:', data.fatherName],
+                        ['اسم الأم:', data.motherName],
+                        ['العنوان:', data.address],
+                        ['الحالة الاجتماعية:', data.socialStatus],
+                        ['رقم هاتف ولي الأمر:', data.parentPhone],
+                        ['الوصي (إن وجد):', data.gardianName || 'لا يوجد']
+                    ];
+                    
+                    doc.autoTable({
+                        startY: 60,
+                        body: studentInfo,
+                        theme: 'grid',
+                        headStyles: { fillColor: [26, 77, 46], textColor: 255, font: 'Amiri', fontStyle: 'bold', halign: 'right' },
+                        columnStyles: { 0: { fontStyle: 'bold', cellWidth: 50, font: 'Amiri' }, 1: { font: 'Amiri' } },
+                        margin: { right: 15 },
+                        styles: { font: 'Amiri', fontStyle: 'normal', halign: 'right', cellPadding: 3 }
+                    });
+                    
+                    // المعلومات الطبية
+                    doc.setFont('Amiri', 'bold');
+                    doc.text('المعلومات الطبية:', 15, doc.autoTable.previous.finalY + 10);
+                    doc.setFont('Amiri', 'normal');
+                    
+                    const medicalInfo = [
+                        ['الحالة الصحية:', data.isSick === 'نعم' ? `مريض (${data.sicknessType || 'غير محدد'})` : 'سليم'],
+                        ['يتناول أدوية:', data.takesMedicine],
+                        ['الزمرة الدموية:', data.bloodType || 'غير محدد'],
+                        ['ملاحظات إضافية:', data.notes || 'لا يوجد']
+                    ];
+                    
+                    doc.autoTable({
+                        startY: doc.autoTable.previous.finalY + 15,
+                        body: medicalInfo,
+                        theme: 'grid',
+                        columnStyles: { 0: { fontStyle: 'bold', cellWidth: 50, font: 'Amiri' }, 1: { font: 'Amiri' } },
+                        margin: { right: 15 },
+                        styles: { font: 'Amiri', fontStyle: 'normal', halign: 'right', cellPadding: 3 }
+                    });
+                    
+                    // قسم الإدارة
+                    const footerY = doc.autoTable.previous.finalY + 20;
+                    doc.setDrawColor(214, 175, 55);
+                    doc.setLineWidth(0.5);
+                    doc.line(15, footerY, 195, footerY);
+                    
+                    doc.setFont('Amiri', 'bold');
+                    doc.text('قسم الإدارة:', 15, footerY + 10);
+                    doc.setFont('Amiri', 'normal');
+                    
+                    const adminInfo = [
+                        ['حقوق اشتراك الولي السنوية:', '________________________'],
+                        ['مصادقة الإدارة:', '________________________'],
+                        ['إمضاء الولي على صحة المعلومات:', '________________________'],
+                        ['تاريخ:', '________________________']
+                    ];
+                    
+                    doc.autoTable({
+                        startY: footerY + 15,
+                        body: adminInfo,
+                        theme: 'grid',
+                        columnStyles: { 0: { fontStyle: 'bold', cellWidth: 70, font: 'Amiri' }, 1: { font: 'Amiri', cellWidth: 70 } },
+                        margin: { right: 15 },
+                        styles: { font: 'Amiri', fontStyle: 'normal', halign: 'right', cellPadding: 5 }
+                    });
+                    
+                    // تذييل الصفحة
+                    doc.setFontSize(10);
+                    doc.setTextColor(100);
+                    doc.text('شكراً لتسجيلكم في المجمع القرآني حمزة بن عبدالمطلب', 105, 285, { align: 'center' });
+                    doc.text('سيتم التواصل معكم خلال 3 أيام عمل', 105, 290, { align: 'center' });
+                    
+                    resolve(doc);
                 });
-                
-                // المعلومات الطبية
-                doc.setFont('Amiri', 'bold');
-                doc.text('المعلومات الطبية:', 15, doc.autoTable.previous.finalY + 10);
-                doc.setFont('Amiri', 'normal');
-                
-                const medicalInfo = [
-                    ['الحالة الصحية:', data.isSick === 'نعم' ? `مريض (${data.sicknessType || 'غير محدد'})` : 'سليم'],
-                    ['يتناول أدوية:', data.takesMedicine],
-                    ['الزمرة الدموية:', data.bloodType || 'غير محدد'],
-                    ['ملاحظات إضافية:', data.notes || 'لا يوجد']
-                ];
-                
-                doc.autoTable({
-                    startY: doc.autoTable.previous.finalY + 15,
-                    body: medicalInfo,
-                    theme: 'grid',
-                    columnStyles: { 0: { fontStyle: 'bold', cellWidth: 50, font: 'Amiri' }, 1: { font: 'Amiri' } },
-                    margin: { right: 15 },
-                    styles: { font: 'Amiri', fontStyle: 'normal', halign: 'right', cellPadding: 3 }
-                });
-                
-                // قسم الإدارة
-                const footerY = doc.autoTable.previous.finalY + 20;
-                doc.setDrawColor(214, 175, 55);
-                doc.setLineWidth(0.5);
-                doc.line(15, footerY, 195, footerY);
-                
-                doc.setFont('Amiri', 'bold');
-                doc.text('قسم الإدارة:', 15, footerY + 10);
-                doc.setFont('Amiri', 'normal');
-                
-                const adminInfo = [
-                    ['حقوق اشتراك الولي السنوية:', '________________________'],
-                    ['مصادقة الإدارة:', '________________________'],
-                    ['إمضاء الولي على صحة المعلومات:', '________________________'],
-                    ['تاريخ:', '________________________']
-                ];
-                
-                doc.autoTable({
-                    startY: footerY + 15,
-                    body: adminInfo,
-                    theme: 'grid',
-                    columnStyles: { 0: { fontStyle: 'bold', cellWidth: 70, font: 'Amiri' }, 1: { font: 'Amiri', cellWidth: 70 } },
-                    margin: { right: 15 },
-                    styles: { font: 'Amiri', fontStyle: 'normal', halign: 'right', cellPadding: 5 }
-                });
-                
-                // تذييل الصفحة
-                doc.setFontSize(10);
-                doc.setTextColor(100);
-                doc.text('شكراً لتسجيلكم في المجمع القرآني حمزة بن عبدالمطلب', 105, 285, { align: 'center' });
-                doc.text('سيتم التواصل معكم خلال 3 أيام عمل', 105, 290, { align: 'center' });
-                
-                doc.save(`استمارة_تسجيل_${data.firstName}_${data.lastName}.pdf`);
             }
 
             function formatArabicDate(dateString) {
@@ -866,20 +892,22 @@
                         guardianName: document.getElementById('guardianName').value.trim(),
                         notes: document.getElementById('notes').value.trim(),
                         registrationDate: new Date().toISOString(),
-                        status: 'pending'
+                        status: 'pending',
+                        registrationNumber: `${new Date().getFullYear()}${(new Date().getMonth() + 1).toString().padStart(2, '0')}${new Date().getDate().toString().padStart(2, '0')}-${Math.floor(1000 + Math.random() * 9000)}`
                     };
                     
-                    const now = new Date();
-                    const datePart = now.getFullYear().toString() + 
-                                    (now.getMonth() + 1).toString().padStart(2, '0') + 
-                                    now.getDate().toString().padStart(2, '0');
-                    const randomPart = Math.floor(1000 + Math.random() * 9000);
-                    registrationNumber = `${datePart}-${randomPart}`;
+                    registrationNumber = studentData.registrationNumber;
                     
                     const studentId = studentData.firstName + '_' + studentData.lastName + '_' + new Date().getTime();
                     
                     // حفظ بيانات التسجيل محلياً للاسترجاع
                     registrationData[registrationNumber] = studentData;
+                    
+                    // حفظ في localStorage للاسترجاع
+                    localStorage.setItem('lastRegistration', JSON.stringify({
+                        number: registrationNumber,
+                        data: studentData
+                    }));
                     
                     database.ref('students/' + studentId).set(studentData)
                         .then(() => {
@@ -891,11 +919,34 @@
                                 <br><small>الرجاء الاحتفاظ برقم التسجيل لاستعادة الاستمارة لاحقاً</small>
                             `;
                             
-                            // تفعيل زر التحميل
+                            // تفعيل أزرار التحميل والطباعة
                             downloadBtn.style.display = 'inline-block';
+                            printBtn.style.display = 'inline-block';
+                            
                             downloadBtn.onclick = function(e) {
                                 e.preventDefault();
-                                generateRegistrationPDF();
+                                generateRegistrationPDF(studentData, registrationNumber)
+                                    .then(doc => {
+                                        doc.save(`استمارة_تسجيل_${studentData.firstName}_${studentData.lastName}.pdf`);
+                                    });
+                            };
+                            
+                            printBtn.onclick = function(e) {
+                                e.preventDefault();
+                                generateRegistrationPDF(studentData, registrationNumber)
+                                    .then(doc => {
+                                        doc.autoPrint();
+                                        // For mobile and desktop compatibility
+                                        const blob = doc.output('blob');
+                                        const url = URL.createObjectURL(blob);
+                                        const iframe = document.createElement('iframe');
+                                        iframe.style.display = 'none';
+                                        iframe.src = url;
+                                        document.body.appendChild(iframe);
+                                        iframe.onload = () => {
+                                            iframe.contentWindow.print();
+                                        };
+                                    });
                             };
                             
                             showSuccessModal();
@@ -931,41 +982,56 @@
                     return;
                 }
                 
-                // البحث في البيانات المحفوظة
+                // البحث في البيانات المحفوظة محلياً
                 if (registrationData[regNumber]) {
-                    generateRegistrationPDF(registrationData[regNumber], regNumber);
-                    recoveryMessage.textContent = 'تم تحميل الاستمارة بنجاح';
-                    recoveryMessage.style.display = 'block';
-                    recoveryMessage.style.color = 'var(--success-color)';
-                } else {
-                    // البحث في قاعدة البيانات إذا لم تكن محفوظة محلياً
-                    database.ref('students').orderByChild('parentPhone').once('value')
-                        .then(snapshot => {
-                            let found = false;
+                    generateRegistrationPDF(registrationData[regNumber], regNumber)
+                        .then(doc => {
+                            doc.save(`استمارة_تسجيل_${registrationData[regNumber].firstName}_${registrationData[regNumber].lastName}.pdf`);
+                            recoveryMessage.textContent = 'تم تحميل الاستمارة بنجاح';
+                            recoveryMessage.style.display = 'block';
+                            recoveryMessage.style.color = 'var(--success-color)';
+                        });
+                    return;
+                }
+                
+                // البحث في localStorage
+                const lastRegistration = JSON.parse(localStorage.getItem('lastRegistration'));
+                if (lastRegistration && lastRegistration.number === regNumber) {
+                    generateRegistrationPDF(lastRegistration.data, regNumber)
+                        .then(doc => {
+                            doc.save(`استمارة_تسجيل_${lastRegistration.data.firstName}_${lastRegistration.data.lastName}.pdf`);
+                            recoveryMessage.textContent = 'تم تحميل الاستمارة بنجاح';
+                            recoveryMessage.style.display = 'block';
+                            recoveryMessage.style.color = 'var(--success-color)';
+                        });
+                    return;
+                }
+                
+                // البحث في قاعدة البيانات إذا لم تكن محفوظة محلياً
+                database.ref('students').orderByChild('registrationNumber').equalTo(regNumber).once('value')
+                    .then(snapshot => {
+                        if (snapshot.exists()) {
                             snapshot.forEach(childSnapshot => {
                                 const data = childSnapshot.val();
-                                if (data.registrationNumber === regNumber) {
-                                    generateRegistrationPDF(data, regNumber);
-                                    recoveryMessage.textContent = 'تم تحميل الاستمارة بنجاح';
-                                    recoveryMessage.style.display = 'block';
-                                    recoveryMessage.style.color = 'var(--success-color)';
-                                    found = true;
-                                    return true; // يوقف التكرار
-                                }
+                                generateRegistrationPDF(data, regNumber)
+                                    .then(doc => {
+                                        doc.save(`استمارة_تسجيل_${data.firstName}_${data.lastName}.pdf`);
+                                        recoveryMessage.textContent = 'تم تحميل الاستمارة بنجاح';
+                                        recoveryMessage.style.display = 'block';
+                                        recoveryMessage.style.color = 'var(--success-color)';
+                                    });
                             });
-                            
-                            if (!found) {
-                                recoveryMessage.textContent = 'لم يتم العثور على رقم التسجيل';
-                                recoveryMessage.style.display = 'block';
-                                recoveryMessage.style.color = 'var(--error-color)';
-                            }
-                        })
-                        .catch(error => {
-                            recoveryMessage.textContent = 'حدث خطأ أثناء البحث عن الاستمارة';
+                        } else {
+                            recoveryMessage.textContent = 'لم يتم العثور على رقم التسجيل';
                             recoveryMessage.style.display = 'block';
                             recoveryMessage.style.color = 'var(--error-color)';
-                        });
-                }
+                        }
+                    })
+                    .catch(error => {
+                        recoveryMessage.textContent = 'حدث خطأ أثناء البحث عن الاستمارة';
+                        recoveryMessage.style.display = 'block';
+                        recoveryMessage.style.color = 'var(--error-color)';
+                    });
             });
 
             // تحديد نطاق تاريخ الميلاد
