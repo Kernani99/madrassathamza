@@ -7,7 +7,10 @@
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="icon" href="https://i.ibb.co/jZrxhFsf/1-min.png" type="image/png">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
     <style>
+        /* أنماط CSS السابقة تبقى كما هي */
         :root {
             --primary-color: #1a4d2e;
             --primary-dark: #0e3a23;
@@ -148,6 +151,20 @@
             margin-left: 0.5rem;
         }
 
+        .select-group {
+            position: relative;
+        }
+
+        .select-group select {
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 1rem center;
+            background-size: 1em;
+        }
+
         .error-message {
             color: var(--error-color);
             font-size: 0.9rem;
@@ -190,6 +207,54 @@
             font-size: 0.9rem;
         }
 
+        .download-btn {
+            background: var(--gold-color);
+            color: var(--primary-dark);
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: inline-block;
+            margin-top: 1rem;
+            text-decoration: none;
+        }
+
+        .download-btn:hover {
+            background: #c9a227;
+            transform: translateY(-2px);
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        }
+
+        .recovery-section {
+            text-align: center;
+            margin-top: 2rem;
+            padding: 1rem;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            display: none;
+        }
+
+        .recovery-btn {
+            background: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 0.6rem 1.2rem;
+            border-radius: 50px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: inline-block;
+            margin-top: 0.5rem;
+        }
+
+        .recovery-btn:hover {
+            background: #3a6a4a;
+        }
+
         footer {
             background-color: var(--primary-dark);
             color: white;
@@ -203,7 +268,6 @@
             color: #ccc;
         }
 
-        /* Modal styles */
         .modal {
             display: none;
             position: fixed;
@@ -273,7 +337,6 @@
             background: var(--primary-dark);
         }
 
-        /* Loading spinner */
         .spinner {
             display: none;
             position: absolute;
@@ -302,7 +365,6 @@
             100% { transform: rotate(360deg); }
         }
 
-        /* Responsive styles */
         @media (max-width: 768px) {
             .container {
                 margin: 2rem auto;
@@ -450,6 +512,21 @@
                 <div class="error-message" id="takesMedicineError">يجب اختيار الإجابة</div>
             </div>
             
+            <div class="form-group select-group">
+                <label for="bloodType">نوع الزمرة الدموية</label>
+                <select id="bloodType" class="form-control">
+                    <option value="">-- اختر الزمرة الدموية --</option>
+                    <option value="A+">A+</option>
+                    <option value="A-">A-</option>
+                    <option value="B+">B+</option>
+                    <option value="B-">B-</option>
+                    <option value="AB+">AB+</option>
+                    <option value="AB-">AB-</option>
+                    <option value="O+">O+</option>
+                    <option value="O-">O-</option>
+                </select>
+            </div>
+            
             <div class="form-group">
                 <label for="notes">ملاحظات إضافية (اختياري)</label>
                 <textarea id="notes" class="form-control" rows="2"></textarea>
@@ -458,6 +535,14 @@
             <button type="submit" class="submit-btn" id="submitBtn">تسجيل المتمدرس</button>
             
             <p class="form-note">سيتم مراجعة طلب التسجيل وإعلامكم بالنتيجة خلال 3 أيام عمل</p>
+            
+            <!-- قسم استعادة الاستمارة -->
+            <div class="recovery-section" id="recoverySection">
+                <p>إذا نسيت تحميل الاستمارة، يمكنك استعادتها بإدخال رقم التسجيل:</p>
+                <input type="text" id="recoveryNumber" class="form-control" placeholder="أدخل رقم التسجيل">
+                <button class="recovery-btn" id="recoveryBtn">استعادة الاستمارة</button>
+                <p id="recoveryMessage" style="display:none; color:var(--primary-color); margin-top:10px;"></p>
+            </div>
         </form>
     </main>
 
@@ -466,8 +551,11 @@
         <div class="modal-content">
             <i class="fas fa-check-circle modal-icon success-icon"></i>
             <h3 class="modal-title">تم التسجيل بنجاح</h3>
-            <p class="modal-message" id="successMessage">تم تسجيل الطالب بنجاح وسيتم التواصل معكم قريباً</p>
+            <p class="modal-message" id="successMessage"></p>
             <button class="modal-btn" id="successBtn">حسناً</button>
+            <a href="#" class="download-btn" id="downloadBtn" style="display: none;">
+                <i class="fas fa-download"></i> تحميل استمارة التسجيل
+            </a>
         </div>
     </div>
 
@@ -476,7 +564,7 @@
         <div class="modal-content">
             <i class="fas fa-times-circle modal-icon error-icon"></i>
             <h3 class="modal-title">حدث خطأ</h3>
-            <p class="modal-message" id="errorMessage">حدث خطأ أثناء محاولة التسجيل، يرجى المحاولة مرة أخرى</p>
+            <p class="modal-message" id="errorMessage"></p>
             <button class="modal-btn" id="errorBtn">حسناً</button>
         </div>
     </div>
@@ -487,12 +575,10 @@
         </div>
     </footer>
 
-    <!-- Firebase Libraries -->
     <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-database-compat.js"></script>
 
     <script>
-        // Firebase configuration
         const firebaseConfig = {
             apiKey: "AIzaSyAzx-JlJBJxtVZT2cXDtJiHbs6s9K-3hEY",
             authDomain: "tahdiri-dc608.firebaseapp.com",
@@ -504,138 +590,84 @@
             measurementId: "G-H57ECZPTT7"
         };
 
-        // Initialize Firebase
         const app = firebase.initializeApp(firebaseConfig);
         const database = firebase.database();
+        const { jsPDF } = window.jspdf;
 
         document.addEventListener('DOMContentLoaded', function() {
-            // Set current year in footer
             document.getElementById('year').textContent = new Date().getFullYear();
             
-            // Form elements
             const form = document.getElementById('studentRegistration');
             const submitBtn = document.getElementById('submitBtn');
             const formSpinner = document.getElementById('formSpinner');
-            
-            // Modal elements
             const successModal = document.getElementById('successModal');
             const errorModal = document.getElementById('errorModal');
             const successBtn = document.getElementById('successBtn');
             const errorBtn = document.getElementById('errorBtn');
             const successMessage = document.getElementById('successMessage');
             const errorMessage = document.getElementById('errorMessage');
+            const downloadBtn = document.getElementById('downloadBtn');
+            const recoverySection = document.getElementById('recoverySection');
+            const recoveryBtn = document.getElementById('recoveryBtn');
+            const recoveryNumber = document.getElementById('recoveryNumber');
+            const recoveryMessage = document.getElementById('recoveryMessage');
             
-            // Conditional fields
-            const socialStatusRadios = document.querySelectorAll('input[name="socialStatus"]');
-            const guardianGroup = document.getElementById('guardianGroup');
-            
-            const isSickRadios = document.querySelectorAll('input[name="isSick"]');
-            const sicknessTypeGroup = document.getElementById('sicknessTypeGroup');
-            
-            // Show/hide guardian field based on social status
-            socialStatusRadios.forEach(radio => {
+            let studentData = null;
+            let registrationNumber = null;
+            let registrationData = {};
+
+            // إظهار/إخفاء الحقول الشرطية
+            document.querySelectorAll('input[name="socialStatus"]').forEach(radio => {
                 radio.addEventListener('change', function() {
-                    if (this.value === 'يتيم' || this.value === 'مطلق') {
-                        guardianGroup.style.display = 'block';
-                    } else {
-                        guardianGroup.style.display = 'none';
-                        document.getElementById('guardianName').value = '';
-                    }
+                    document.getElementById('guardianGroup').style.display = 
+                        (this.value === 'يتيم' || this.value === 'مطلق') ? 'block' : 'none';
                 });
             });
-            
-            // Show/hide sickness type based on isSick
-            isSickRadios.forEach(radio => {
+
+            document.querySelectorAll('input[name="isSick"]').forEach(radio => {
                 radio.addEventListener('change', function() {
-                    if (this.value === 'نعم') {
-                        sicknessTypeGroup.style.display = 'block';
-                    } else {
-                        sicknessTypeGroup.style.display = 'none';
-                        document.getElementById('sicknessType').value = '';
-                    }
+                    document.getElementById('sicknessTypeGroup').style.display = 
+                        this.value === 'نعم' ? 'block' : 'none';
                 });
             });
-            
-            // Validate birth date (must be 2020)
-            const birthDateInput = document.getElementById('birthDate');
-            birthDateInput.addEventListener('change', function() {
-                validateBirthDate();
-            });
-            
-            // Validate phone number
-            const parentPhoneInput = document.getElementById('parentPhone');
-            parentPhoneInput.addEventListener('input', function() {
-                validatePhone();
-            });
-            
-            // Show modal functions
-            function showSuccessModal(message) {
-                if (message) successMessage.textContent = message;
-                successModal.style.display = 'flex';
-            }
-            
-            function showErrorModal(message) {
-                if (message) errorMessage.textContent = message;
-                errorModal.style.display = 'flex';
-            }
-            
-            // Close modal buttons
-            successBtn.addEventListener('click', function() {
-                successModal.style.display = 'none';
-            });
-            
-            errorBtn.addEventListener('click', function() {
-                errorModal.style.display = 'none';
-            });
-            
-            // Click outside modal to close
-            window.addEventListener('click', function(event) {
-                if (event.target === successModal) {
-                    successModal.style.display = 'none';
-                }
-                if (event.target === errorModal) {
-                    errorModal.style.display = 'none';
-                }
-            });
-            
-            // Validation functions
+
+            // التحقق من صحة البيانات
+            document.getElementById('birthDate').addEventListener('change', validateBirthDate);
+            document.getElementById('parentPhone').addEventListener('input', validatePhone);
+
             function validateBirthDate() {
-                const selectedDate = new Date(birthDateInput.value);
+                const input = document.getElementById('birthDate');
+                const error = document.getElementById('birthDateError');
+                const selectedDate = new Date(input.value);
                 const selectedYear = selectedDate.getFullYear();
-                const errorElement = document.getElementById('birthDateError');
                 
                 if (selectedYear !== 2020 || isNaN(selectedYear)) {
-                    errorElement.style.display = 'block';
-                    birthDateInput.setCustomValidity('يجب أن يكون تاريخ الميلاد في سنة 2020');
+                    error.style.display = 'block';
+                    input.setCustomValidity('يجب أن يكون تاريخ الميلاد في سنة 2020');
                     return false;
                 } else {
-                    errorElement.style.display = 'none';
-                    birthDateInput.setCustomValidity('');
+                    error.style.display = 'none';
+                    input.setCustomValidity('');
                     return true;
                 }
             }
-            
+
             function validatePhone() {
-                const errorElement = document.getElementById('parentPhoneError');
+                const input = document.getElementById('parentPhone');
+                const error = document.getElementById('parentPhoneError');
+                const isValid = input.checkValidity();
                 
-                if (!parentPhoneInput.checkValidity()) {
-                    errorElement.style.display = 'block';
-                    return false;
-                } else {
-                    errorElement.style.display = 'none';
-                    return true;
-                }
+                error.style.display = isValid ? 'none' : 'block';
+                return isValid;
             }
-            
+
             function validateRequiredFields() {
                 let isValid = true;
-                
-                // Validate text fields
                 const requiredFields = ['firstName', 'lastName', 'birthPlace', 'fatherName', 'motherName', 'address'];
+                
                 requiredFields.forEach(field => {
                     const input = document.getElementById(field);
                     const error = document.getElementById(field + 'Error');
-                    
                     if (!input.value.trim()) {
                         error.style.display = 'block';
                         isValid = false;
@@ -643,8 +675,7 @@
                         error.style.display = 'none';
                     }
                 });
-                
-                // Validate radio groups
+
                 const requiredRadios = [
                     {name: 'socialStatus', errorId: 'socialStatusError'},
                     {name: 'isSick', errorId: 'isSickError'},
@@ -654,7 +685,6 @@
                 requiredRadios.forEach(radio => {
                     const checked = document.querySelector(`input[name="${radio.name}"]:checked`);
                     const error = document.getElementById(radio.errorId);
-                    
                     if (!checked) {
                         error.style.display = 'block';
                         isValid = false;
@@ -662,42 +692,164 @@
                         error.style.display = 'none';
                     }
                 });
-                
+
                 return isValid;
             }
-            
-            // Show error messages when leaving required fields empty
-            const inputs = form.querySelectorAll('input[required], textarea[required]');
-            inputs.forEach(input => {
-                input.addEventListener('blur', function() {
-                    const errorId = this.id + 'Error';
-                    const errorElement = document.getElementById(errorId);
-                    
-                    if (this.required && !this.value.trim()) {
-                        errorElement.style.display = 'block';
-                    }
-                });
+
+            // إظهار/إخفاء النوافذ المنبثقة
+            function showSuccessModal() {
+                successModal.style.display = 'flex';
+            }
+
+            function showErrorModal() {
+                errorModal.style.display = 'flex';
+            }
+
+            successBtn.addEventListener('click', () => {
+                successModal.style.display = 'none';
+                recoverySection.style.display = 'block';
             });
-            
-            // Form submission
+
+            errorBtn.addEventListener('click', () => errorModal.style.display = 'none');
+
+            window.addEventListener('click', function(event) {
+                if (event.target === successModal) successModal.style.display = 'none';
+                if (event.target === errorModal) errorModal.style.display = 'none';
+            });
+
+            // إنشاء ملف PDF
+            function generateRegistrationPDF(data = studentData, regNumber = registrationNumber) {
+                const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
+                
+                // إضافة الخط العربي
+                doc.addFont('https://cdn.jsdelivr.net/gh/arabic-fonts/amiri-font@1.0.0/Amiri-Regular.ttf', 'Amiri', 'normal');
+                doc.addFont('https://cdn.jsdelivr.net/gh/arabic-fonts/amiri-font@1.0.0/Amiri-Bold.ttf', 'Amiri', 'bold');
+                doc.setFont('Amiri');
+
+                // رأس الصفحة
+                const logoUrl = 'https://i.ibb.co/jZrxhFsf/1-min.png';
+                doc.addImage(logoUrl, 'PNG', 15, 15, 40, 40);
+                
+                doc.setFontSize(18);
+                doc.setTextColor(26, 77, 46);
+                doc.setFont('Amiri', 'bold');
+                doc.text('المجمع القرآني حمزة بن عبدالمطلب', 105, 25, { align: 'center' });
+                doc.setFontSize(16);
+                doc.text('استمارة التسجيل الأولية', 105, 35, { align: 'center' });
+                
+                doc.setFontSize(10);
+                doc.setTextColor(100);
+                doc.text(`رقم التسجيل: ${regNumber}`, 190, 20, { align: 'right' });
+                doc.text(`تاريخ التسجيل: ${new Date(data.registrationDate).toLocaleDateString('ar-EG')}`, 190, 30, { align: 'right' });
+                
+                doc.setDrawColor(214, 175, 55);
+                doc.setLineWidth(0.5);
+                doc.line(15, 45, 195, 45);
+                
+                // معلومات الطالب
+                doc.setFontSize(12);
+                doc.setTextColor(0);
+                doc.setFont('Amiri', 'bold');
+                doc.text('معلومات المتمدرس:', 15, 55);
+                doc.setFont('Amiri', 'normal');
+                
+                const studentInfo = [
+                    ['الاسم الكامل:', `${data.firstName} ${data.lastName}`],
+                    ['تاريخ الميلاد:', formatArabicDate(data.birthDate)],
+                    ['مكان الميلاد:', data.birthPlace],
+                    ['اسم الأب:', data.fatherName],
+                    ['اسم الأم:', data.motherName],
+                    ['العنوان:', data.address],
+                    ['الحالة الاجتماعية:', data.socialStatus],
+                    ['رقم هاتف ولي الأمر:', data.parentPhone],
+                    ['الوصي (إن وجد):', data.guardianName || 'لا يوجد']
+                ];
+                
+                doc.autoTable({
+                    startY: 60,
+                    body: studentInfo,
+                    theme: 'grid',
+                    headStyles: { fillColor: [26, 77, 46], textColor: 255, font: 'Amiri', fontStyle: 'bold', halign: 'right' },
+                    columnStyles: { 0: { fontStyle: 'bold', cellWidth: 50, font: 'Amiri' }, 1: { font: 'Amiri' } },
+                    margin: { right: 15 },
+                    styles: { font: 'Amiri', fontStyle: 'normal', halign: 'right', cellPadding: 3 }
+                });
+                
+                // المعلومات الطبية
+                doc.setFont('Amiri', 'bold');
+                doc.text('المعلومات الطبية:', 15, doc.autoTable.previous.finalY + 10);
+                doc.setFont('Amiri', 'normal');
+                
+                const medicalInfo = [
+                    ['الحالة الصحية:', data.isSick === 'نعم' ? `مريض (${data.sicknessType || 'غير محدد'})` : 'سليم'],
+                    ['يتناول أدوية:', data.takesMedicine],
+                    ['الزمرة الدموية:', data.bloodType || 'غير محدد'],
+                    ['ملاحظات إضافية:', data.notes || 'لا يوجد']
+                ];
+                
+                doc.autoTable({
+                    startY: doc.autoTable.previous.finalY + 15,
+                    body: medicalInfo,
+                    theme: 'grid',
+                    columnStyles: { 0: { fontStyle: 'bold', cellWidth: 50, font: 'Amiri' }, 1: { font: 'Amiri' } },
+                    margin: { right: 15 },
+                    styles: { font: 'Amiri', fontStyle: 'normal', halign: 'right', cellPadding: 3 }
+                });
+                
+                // قسم الإدارة
+                const footerY = doc.autoTable.previous.finalY + 20;
+                doc.setDrawColor(214, 175, 55);
+                doc.setLineWidth(0.5);
+                doc.line(15, footerY, 195, footerY);
+                
+                doc.setFont('Amiri', 'bold');
+                doc.text('قسم الإدارة:', 15, footerY + 10);
+                doc.setFont('Amiri', 'normal');
+                
+                const adminInfo = [
+                    ['حقوق اشتراك الولي السنوية:', '________________________'],
+                    ['مصادقة الإدارة:', '________________________'],
+                    ['إمضاء الولي على صحة المعلومات:', '________________________'],
+                    ['تاريخ:', '________________________']
+                ];
+                
+                doc.autoTable({
+                    startY: footerY + 15,
+                    body: adminInfo,
+                    theme: 'grid',
+                    columnStyles: { 0: { fontStyle: 'bold', cellWidth: 70, font: 'Amiri' }, 1: { font: 'Amiri', cellWidth: 70 } },
+                    margin: { right: 15 },
+                    styles: { font: 'Amiri', fontStyle: 'normal', halign: 'right', cellPadding: 5 }
+                });
+                
+                // تذييل الصفحة
+                doc.setFontSize(10);
+                doc.setTextColor(100);
+                doc.text('شكراً لتسجيلكم في المجمع القرآني حمزة بن عبدالمطلب', 105, 285, { align: 'center' });
+                doc.text('سيتم التواصل معكم خلال 3 أيام عمل', 105, 290, { align: 'center' });
+                
+                doc.save(`استمارة_تسجيل_${data.firstName}_${data.lastName}.pdf`);
+            }
+
+            function formatArabicDate(dateString) {
+                if (!dateString) return '';
+                const date = new Date(dateString);
+                return date.toLocaleDateString('ar-EG');
+            }
+
+            // إرسال النموذج
             form.addEventListener('submit', function(e) {
                 e.preventDefault();
                 
-                // Validate all fields
                 const isBirthDateValid = validateBirthDate();
                 const isPhoneValid = validatePhone();
                 const isRequiredFieldsValid = validateRequiredFields();
                 
-                const isValid = isBirthDateValid && isPhoneValid && isRequiredFieldsValid;
-                
-                if (isValid) {
-                    // Show loading spinner
+                if (isBirthDateValid && isPhoneValid && isRequiredFieldsValid) {
                     formSpinner.style.display = 'flex';
                     submitBtn.disabled = true;
                     
-                    // Prepare form data
-                    const formData = {
-                        // Student info
+                    studentData = {
                         firstName: document.getElementById('firstName').value.trim(),
                         lastName: document.getElementById('lastName').value.trim(),
                         birthDate: document.getElementById('birthDate').value,
@@ -707,48 +859,58 @@
                         address: document.getElementById('address').value.trim(),
                         socialStatus: document.querySelector('input[name="socialStatus"]:checked').value,
                         parentPhone: document.getElementById('parentPhone').value.trim(),
-                        
-                        // Medical info
                         isSick: document.querySelector('input[name="isSick"]:checked').value,
                         sicknessType: document.getElementById('sicknessType').value.trim(),
                         takesMedicine: document.querySelector('input[name="takesMedicine"]:checked').value,
-                        
-                        // Additional info
+                        bloodType: document.getElementById('bloodType').value,
                         guardianName: document.getElementById('guardianName').value.trim(),
                         notes: document.getElementById('notes').value.trim(),
-                        
-                        // System info
                         registrationDate: new Date().toISOString(),
                         status: 'pending'
                     };
                     
-                    // Save to Firebase
-                    const studentId = formData.firstName + '_' + formData.lastName + '_' + new Date().getTime();
-                    database.ref('students/' + studentId).set(formData)
+                    const now = new Date();
+                    const datePart = now.getFullYear().toString() + 
+                                    (now.getMonth() + 1).toString().padStart(2, '0') + 
+                                    now.getDate().toString().padStart(2, '0');
+                    const randomPart = Math.floor(1000 + Math.random() * 9000);
+                    registrationNumber = `${datePart}-${randomPart}`;
+                    
+                    const studentId = studentData.firstName + '_' + studentData.lastName + '_' + new Date().getTime();
+                    
+                    // حفظ بيانات التسجيل محلياً للاسترجاع
+                    registrationData[registrationNumber] = studentData;
+                    
+                    database.ref('students/' + studentId).set(studentData)
                         .then(() => {
-                            // Hide spinner
                             formSpinner.style.display = 'none';
+                            const studentName = studentData.firstName + ' ' + studentData.lastName;
+                            successMessage.innerHTML = `
+                                تم تسجيل الطالب <strong>${studentName}</strong> بنجاح<br>
+                                رقم التسجيل: <strong>${registrationNumber}</strong>
+                                <br><small>الرجاء الاحتفاظ برقم التسجيل لاستعادة الاستمارة لاحقاً</small>
+                            `;
                             
-                            // Show success message with student name
-                            const studentName = formData.firstName + ' ' + formData.lastName;
-                            showSuccessModal(`تم تسجيل الطالب ${studentName} بنجاح وسيتم التواصل معكم قريباً`);
+                            // تفعيل زر التحميل
+                            downloadBtn.style.display = 'inline-block';
+                            downloadBtn.onclick = function(e) {
+                                e.preventDefault();
+                                generateRegistrationPDF();
+                            };
                             
-                            // Reset form
+                            showSuccessModal();
                             form.reset();
                             submitBtn.disabled = false;
-                            guardianGroup.style.display = 'none';
-                            sicknessTypeGroup.style.display = 'none';
+                            document.getElementById('guardianGroup').style.display = 'none';
+                            document.getElementById('sicknessTypeGroup').style.display = 'none';
                         })
                         .catch((error) => {
-                            // Hide spinner
                             formSpinner.style.display = 'none';
                             submitBtn.disabled = false;
-                            
-                            // Show error message
-                            showErrorModal('حدث خطأ أثناء حفظ البيانات: ' + error.message);
+                            errorMessage.textContent = 'حدث خطأ أثناء حفظ البيانات: ' + error.message;
+                            showErrorModal();
                         });
                 } else {
-                    // Scroll to first error
                     const firstError = document.querySelector('.error-message[style="display: block;"]');
                     if (firstError) {
                         firstError.previousElementSibling.scrollIntoView({
@@ -758,14 +920,59 @@
                     }
                 }
             });
-            
-            // Set max date for birth date (must be born in 2020)
-            const currentYear = new Date().getFullYear();
+
+            // استعادة الاستمارة
+            recoveryBtn.addEventListener('click', function() {
+                const regNumber = recoveryNumber.value.trim();
+                if (!regNumber) {
+                    recoveryMessage.textContent = 'الرجاء إدخال رقم التسجيل';
+                    recoveryMessage.style.display = 'block';
+                    recoveryMessage.style.color = 'var(--error-color)';
+                    return;
+                }
+                
+                // البحث في البيانات المحفوظة
+                if (registrationData[regNumber]) {
+                    generateRegistrationPDF(registrationData[regNumber], regNumber);
+                    recoveryMessage.textContent = 'تم تحميل الاستمارة بنجاح';
+                    recoveryMessage.style.display = 'block';
+                    recoveryMessage.style.color = 'var(--success-color)';
+                } else {
+                    // البحث في قاعدة البيانات إذا لم تكن محفوظة محلياً
+                    database.ref('students').orderByChild('parentPhone').once('value')
+                        .then(snapshot => {
+                            let found = false;
+                            snapshot.forEach(childSnapshot => {
+                                const data = childSnapshot.val();
+                                if (data.registrationNumber === regNumber) {
+                                    generateRegistrationPDF(data, regNumber);
+                                    recoveryMessage.textContent = 'تم تحميل الاستمارة بنجاح';
+                                    recoveryMessage.style.display = 'block';
+                                    recoveryMessage.style.color = 'var(--success-color)';
+                                    found = true;
+                                    return true; // يوقف التكرار
+                                }
+                            });
+                            
+                            if (!found) {
+                                recoveryMessage.textContent = 'لم يتم العثور على رقم التسجيل';
+                                recoveryMessage.style.display = 'block';
+                                recoveryMessage.style.color = 'var(--error-color)';
+                            }
+                        })
+                        .catch(error => {
+                            recoveryMessage.textContent = 'حدث خطأ أثناء البحث عن الاستمارة';
+                            recoveryMessage.style.display = 'block';
+                            recoveryMessage.style.color = 'var(--error-color)';
+                        });
+                }
+            });
+
+            // تحديد نطاق تاريخ الميلاد
             const maxDate = new Date('2020-12-31');
             const minDate = new Date('2020-01-01');
-            
-            birthDateInput.max = maxDate.toISOString().split('T')[0];
-            birthDateInput.min = minDate.toISOString().split('T')[0];
+            document.getElementById('birthDate').max = maxDate.toISOString().split('T')[0];
+            document.getElementById('birthDate').min = minDate.toISOString().split('T')[0];
         });
     </script>
 </body>
