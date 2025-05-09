@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>الرئيسية | المجمع القرآني حمزة بن عبدالمطلب</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="icon" href="https://i.ibb.co/jZrxhFsf/1-min.png" type="image/png">
+    <style>
+        :root {
+            --primary-color: #1a4d2e;
+            --primary-dark: #0e3a23;
+            --secondary-color: #f5f5dc;
+            --accent-color: #4a7856;
+            --text-color: #333;
+            --light-bg: #f9f9f7;
+            --gold-color: #d4af37;
+            --error-color: #e74c3c;
+            --success-color: #2ecc71;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Cairo', sans-serif;
+        }
+
+        body {
+            background-color: var(--light-bg);
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+
+        header {
+            background: linear-gradient(rgba(26, 77, 46, 0.95), rgba(26, 77, 46, 0.95)),
+                        url('https://img.freepik.com/free-vector/abstract-islamic-golden-pattern-backdrop-ethnic-style_1017-54276.jpg') center/cover;
+            color: white;
+            padding: 2rem 1rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            width: 100%;
+        }
+
+        .logo {
+            width: 180px;
+            margin: 0.5rem auto;
+            filter: drop-shadow(0 2px 5px rgba(0,0,0,0.3));
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-15px); }
+            100% { transform: translateY(0px); }
+        }
+
+        header h1 {
+            margin: 1rem 0;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+            font-size: 2.5rem;
+            line-height: 1.3;
+            font-weight: 700;
+        }
+
+        header p {
+            font-size: 1.2rem;
+            max-width: 800px;
+            margin: 0 auto 2rem;
+            text-shadow: 0 1px 3px rgba(0,0,0,0.2);
+        }
+
+        .domain-badge {
+            background-color: rgba(255,255,255,0.9);
+            color: var(--primary-dark);
+            padding: 0.8rem 1.5rem;
+            border-radius: 50px;
+            font-size: 1.5rem;
+            font-weight: 700;
+            display: inline-block;
+            margin: 1rem 0;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .cta-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            margin-top: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            text-decoration: none;
+            transition: all 0.3s;
+            min-width: 200px;
+            text-align: center;
+        }
+
+        .btn-primary {
+            background: var(--gold-color);
+            color: var(--primary-dark);
+        }
+
+        .btn-primary:hover {
+            background: white;
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: white;
+            border: 2px solid white;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255,255,255,0.2);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+
+        .features {
+            padding: 5rem 1rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            color: var(--primary-color);
+            text-align: center;
+            margin-bottom: 3rem;
+            font-size: 2rem;
+            font-weight: 800;
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            right: 50%;
+            transform: translateX(50%);
+            width: 80px;
+            height: 4px;
+            background: var(--gold-color);
+            border-radius: 3px;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .feature-card {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            text-align: center;
+            transition: all 0.3s;
+            border-top: 5px solid var(--gold-color);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            color: var(--gold-color);
+            margin-bottom: 1.5rem;
+        }
+
+        .feature-title {
+            font-size: 1.5rem;
+            color: var(--primary-dark);
+            margin-bottom: 1rem;
+        }
+
+        .feature-desc {
+            color: #666;
+            line-height: 1.7;
+        }
+
+        footer {
+            background-color: var(--primary-dark);
+            color: white;
+            padding: 3rem 0;
+            text-align: center;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin: 2rem 0;
+            flex-wrap: wrap;
+        }
+
+        .footer-links a {
+            color: white;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+
+        .footer-links a:hover {
+            color: var(--gold-color);
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .social-links a {
+            width: 45px;
+            height: 45px;
+            background: rgba(255,255,255,0.1);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            transition: all 0.3s;
+        }
+
+        .social-links a:hover {
+            background: var(--gold-color);
+            color: var(--primary-dark);
+            transform: translateY(-3px);
+        }
+
+        .copyright {
+            font-size: 0.9rem;
+            color: #ccc;
+            margin-top: 2rem;
+        }
+
+        /* Responsive styles */
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 1.8rem;
+            }
+            
+            header p {
+                font-size: 1rem;
+                padding: 0 1rem;
+            }
+            
+            .domain-badge {
+                font-size: 1.2rem;
+                padding: 0.6rem 1.2rem;
+            }
+            
+            .btn {
+                padding: 0.8rem 1.5rem;
+                font-size: 1rem;
+                min-width: 160px;
+            }
+            
+            .section-title {
+                font-size: 1.5rem;
+            }
+            
+            .feature-card {
+                padding: 1.5rem;
+            }
+            
+            .feature-icon {
+                font-size: 2.5rem;
+            }
+            
+            .feature-title {
+                font-size: 1.3rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <img src="https://i.ibb.co/jZrxhFsf/1-min.png" alt="شعار المجمع القرآني" class="logo">
+        <h1>المجمع القرآني حمزة بن عبدالمطلب</h1>
+        <p>منارة للعلم ومركز للإشعاع القرآني، نعمل على تعليم القرآن الكريم وعلومه وفق منهجية متكاملة</p>
+        
+        <div class="domain-badge">www.mojam3.com</div>
+        
+        <div class="cta-buttons">
+            <a href="#" class="btn btn-primary">بدء التسجيل</a>
+            <a href="#" class="btn btn-secondary">تعرف علينا</a>
+        </div>
+    </header>
+
+    <section class="features">
+        <h2 class="section-title">من خدمات المجمع</h2>
+        
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-book-quran"></i>
+                </div>
+                <h3 class="feature-title">تحفيظ القرآن الكريم</h3>
+                <p class="feature-desc">
+                    برامج متكاملة لحفظ القرآن الكريم وفق أحكام التلاوة والتجويد، بمتابعة معلمين متخصصين
+                </p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-user-graduate"></i>
+                </div>
+                <h3 class="feature-title">التعليم ما قبل التمدرس</h3>
+                <p class="feature-desc">
+                    برامج تربوية وتعليمية متخصصة للأطفال تهيئتهم للتعليم النظامي مع تأسيس قرآني متين
+                </p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-hands-helping"></i>
+                </div>
+                <h3 class="feature-title">محو الأمية</h3>
+                <p class="feature-desc">
+                    دورات تعليمية لمحو الأمية القرائية والقرآنية لكافة الفئات العمرية
+                </p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-book-reader"></i>
+                </div>
+                <h3 class="feature-title">مكتبة قرآنية متخصصة</h3>
+                <p class="feature-desc">
+                    تضم أكثر من 15,000 كتاب و23,000 عنوان في مختلف علوم القرآن والحديث
+                </p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-microphone-alt"></i>
+                </div>
+                <h3 class="feature-title">دورات التجويد والإقراء</h3>
+                <p class="feature-desc">
+                    برامج متقدمة في أحكام التجويد وعلوم القراءات بإشراف مشايخ متخصصين
+                </p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-trophy"></i>
+                </div>
+                <h3 class="feature-title">مسابقات قرآنية</h3>
+                <p class="feature-desc">
+                    مسابقات سنوية في الحفظ والتلاوة لتشجيع الطلاب وتحفيز المتميزين
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="footer-links">
+            <a href="#">الرئيسية</a>
+            <a href="#">عن المجمع</a>
+            <a href="#">البرامج التعليمية</a>
+            <a href="#">المكتبة</a>
+            <a href="#">اتصل بنا</a>
+        </div>
+        
+        <div class="social-links">
+            <a href="#"><i class="fab fa-twitter"></i></a>
+            <a href="#"><i class="fab fa-facebook-f"></i></a>
+            <a href="#"><i class="fab fa-instagram"></i></a>
+            <a href="#"><i class="fab fa-youtube"></i></a>
+            <a href="#"><i class="fab fa-whatsapp"></i></a>
+        </div>
+        
+        <div class="copyright">
+            <p>جميع الحقوق محفوظة &copy; المجمع القرآني حمزة بن عبدالمطلب <span id="year"></span></p>
+            <p>النطاق الرسمي: www.mojam3.com</p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Set current year in footer
+            document.getElementById('year').textContent = new Date().getFullYear();
+            
+            // Animation for feature cards
+            const featureCards = document.querySelectorAll('.feature-card');
+            featureCards.forEach((card, index) => {
+                setTimeout(() => {
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, index * 200);
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                card.style.transition = 'all 0.5s ease';
+            });
+        });
+    </script>
+</body>
+</html>
