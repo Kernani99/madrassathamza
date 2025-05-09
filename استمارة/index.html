@@ -3,618 +3,521 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>نظام إدارة الطلاب - المجمع القرآني حمزة بن عبدالمطلب</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="icon" href="https://i.ibb.co/jZrxhFsf/1-min.png" type="image/png">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
+    <title>نظام التحويل من JSON إلى Excel - المجمع القرآني</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        /* أنماط CSS تبقى كما هي */
         :root {
             --primary-color: #1a4d2e;
-            --primary-dark: #0e3a23;
+            --primary-light: #4a7856;
             --secondary-color: #f5f5dc;
-            --accent-color: #4a7856;
+            --accent-color: #d4af37;
             --text-color: #333;
             --light-bg: #f9f9f7;
-            --gold-color: #d4af37;
-            --error-color: #e74c3c;
-            --success-color: #2ecc71;
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Cairo', sans-serif;
         }
 
         body {
+            font-family: 'Cairo', sans-serif;
             background-color: var(--light-bg);
             color: var(--text-color);
+            margin: 0;
+            padding: 0;
             line-height: 1.6;
         }
 
-        header {
-            background: linear-gradient(rgba(26, 77, 46, 0.95), rgba(26, 77, 46, 0.95)),
-                        url('https://img.freepik.com/free-vector/abstract-islamic-golden-pattern-backdrop-ethnic-style_1017-54276.jpg') center/cover;
+        .header {
+            background: linear-gradient(rgba(26, 77, 46, 0.9), rgba(26, 77, 46, 0.9)),
+                        url('https://img.freepik.com/free-vector/arabic-pattern-background_53876-91528.jpg');
             color: white;
-            padding: 2rem 1rem;
+            padding: 1.5rem;
             text-align: center;
-            position: relative;
-            overflow: hidden;
-            min-height: 200px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            width: 100%;
-            border-radius: 0 0 15px 15px;
             box-shadow: 0 4px 12px rgba(0,0,0,0.1);
         }
 
-        .logo {
-            width: 150px;
-            margin: 0.5rem auto;
-            filter: drop-shadow(0 2px 5px rgba(0,0,0,0.3));
+        .header h1 {
+            margin: 0.5rem 0;
+            font-size: 1.8rem;
         }
 
-        header h1 {
-            margin: 0.5rem 0;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
-            font-size: 1.8rem;
-            line-height: 1.3;
-            font-weight: 700;
+        .logo {
+            height: 80px;
+            margin-bottom: 10px;
         }
 
         .container {
-            max-width: 1200px;
-            margin: 3rem auto;
+            max-width: 1000px;
+            margin: 2rem auto;
             padding: 0 1.5rem;
         }
 
-        .upload-section {
+        .card {
             background: white;
-            border-radius: 15px;
-            padding: 2rem;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
-            margin-bottom: 2rem;
-            text-align: center;
-        }
-
-        .upload-title {
-            color: var(--primary-color);
-            margin-bottom: 1.5rem;
-            font-size: 1.5rem;
-            font-weight: 700;
-        }
-
-        .upload-box {
-            border: 2px dashed var(--primary-color);
             border-radius: 10px;
             padding: 2rem;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            margin-bottom: 2rem;
+        }
+
+        .card-title {
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--accent-color);
+            padding-bottom: 0.5rem;
+            margin-top: 0;
+        }
+
+        .upload-area {
+            border: 2px dashed var(--primary-light);
+            padding: 2rem;
+            text-align: center;
             margin-bottom: 1.5rem;
+            border-radius: 8px;
             cursor: pointer;
             transition: all 0.3s;
+            background-color: rgba(74, 120, 86, 0.05);
         }
 
-        .upload-box:hover {
-            background-color: rgba(26, 77, 46, 0.05);
+        .upload-area:hover {
+            background-color: rgba(74, 120, 86, 0.1);
+            border-color: var(--primary-color);
         }
 
-        .upload-icon {
-            font-size: 3rem;
-            color: var(--primary-color);
-            margin-bottom: 1rem;
-        }
-
-        .upload-text {
-            margin-bottom: 1rem;
-        }
-
-        .file-input {
+        #fileInput {
             display: none;
         }
 
-        .file-name {
-            margin-top: 1rem;
-            font-size: 0.9rem;
-            color: #666;
-        }
-
-        .upload-btn {
-            background: var(--primary-color);
+        .btn {
+            background-color: var(--primary-color);
             color: white;
             border: none;
-            padding: 1rem 2rem;
+            padding: 0.8rem 1.5rem;
             border-radius: 50px;
-            font-size: 1.1rem;
-            font-weight: 700;
             cursor: pointer;
+            font-size: 1rem;
+            font-weight: 500;
             transition: all 0.3s;
-            margin-top: 1rem;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0.5rem;
         }
 
-        .upload-btn:hover {
-            background: var(--primary-dark);
-            transform: translateY(-3px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        .btn:hover {
+            background-color: var(--primary-light);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
         }
 
-        .upload-btn:disabled {
-            background: #ccc;
+        .btn:disabled {
+            background-color: #cccccc;
             cursor: not-allowed;
             transform: none;
             box-shadow: none;
         }
 
-        .students-list {
-            background: white;
-            border-radius: 15px;
-            padding: 1.5rem;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
-            display: none;
+        .btn i {
+            margin-left: 8px;
         }
 
-        .student-card {
-            border: 1px solid #eee;
-            border-radius: 10px;
-            padding: 1.5rem;
-            margin-bottom: 1.5rem;
-            transition: all 0.3s;
+        .btn-download {
+            background-color: var(--primary-light);
         }
 
-        .student-card:hover {
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-            transform: translateY(-3px);
-        }
-
-        .student-name {
-            color: var(--primary-dark);
-            font-size: 1.3rem;
-            font-weight: 700;
-            margin-bottom: 0.5rem;
-        }
-
-        .student-info {
+        .search-container {
+            margin: 1.5rem 0;
             display: flex;
+            justify-content: space-between;
+            align-items: center;
             flex-wrap: wrap;
-            gap: 1rem;
-            margin-bottom: 1rem;
         }
 
-        .info-item {
-            flex: 1 1 200px;
-        }
-
-        .info-label {
-            font-weight: 600;
-            color: var(--primary-color);
-        }
-
-        .student-actions {
-            display: flex;
-            justify-content: flex-end;
-            gap: 1rem;
-        }
-
-        .action-btn {
-            background: var(--primary-color);
-            color: white;
-            border: none;
-            padding: 0.8rem 1.5rem;
+        .search-box {
+            flex: 1;
+            min-width: 250px;
+            padding: 0.8rem 1rem;
+            border: 1px solid #ddd;
             border-radius: 50px;
             font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
+            margin-left: 1rem;
             transition: all 0.3s;
         }
 
-        .action-btn:hover {
-            background: var(--primary-dark);
+        .search-box:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(26, 77, 46, 0.2);
         }
 
-        .action-btn.secondary {
-            background: var(--gold-color);
-            color: var(--primary-dark);
+        #preview {
+            margin-top: 2rem;
+            overflow-x: auto;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
         }
 
-        .action-btn.secondary:hover {
-            background: #c9a227;
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+            min-width: 600px;
         }
 
-        .spinner {
-            display: none;
-            justify-content: center;
-            align-items: center;
-            margin: 2rem 0;
+        th, td {
+            border: 1px solid #e0e0e0;
+            padding: 12px 15px;
+            text-align: right;
         }
 
-        .spinner-inner {
-            width: 50px;
-            height: 50px;
-            border: 5px solid #f3f3f3;
-            border-top: 5px solid var(--primary-color);
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        .no-students {
-            text-align: center;
-            padding: 2rem;
-            color: #666;
-        }
-
-        footer {
-            background-color: var(--primary-dark);
+        th {
+            background-color: var(--primary-color);
             color: white;
-            padding: 2rem 0;
-            text-align: center;
-            margin-top: 3rem;
+            font-weight: 500;
         }
 
-        .copyright {
-            font-size: 0.9rem;
-            color: #ccc;
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        .status {
+            margin: 1rem 0;
+            padding: 1rem;
+            border-radius: 8px;
+            display: none;
+            font-weight: 500;
+        }
+
+        .success {
+            background-color: #e8f5e9;
+            color: #2e7d32;
+            border-left: 4px solid #2e7d32;
+        }
+
+        .error {
+            background-color: #ffebee;
+            color: #c62828;
+            border-left: 4px solid #c62828;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 1.5rem;
+            background-color: var(--primary-color);
+            color: white;
+            margin-top: 2rem;
+        }
+
+        .latin-numbers {
+            font-feature-settings: "lnum";
+            -moz-font-feature-settings: "lnum";
+            -webkit-font-feature-settings: "lnum";
         }
 
         @media (max-width: 768px) {
             .container {
-                margin: 2rem auto;
                 padding: 0 1rem;
             }
             
-            .upload-section {
+            .card {
                 padding: 1.5rem;
             }
             
-            header h1 {
+            .header h1 {
                 font-size: 1.5rem;
             }
             
-            .student-actions {
+            .search-container {
                 flex-direction: column;
-                gap: 0.5rem;
+                align-items: stretch;
             }
             
-            .action-btn {
-                width: 100%;
+            .search-box {
+                margin: 0.5rem 0;
             }
         }
     </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
-    <header>
-        <img src="https://i.ibb.co/jZrxhFsf/1-min.png" alt="شعار المجمع" class="logo">
-        <h1>نظام إدارة الطلاب</h1>
+    <header class="header">
+        <img src="https://i.ibb.co/jZrxhFsf/1-min.png" alt="شعار المجمع القرآني" class="logo">
+        <h1>نظام التحويل من JSON إلى Excel</h1>
     </header>
 
     <main class="container">
-        <section class="upload-section">
-            <h2 class="upload-title">رفع ملف بيانات الطلاب</h2>
+        <div class="card">
+            <h2 class="card-title">تحويل بيانات الطلاب</h2>
             
-            <div class="upload-box" id="uploadBox">
-                <i class="fas fa-file-upload upload-icon"></i>
-                <p class="upload-text">انقر لاختيار ملف JSON أو اسحبه وأسقطه هنا</p>
-                <input type="file" id="jsonFile" class="file-input" accept=".json">
-                <div class="file-name" id="fileName">لم يتم اختيار أي ملف</div>
+            <div class="upload-area" id="uploadArea">
+                <p><i class="fas fa-cloud-upload-alt" style="font-size: 2rem; margin-bottom: 1rem;"></i></p>
+                <p>انقر لاختيار ملف JSON أو اسحبه وأسقطه هنا</p>
+                <p style="color: #666; font-size: 0.9rem;">(يجب أن يكون الملف بنفس هيكل بيانات الطلاب)</p>
+                <input type="file" id="fileInput" accept=".json">
             </div>
             
-            <button class="upload-btn" id="uploadBtn" disabled>تحميل البيانات</button>
-            
-            <div class="spinner" id="loadingSpinner">
-                <div class="spinner-inner"></div>
+            <div class="search-container">
+                <input type="text" id="searchInput" class="search-box" placeholder="ابحث باسم الطالب..." disabled>
+                <button class="btn" id="convertBtn" disabled>
+                    <i class="fas fa-file-excel"></i> تحويل إلى Excel
+                </button>
             </div>
-        </section>
-        
-        <section class="students-list" id="studentsList">
-            <!-- سيتم ملء هذه القائمة بعد رفع الملف -->
-        </section>
+            
+            <div id="statusMessage" class="status"></div>
+            
+            <div id="preview"></div>
+            
+            <a id="downloadLink" class="btn btn-download" style="display: none;">
+                <i class="fas fa-download"></i> تحميل ملف Excel
+            </a>
+        </div>
     </main>
 
-    <footer>
-        <div class="copyright">
-            <p>جميع الحقوق محفوظة &copy; المجمع القرآني حمزة بن عبدالمطلب <span id="year"></span></p>
-        </div>
+    <footer class="footer">
+        <p>جميع الحقوق محفوظة &copy; المجمع القرآني حمزة بن عبدالمطلب <span id="year"></span></p>
     </footer>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <script>
-        // تحميل مكتبة jsPDF بشكل صحيح
-        const { jsPDF } = window.jspdf;
-
         document.addEventListener('DOMContentLoaded', function() {
+            const fileInput = document.getElementById('fileInput');
+            const uploadArea = document.getElementById('uploadArea');
+            const convertBtn = document.getElementById('convertBtn');
+            const downloadLink = document.getElementById('downloadLink');
+            const previewDiv = document.getElementById('preview');
+            const statusMessage = document.getElementById('statusMessage');
+            const searchInput = document.getElementById('searchInput');
+            
+            let jsonData = null;
+            let currentStudents = [];
+            
+            // Set current year in footer
             document.getElementById('year').textContent = new Date().getFullYear();
             
-            const uploadBox = document.getElementById('uploadBox');
-            const jsonFileInput = document.getElementById('jsonFile');
-            const fileName = document.getElementById('fileName');
-            const uploadBtn = document.getElementById('uploadBtn');
-            const loadingSpinner = document.getElementById('loadingSpinner');
-            const studentsList = document.getElementById('studentsList');
-            
-            let studentsData = [];
-            
-            // عند النقر على منطقة الرفع
-            uploadBox.addEventListener('click', function() {
-                jsonFileInput.click();
-            });
-            
-            // عند تغيير اختيار الملف
-            jsonFileInput.addEventListener('change', function() {
-                if (this.files.length > 0) {
-                    fileName.textContent = this.files[0].name;
-                    uploadBtn.disabled = false;
-                } else {
-                    fileName.textContent = 'لم يتم اختيار أي ملف';
-                    uploadBtn.disabled = true;
-                }
-            });
-            
-            // عند سحب وإسقاط الملف
-            uploadBox.addEventListener('dragover', function(e) {
+            // Handle drag and drop
+            uploadArea.addEventListener('dragover', (e) => {
                 e.preventDefault();
-                this.style.backgroundColor = 'rgba(26, 77, 46, 0.1)';
+                uploadArea.style.borderColor = '#1a4d2e';
+                uploadArea.style.backgroundColor = 'rgba(26, 77, 46, 0.1)';
             });
             
-            uploadBox.addEventListener('dragleave', function() {
-                this.style.backgroundColor = '';
+            uploadArea.addEventListener('dragleave', () => {
+                uploadArea.style.borderColor = '#4a7856';
+                uploadArea.style.backgroundColor = 'rgba(74, 120, 86, 0.05)';
             });
             
-            uploadBox.addEventListener('drop', function(e) {
+            uploadArea.addEventListener('drop', (e) => {
                 e.preventDefault();
-                this.style.backgroundColor = '';
+                uploadArea.style.borderColor = '#4a7856';
+                uploadArea.style.backgroundColor = 'rgba(74, 120, 86, 0.05)';
                 
-                if (e.dataTransfer.files.length > 0) {
-                    const file = e.dataTransfer.files[0];
-                    if (file.type === 'application/json' || file.name.endsWith('.json')) {
-                        jsonFileInput.files = e.dataTransfer.files;
-                        fileName.textContent = file.name;
-                        uploadBtn.disabled = false;
-                    } else {
-                        fileName.textContent = 'الرجاء اختيار ملف JSON فقط';
-                        uploadBtn.disabled = true;
-                    }
+                if (e.dataTransfer.files.length) {
+                    fileInput.files = e.dataTransfer.files;
+                    handleFileSelect();
                 }
             });
             
-            // عند النقر على زر تحميل البيانات
-            uploadBtn.addEventListener('click', function() {
-                const file = jsonFileInput.files[0];
+            // Handle file selection
+            uploadArea.addEventListener('click', () => {
+                fileInput.click();
+            });
+            
+            fileInput.addEventListener('change', handleFileSelect);
+            
+            // Search functionality
+            searchInput.addEventListener('input', function() {
+                if (!jsonData || !jsonData.students) return;
+                
+                const searchTerm = this.value.trim().toLowerCase();
+                if (searchTerm === '') {
+                    currentStudents = Object.values(jsonData.students);
+                } else {
+                    currentStudents = Object.values(jsonData.students).filter(student => {
+                        const fullName = (student.firstName + ' ' + student.lastName).toLowerCase();
+                        return fullName.includes(searchTerm);
+                    });
+                }
+                
+                previewData({ students: arrayToObject(currentStudents) });
+            });
+            
+            function arrayToObject(arr) {
+                return arr.reduce((obj, item, index) => {
+                    obj[`student_${index}`] = item;
+                    return obj;
+                }, {});
+            }
+            
+            function handleFileSelect() {
+                const file = fileInput.files[0];
                 if (!file) return;
                 
-                loadingSpinner.style.display = 'flex';
-                studentsList.style.display = 'none';
-                
                 const reader = new FileReader();
+                
                 reader.onload = function(e) {
                     try {
-                        const data = JSON.parse(e.target.result);
+                        jsonData = JSON.parse(e.target.result);
+                        convertBtn.disabled = false;
+                        searchInput.disabled = false;
                         
-                        if (data.students && typeof data.students === 'object') {
-                            studentsData = Object.values(data.students);
-                            
-                            if (studentsData.length > 0) {
-                                renderStudentsList();
-                                studentsList.style.display = 'block';
-                            } else {
-                                showNoStudents();
-                            }
+                        if (jsonData.students) {
+                            currentStudents = Object.values(jsonData.students);
                         } else {
-                            throw new Error('هيكلة الملف غير صحيحة. يجب أن يحتوي على كائن students');
+                            currentStudents = Array.isArray(jsonData) ? jsonData : [jsonData];
                         }
+                        
+                        showStatus('تم تحميل الملف بنجاح. العدد: ' + currentStudents.length + ' طالب', 'success');
+                        previewData(jsonData);
                     } catch (error) {
-                        console.error('Error parsing JSON:', error);
-                        fileName.textContent = 'خطأ في قراءة الملف: ' + error.message;
-                        showNoStudents();
-                    } finally {
-                        loadingSpinner.style.display = 'none';
+                        showStatus('خطأ في قراءة ملف JSON: ' + error.message, 'error');
+                        console.error(error);
                     }
                 };
                 
                 reader.onerror = function() {
-                    loadingSpinner.style.display = 'none';
-                    fileName.textContent = 'حدث خطأ أثناء قراءة الملف';
-                    showNoStudents();
+                    showStatus('حدث خطأ أثناء قراءة الملف', 'error');
                 };
                 
                 reader.readAsText(file);
+            }
+            
+            // Convert to Excel
+            convertBtn.addEventListener('click', function() {
+                if (!currentStudents || currentStudents.length === 0) {
+                    showStatus('لا يوجد بيانات طلاب لتحويلها', 'error');
+                    return;
+                }
+                
+                try {
+                    // Create ordered data with specific column order
+                    const orderedData = currentStudents.map(student => {
+                        return {
+                            'الاسم': student.firstName || '',
+                            'اللقب': student.lastName || '',
+                            'اسم الأب': student.fatherName || '',
+                            'اسم الأم': student.motherName || '',
+                            'تاريخ الميلاد': student.birthDate ? formatExcelDate(student.birthDate) : '',
+                            'مكان الميلاد': student.birthPlace || '',
+                            'العنوان': student.address || '',
+                            'رقم الهاتف': student.parentPhone || '',
+                            'الحالة الصحية': student.isSick === 'نعم' ? 'مريض' : 'سليم',
+                            'يتناول أدوية': student.takesMedicine || '',
+                            'الزمرة الدموية': student.bloodType || 'غير محدد',
+                            'ملاحظات': student.notes || '',
+                            'تاريخ التسجيل': student.registrationDate ? formatExcelDate(student.registrationDate) : ''
+                        };
+                    });
+
+                    // Create worksheet
+                    const ws = XLSX.utils.json_to_sheet(orderedData);
+                    
+                    // Create workbook
+                    const wb = XLSX.utils.book_new();
+                    XLSX.utils.book_append_sheet(wb, ws, "الطلاب");
+                    
+                    // Generate Excel file
+                    const excelBuffer = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
+                    
+                    // Create download link
+                    const blob = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+                    const url = URL.createObjectURL(blob);
+                    
+                    downloadLink.href = url;
+                    downloadLink.download = 'طلاب_المجمع_القرآني_' + new Date().toISOString().slice(0,10) + '.xlsx';
+                    downloadLink.style.display = 'inline-block';
+                    
+                    showStatus('تم تحويل بيانات ' + currentStudents.length + ' طالب بنجاح. جاهز للتحميل!', 'success');
+                } catch (error) {
+                    showStatus('حدث خطأ أثناء التحويل: ' + error.message, 'error');
+                    console.error(error);
+                }
             });
             
-            // عرض قائمة الطلاب
-            function renderStudentsList() {
-                studentsList.innerHTML = '';
-                
-                studentsData.forEach((student, index) => {
-                    const studentCard = document.createElement('div');
-                    studentCard.className = 'student-card';
-                    
-                    studentCard.innerHTML = `
-                        <h3 class="student-name">${student.firstName} ${student.lastName}</h3>
-                        <div class="student-info">
-                            <div class="info-item">
-                                <span class="info-label">رقم التسجيل:</span>
-                                <span>${student.registrationNumber || 'غير متوفر'}</span>
-                            </div>
-                            <div class="info-item">
-                                <span class="info-label">تاريخ الميلاد:</span>
-                                <span>${formatDate(student.birthDate)}</span>
-                            </div>
-                            <div class="info-item">
-                                <span class="info-label">مكان الميلاد:</span>
-                                <span>${student.birthPlace}</span>
-                            </div>
-                            <div class="info-item">
-                                <span class="info-label">اسم الأب:</span>
-                                <span>${student.fatherName}</span>
-                            </div>
-                            <div class="info-item">
-                                <span class="info-label">رقم الهاتف:</span>
-                                <span>${student.parentPhone}</span>
-                            </div>
-                        </div>
-                        <div class="student-actions">
-                            <button class="action-btn secondary print-btn" data-index="${index}">
-                                <i class="fas fa-print"></i> طباعة الاستمارة
-                            </button>
-                        </div>
-                    `;
-                    
-                    studentsList.appendChild(studentCard);
-                });
-                
-                // إضافة معالجات الأحداث لأزرار الطباعة بعد إنشاء جميع البطاقات
-                document.querySelectorAll('.print-btn').forEach(btn => {
-                    btn.addEventListener('click', function() {
-                        const studentIndex = this.getAttribute('data-index');
-                        printStudentForm(studentsData[studentIndex]);
-                    });
-                });
-            }
-            
-            // طباعة استمارة الطالب (الوظيفة المعدلة)
-            function printStudentForm(student) {
-                // إنشاء مستند PDF جديد
-                const doc = new jsPDF({
-                    orientation: 'portrait',
-                    unit: 'mm',
-                    format: 'a4'
-                });
-                
-                // إضافة الخط العربي
-                doc.addFont('https://cdn.jsdelivr.net/gh/arabic-fonts/amiri-font@1.0.0/Amiri-Regular.ttf', 'Amiri', 'normal');
-                doc.addFont('https://cdn.jsdelivr.net/gh/arabic-fonts/amiri-font@1.0.0/Amiri-Bold.ttf', 'Amiri', 'bold');
-                doc.setFont('Amiri');
-
-                // رأس الصفحة
-                const logoUrl = 'https://i.ibb.co/jZrxhFsf/1-min.png';
-                doc.addImage(logoUrl, 'PNG', 15, 15, 40, 40);
-                
-                doc.setFontSize(18);
-                doc.setTextColor(26, 77, 46);
-                doc.setFont('Amiri', 'bold');
-                doc.text('المجمع القرآني حمزة بن عبدالمطلب', 105, 25, { align: 'center' });
-                doc.setFontSize(16);
-                doc.text('استمارة التسجيل الأولية', 105, 35, { align: 'center' });
-                
-                doc.setFontSize(10);
-                doc.setTextColor(100);
-                doc.text(`رقم التسجيل: ${student.registrationNumber || 'غير متوفر'}`, 190, 20, { align: 'right' });
-                doc.text(`تاريخ التسجيل: ${formatDate(student.registrationDate)}`, 190, 30, { align: 'right' });
-                
-                doc.setDrawColor(214, 175, 55);
-                doc.setLineWidth(0.5);
-                doc.line(15, 45, 195, 45);
-                
-                // معلومات الطالب
-                doc.setFontSize(12);
-                doc.setTextColor(0);
-                doc.setFont('Amiri', 'bold');
-                doc.text('معلومات المتمدرس:', 15, 55);
-                doc.setFont('Amiri', 'normal');
-                
-                const studentInfo = [
-                    ['الاسم الكامل:', `${student.firstName} ${student.lastName}`],
-                    ['تاريخ الميلاد:', formatDate(student.birthDate)],
-                    ['مكان الميلاد:', student.birthPlace],
-                    ['اسم الأب:', student.fatherName],
-                    ['اسم الأم:', student.motherName],
-                    ['العنوان:', student.address],
-                    ['الحالة الاجتماعية:', student.socialStatus || 'عادية'],
-                    ['رقم هاتف ولي الأمر:', student.parentPhone],
-                    ['الوصي (إن وجد):', student.guardianName || 'لا يوجد']
-                ];
-                
-                doc.autoTable({
-                    startY: 60,
-                    body: studentInfo,
-                    theme: 'grid',
-                    headStyles: { fillColor: [26, 77, 46], textColor: 255, font: 'Amiri', fontStyle: 'bold', halign: 'right' },
-                    columnStyles: { 0: { fontStyle: 'bold', cellWidth: 50, font: 'Amiri' }, 1: { font: 'Amiri' } },
-                    margin: { right: 15 },
-                    styles: { font: 'Amiri', fontStyle: 'normal', halign: 'right', cellPadding: 3 }
-                });
-                
-                // المعلومات الطبية
-                doc.setFont('Amiri', 'bold');
-                doc.text('المعلومات الطبية:', 15, doc.autoTable.previous.finalY + 10);
-                doc.setFont('Amiri', 'normal');
-                
-                const medicalInfo = [
-                    ['الحالة الصحية:', student.isSick === 'نعم' ? `مريض (${student.sicknessType || 'غير محدد'})` : 'سليم'],
-                    ['يتناول أدوية:', student.takesMedicine],
-                    ['الزمرة الدموية:', student.bloodType || 'غير محدد'],
-                    ['ملاحظات إضافية:', student.notes || 'لا يوجد']
-                ];
-                
-                doc.autoTable({
-                    startY: doc.autoTable.previous.finalY + 15,
-                    body: medicalInfo,
-                    theme: 'grid',
-                    columnStyles: { 0: { fontStyle: 'bold', cellWidth: 50, font: 'Amiri' }, 1: { font: 'Amiri' } },
-                    margin: { right: 15 },
-                    styles: { font: 'Amiri', fontStyle: 'normal', halign: 'right', cellPadding: 3 }
-                });
-                
-                // قسم الإدارة
-                const footerY = doc.autoTable.previous.finalY + 20;
-                doc.setDrawColor(214, 175, 55);
-                doc.setLineWidth(0.5);
-                doc.line(15, footerY, 195, footerY);
-                
-                doc.setFont('Amiri', 'bold');
-                doc.text('قسم الإدارة:', 15, footerY + 10);
-                doc.setFont('Amiri', 'normal');
-                
-                const adminInfo = [
-                    ['حقوق اشتراك الولي السنوية:', '________________________'],
-                    ['مصادقة الإدارة:', '________________________'],
-                    ['إمضاء الولي على صحة المعلومات:', '________________________'],
-                    ['تاريخ:', '________________________']
-                ];
-                
-                doc.autoTable({
-                    startY: footerY + 15,
-                    body: adminInfo,
-                    theme: 'grid',
-                    columnStyles: { 0: { fontStyle: 'bold', cellWidth: 70, font: 'Amiri' }, 1: { font: 'Amiri', cellWidth: 70 } },
-                    margin: { right: 15 },
-                    styles: { font: 'Amiri', fontStyle: 'normal', halign: 'right', cellPadding: 5 }
-                });
-                
-                // تذييل الصفحة
-                doc.setFontSize(10);
-                doc.setTextColor(100);
-                doc.text('شكراً لتسجيلكم في المجمع القرآني حمزة بن عبدالمطلب', 105, 285, { align: 'center' });
-                doc.text('سيتم التواصل معكم خلال 3 أيام عمل', 105, 290, { align: 'center' });
-                
-                // حفظ الملف وفتحه في نافذة جديدة
-                const pdfData = doc.output('blob');
-                const pdfUrl = URL.createObjectURL(pdfData);
-                window.open(pdfUrl, '_blank');
-            }
-            
-            // عرض رسالة عدم وجود طلاب
-            function showNoStudents() {
-                studentsList.innerHTML = `
-                    <div class="no-students">
-                        <i class="fas fa-users-slash" style="font-size: 3rem; color: #ccc; margin-bottom: 1rem;"></i>
-                        <p>لا توجد بيانات طلاب لعرضها</p>
-                        <p>الرجاء رفع ملف JSON يحتوي على بيانات الطلاب</p>
-                    </div>
-                `;
-                studentsList.style.display = 'block';
-            }
-            
-            // تنسيق التاريخ
-            function formatDate(dateString) {
-                if (!dateString) return 'غير محدد';
+            function formatExcelDate(dateString) {
+                if (!dateString) return '';
                 const date = new Date(dateString);
-                return date.toLocaleDateString('ar-EG');
+                // Return date in ISO format (YYYY-MM-DD) with Latin numbers
+                return date.toISOString().split('T')[0];
+            }
+            
+            function previewData(data) {
+                if (!data.students || Object.keys(data.students).length === 0) {
+                    previewDiv.innerHTML = '<p style="text-align: center; color: #666;">لا توجد بيانات طلاب للعرض</p>';
+                    return;
+                }
+                
+                const students = Object.values(data.students);
+                
+                let table = '<table><thead><tr>';
+                
+                // Create headers
+                const headers = [
+                    'الاسم', 
+                    'اللقب', 
+                    'اسم الأب', 
+                    'اسم الأم', 
+                    'تاريخ الميلاد',
+                    'مكان الميلاد',
+                    'العنوان',
+                    'رقم الهاتف',
+                    'الحالة الصحية',
+                    'يتناول أدوية',
+                    'الزمرة الدموية',
+                    'ملاحظات'
+                ];
+                
+                headers.forEach(header => {
+                    table += `<th>${header}</th>`;
+                });
+                table += '</tr></thead><tbody>';
+                
+                // Create rows
+                students.forEach(student => {
+                    table += '<tr>';
+                    
+                    // Name
+                    table += `<td>${student.firstName || ''}</td>`;
+                    table += `<td>${student.lastName || ''}</td>`;
+                    table += `<td>${student.fatherName || ''}</td>`;
+                    table += `<td>${student.motherName || ''}</td>`;
+                    
+                    // Birth info
+                    table += `<td class="latin-numbers">${student.birthDate ? formatDisplayDate(student.birthDate) : ''}</td>`;
+                    table += `<td>${student.birthPlace || ''}</td>`;
+                    
+                    // Contact
+                    table += `<td>${student.address || ''}</td>`;
+                    table += `<td class="latin-numbers">${student.parentPhone || ''}</td>`;
+                    
+                    // Medical info
+                    table += `<td>${student.isSick === 'نعم' ? 'مريض' : 'سليم'}</td>`;
+                    table += `<td>${student.takesMedicine || ''}</td>`;
+                    table += `<td>${student.bloodType || 'غير محدد'}</td>`;
+                    table += `<td>${student.notes || ''}</td>`;
+                    
+                    table += '</tr>';
+                });
+                
+                table += '</tbody></table>';
+                previewDiv.innerHTML = table;
+            }
+            
+            function formatDisplayDate(dateString) {
+                if (!dateString) return '';
+                const date = new Date(dateString);
+                const options = { year: 'numeric', month: '2-digit', day: '2-digit' };
+                return date.toLocaleDateString('ar-EG', options);
+            }
+            
+            function showStatus(message, type) {
+                statusMessage.textContent = message;
+                statusMessage.className = 'status ' + type;
+                statusMessage.style.display = 'block';
+                
+                // Auto hide after 5 seconds
+                setTimeout(() => {
+                    statusMessage.style.display = 'none';
+                }, 5000);
             }
         });
     </script>
