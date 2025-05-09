@@ -10,6 +10,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
     <style>
+        /* أنماط CSS تبقى كما هي بدون تغيير */
         :root {
             --primary-color: #1a4d2e;
             --primary-dark: #0e3a23;
@@ -787,7 +788,7 @@
                         ['العنوان:', data.address],
                         ['الحالة الاجتماعية:', data.socialStatus],
                         ['رقم هاتف ولي الأمر:', data.parentPhone],
-                        ['الوصي (إن وجد):', data.gardianName || 'لا يوجد']
+                        ['الوصي (إن وجد):', data.guardianName || 'لا يوجد']
                     ];
                     
                     doc.autoTable({
@@ -923,20 +924,30 @@
                             downloadBtn.style.display = 'inline-block';
                             printBtn.style.display = 'inline-block';
                             
-                            downloadBtn.onclick = function(e) {
+                            // إعادة تعيين معالجات الأحداث لتجنب التراكم
+                            downloadBtn.onclick = null;
+                            printBtn.onclick = null;
+                            
+                            downloadBtn.addEventListener('click', function(e) {
                                 e.preventDefault();
+                                downloadBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري التحميل...';
                                 generateRegistrationPDF(studentData, registrationNumber)
                                     .then(doc => {
                                         doc.save(`استمارة_تسجيل_${studentData.firstName}_${studentData.lastName}.pdf`);
+                                        downloadBtn.innerHTML = '<i class="fas fa-download"></i> تحميل استمارة التسجيل';
+                                    })
+                                    .catch(error => {
+                                        console.error('خطأ في التحميل:', error);
+                                        alert('حدث خطأ أثناء إنشاء ملف PDF');
+                                        downloadBtn.innerHTML = '<i class="fas fa-download"></i> تحميل استمارة التسجيل';
                                     });
-                            };
+                            });
                             
-                            printBtn.onclick = function(e) {
+                            printBtn.addEventListener('click', function(e) {
                                 e.preventDefault();
+                                printBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري التحضير للطباعة...';
                                 generateRegistrationPDF(studentData, registrationNumber)
                                     .then(doc => {
-                                        doc.autoPrint();
-                                        // For mobile and desktop compatibility
                                         const blob = doc.output('blob');
                                         const url = URL.createObjectURL(blob);
                                         const iframe = document.createElement('iframe');
@@ -945,9 +956,15 @@
                                         document.body.appendChild(iframe);
                                         iframe.onload = () => {
                                             iframe.contentWindow.print();
+                                            printBtn.innerHTML = '<i class="fas fa-print"></i> طباعة الاستمارة';
                                         };
+                                    })
+                                    .catch(error => {
+                                        console.error('خطأ في الطباعة:', error);
+                                        alert('حدث خطأ أثناء التحضير للطباعة');
+                                        printBtn.innerHTML = '<i class="fas fa-print"></i> طباعة الاستمارة';
                                     });
-                            };
+                            });
                             
                             showSuccessModal();
                             form.reset();
@@ -982,6 +999,8 @@
                     return;
                 }
                 
+                recoveryBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري البحث...';
+                
                 // البحث في البيانات المحفوظة محلياً
                 if (registrationData[regNumber]) {
                     generateRegistrationPDF(registrationData[regNumber], regNumber)
@@ -990,6 +1009,13 @@
                             recoveryMessage.textContent = 'تم تحميل الاستمارة بنجاح';
                             recoveryMessage.style.display = 'block';
                             recoveryMessage.style.color = 'var(--success-color)';
+                            recoveryBtn.innerHTML = 'استعادة الاستمارة';
+                        })
+                        .catch(error => {
+                            recoveryMessage.textContent = 'حدث خطأ أثناء إنشاء الملف';
+                            recoveryMessage.style.display = 'block';
+                            recoveryMessage.style.color = 'var(--error-color)';
+                            recoveryBtn.innerHTML = 'استعادة الاستمارة';
                         });
                     return;
                 }
@@ -1003,6 +1029,13 @@
                             recoveryMessage.textContent = 'تم تحميل الاستمارة بنجاح';
                             recoveryMessage.style.display = 'block';
                             recoveryMessage.style.color = 'var(--success-color)';
+                            recoveryBtn.innerHTML = 'استعادة الاستمارة';
+                        })
+                        .catch(error => {
+                            recoveryMessage.textContent = 'حدث خطأ أثناء إنشاء الملف';
+                            recoveryMessage.style.display = 'block';
+                            recoveryMessage.style.color = 'var(--error-color)';
+                            recoveryBtn.innerHTML = 'استعادة الاستمارة';
                         });
                     return;
                 }
@@ -1019,18 +1052,27 @@
                                         recoveryMessage.textContent = 'تم تحميل الاستمارة بنجاح';
                                         recoveryMessage.style.display = 'block';
                                         recoveryMessage.style.color = 'var(--success-color)';
+                                        recoveryBtn.innerHTML = 'استعادة الاستمارة';
+                                    })
+                                    .catch(error => {
+                                        recoveryMessage.textContent = 'حدث خطأ أثناء إنشاء الملف';
+                                        recoveryMessage.style.display = 'block';
+                                        recoveryMessage.style.color = 'var(--error-color)';
+                                        recoveryBtn.innerHTML = 'استعادة الاستمارة';
                                     });
                             });
                         } else {
                             recoveryMessage.textContent = 'لم يتم العثور على رقم التسجيل';
                             recoveryMessage.style.display = 'block';
                             recoveryMessage.style.color = 'var(--error-color)';
+                            recoveryBtn.innerHTML = 'استعادة الاستمارة';
                         }
                     })
                     .catch(error => {
                         recoveryMessage.textContent = 'حدث خطأ أثناء البحث عن الاستمارة';
                         recoveryMessage.style.display = 'block';
                         recoveryMessage.style.color = 'var(--error-color)';
+                        recoveryBtn.innerHTML = 'استعادة الاستمارة';
                     });
             });
 
