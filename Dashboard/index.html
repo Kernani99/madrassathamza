@@ -16,6 +16,7 @@
             --light-bg: #f9f9f7;
             --error-color: #e74c3c;
             --success-color: #2ecc71;
+            --overlay-color: rgba(0, 0, 0, 0.7);
         }
 
         body {
@@ -25,6 +26,89 @@
             margin: 0;
             padding: 0;
             line-height: 1.6;
+        }
+
+        /* صفحة تسجيل الدخول */
+        .login-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(rgba(26, 77, 46, 0.8), rgba(26, 77, 46, 0.8)),
+                        url('https://img.freepik.com/free-vector/arabic-pattern-background_53876-91528.jpg');
+            background-size: cover;
+        }
+
+        .login-box {
+            background: white;
+            width: 90%;
+            max-width: 450px;
+            padding: 2.5rem;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        .login-logo {
+            height: 100px;
+            margin-bottom: 1.5rem;
+        }
+
+        .login-title {
+            color: var(--primary-color);
+            margin-bottom: 1.5rem;
+            font-size: 1.8rem;
+        }
+
+        .login-input {
+            width: 100%;
+            padding: 12px 15px;
+            margin-bottom: 1.2rem;
+            border: 2px solid #ddd;
+            border-radius: 50px;
+            font-family: 'Cairo', sans-serif;
+            font-size: 1rem;
+            transition: all 0.3s;
+            text-align: right;
+        }
+
+        .login-input:focus {
+            border-color: var(--primary-color);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(26, 77, 46, 0.2);
+        }
+
+        .login-btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            font-weight: 600;
+            transition: all 0.3s;
+            width: 100%;
+            margin-top: 0.5rem;
+        }
+
+        .login-btn:hover {
+            background-color: var(--primary-light);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .login-error {
+            color: var(--error-color);
+            margin-top: 1rem;
+            font-weight: 500;
+            display: none;
+        }
+
+        /* المحتوى الرئيسي (يظهر بعد التسجيل) */
+        .main-content {
+            display: none;
         }
 
         .header {
@@ -47,10 +131,9 @@
         }
 
         .container {
-            max-width: 100%;
+            max-width: 95%;
             margin: 2rem auto;
             padding: 0 1rem;
-            overflow-x: auto;
         }
 
         .card {
@@ -59,7 +142,7 @@
             padding: 1.5rem;
             box-shadow: 0 5px 15px rgba(0,0,0,0.05);
             margin-bottom: 2rem;
-            min-width: 1000px;
+            overflow-x: auto;
         }
 
         .card-title {
@@ -82,7 +165,7 @@
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            margin: 0.5rem 0;
+            margin: 0.5rem;
         }
 
         .btn:hover {
@@ -100,18 +183,80 @@
             color: var(--primary-color);
         }
 
+        .btn-print {
+            background-color: #3498db;
+        }
+
+        .btn-excel {
+            background-color: #27ae60;
+        }
+
+        .btn-logout {
+            background-color: var(--error-color);
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            z-index: 100;
+        }
+
+        .controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 1rem;
+            align-items: center;
+        }
+
+        .search-container {
+            flex-grow: 1;
+            position: relative;
+            max-width: 400px;
+            margin-right: auto;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 10px 15px 10px 40px;
+            border: 2px solid #ddd;
+            border-radius: 50px;
+            font-family: 'Cairo', sans-serif;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+        .search-input:focus {
+            border-color: var(--primary-color);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(26, 77, 46, 0.2);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #777;
+        }
+
+        .table-container {
+            width: 100%;
+            overflow-x: auto;
+            margin-top: 1.5rem;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+        }
+
         table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 1.5rem;
             font-size: 0.9rem;
+            min-width: 1000px;
         }
 
         th, td {
             border: 1px solid #e0e0e0;
             padding: 10px 12px;
             text-align: right;
-            min-width: 100px;
         }
 
         th {
@@ -120,6 +265,7 @@
             font-weight: 600;
             position: sticky;
             top: 0;
+            white-space: nowrap;
         }
 
         tr:nth-child(even) {
@@ -167,51 +313,129 @@
             font-style: italic;
         }
 
+        .latin-numbers {
+            font-family: Arial, sans-serif;
+        }
+
         @keyframes spin {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @media print {
+            body * {
+                visibility: hidden;
+            }
+            .printable, .printable * {
+                visibility: visible;
+            }
+            .printable {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+                font-size: 12pt;
+            }
+            .printable table {
+                width: 100%;
+                border-collapse: collapse;
+            }
+            .printable th, .printable td {
+                padding: 6px;
+                border: 1px solid #ddd;
+            }
+            .no-print {
+                display: none !important;
+            }
         }
 
         @media (max-width: 1200px) {
             .container {
                 padding: 0;
             }
-            
             .card {
                 border-radius: 0;
+            }
+            .controls {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .search-container {
+                width: 100%;
+                max-width: 100%;
+                margin-bottom: 10px;
             }
         }
     </style>
 </head>
 <body>
-    <header class="header">
-        <img src="https://i.ibb.co/jZrxhFsf/1-min.png" alt="شعار المجمع القرآني" class="logo">
-        <h1>نظام إدارة الطلاب - المجمع القرآني</h1>
-    </header>
-
-    <main class="container">
-        <div class="card">
-            <h2 class="card-title">قائمة الطلاب المسجلين</h2>
-            
-            <div class="controls">
-                <button id="refreshBtn" class="btn btn-refresh">
-                    <i class="fas fa-sync-alt"></i> تحديث البيانات
-                </button>
+    <!-- صفحة تسجيل الدخول -->
+    <div class="login-container" id="loginPage">
+        <div class="login-box">
+            <img src="https://i.ibb.co/jZrxhFsf/1-min.png" alt="شعار المجمع القرآني" class="login-logo">
+            <h1 class="login-title">تسجيل الدخول للنظام</h1>
+            <input type="password" id="passwordInput" class="login-input" placeholder="كلمة المرور" autocomplete="off">
+            <button id="loginBtn" class="login-btn">دخول <i class="fas fa-sign-in-alt"></i></button>
+            <div id="loginError" class="login-error">
+                <i class="fas fa-exclamation-circle"></i> كلمة المرور غير صحيحة
             </div>
-            
-            <div id="statusMessage" class="status"></div>
-            
-            <div id="loadingIndicator" class="loading">
-                <i class="fas fa-spinner"></i>
-                <p>جاري تحميل البيانات...</p>
-            </div>
-            
-            <div id="studentsTable"></div>
         </div>
-    </main>
+    </div>
+
+    <!-- المحتوى الرئيسي (يظهر بعد التسجيل) -->
+    <div class="main-content" id="mainContent">
+        <header class="header no-print">
+            <img src="https://i.ibb.co/jZrxhFsf/1-min.png" alt="شعار المجمع القرآني" class="logo">
+            <h1>نظام إدارة الطلاب - المجمع القرآني</h1>
+        </header>
+
+        <main class="container">
+            <div class="card">
+                <h2 class="card-title">قائمة الطلاب المسجلين</h2>
+                
+                <div class="controls no-print">
+                    <div class="search-container">
+                        <i class="fas fa-search search-icon"></i>
+                        <input type="text" id="searchInput" class="search-input" placeholder="ابحث عن طالب...">
+                    </div>
+                    
+                    <button id="refreshBtn" class="btn btn-refresh">
+                        <i class="fas fa-sync-alt"></i> تحديث البيانات
+                    </button>
+                    <button id="printBtn" class="btn btn-print">
+                        <i class="fas fa-print"></i> طباعة القائمة
+                    </button>
+                    <button id="excelBtn" class="btn btn-excel">
+                        <i class="fas fa-file-excel"></i> تصدير لإكسل
+                    </button>
+                </div>
+                
+                <div id="statusMessage" class="status"></div>
+                
+                <div id="loadingIndicator" class="loading">
+                    <i class="fas fa-spinner"></i>
+                    <p>جاري تحميل البيانات...</p>
+                </div>
+                
+                <div class="table-container">
+                    <div id="studentsTable"></div>
+                </div>
+            </div>
+        </main>
+
+        <button id="logoutBtn" class="btn btn-logout no-print">
+            <i class="fas fa-sign-out-alt"></i> تسجيل الخروج
+        </button>
+    </div>
 
     <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-database-compat.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <script>
         // تهيئة Firebase
         const firebaseConfig = {
@@ -229,17 +453,103 @@
         const app = firebase.initializeApp(firebaseConfig);
         const database = firebase.database();
 
+        // كلمة المرور للنظام (يمكن تغييرها)
+        const SYSTEM_PASSWORD = "admin123";
+
         document.addEventListener('DOMContentLoaded', function() {
+            const loginPage = document.getElementById('loginPage');
+            const mainContent = document.getElementById('mainContent');
+            const passwordInput = document.getElementById('passwordInput');
+            const loginBtn = document.getElementById('loginBtn');
+            const loginError = document.getElementById('loginError');
+            const logoutBtn = document.getElementById('logoutBtn');
             const refreshBtn = document.getElementById('refreshBtn');
+            const printBtn = document.getElementById('printBtn');
+            const excelBtn = document.getElementById('excelBtn');
+            const searchInput = document.getElementById('searchInput');
             const statusMessage = document.getElementById('statusMessage');
             const loadingIndicator = document.getElementById('loadingIndicator');
             const studentsTable = document.getElementById('studentsTable');
             
-            // تحميل البيانات عند فتح الصفحة
-            loadStudentsData();
+            let studentsData = null;
+            let filteredData = null;
             
-            // حدث زر التحديث
+            // التحقق من حالة تسجيل الدخول في localStorage
+            checkLoginStatus();
+            
+            // أحداث تسجيل الدخول والخروج
+            loginBtn.addEventListener('click', login);
+            passwordInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') login();
+            });
+            logoutBtn.addEventListener('click', logout);
+            
+            // أحداث النظام الرئيسي
             refreshBtn.addEventListener('click', loadStudentsData);
+            printBtn.addEventListener('click', printTable);
+            excelBtn.addEventListener('click', exportToExcel);
+            searchInput.addEventListener('input', searchStudents);
+            
+            // دالة التحقق من تسجيل الدخول
+            function checkLoginStatus() {
+                const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+                
+                if (isLoggedIn) {
+                    loginPage.style.display = 'none';
+                    mainContent.style.display = 'block';
+                    loadStudentsData();
+                } else {
+                    loginPage.style.display = 'flex';
+                    mainContent.style.display = 'none';
+                }
+            }
+            
+            // دالة تسجيل الدخول
+            function login() {
+                const password = passwordInput.value.trim();
+                
+                if (password === SYSTEM_PASSWORD) {
+                    localStorage.setItem('isLoggedIn', 'true');
+                    loginError.style.display = 'none';
+                    passwordInput.value = '';
+                    checkLoginStatus();
+                } else {
+                    loginError.style.display = 'block';
+                    passwordInput.focus();
+                    shakeLoginBox();
+                }
+            }
+            
+            // دالة تسجيل الخروج
+            function logout() {
+                localStorage.removeItem('isLoggedIn');
+                checkLoginStatus();
+            }
+            
+            // تأثير اهتزاز عند خطأ في كلمة المرور
+            function shakeLoginBox() {
+                const loginBox = document.querySelector('.login-box');
+                loginBox.style.animation = 'none';
+                void loginBox.offsetWidth; // Trigger reflow
+                loginBox.style.animation = 'shake 0.5s';
+                
+                // إنشاء تأثير الاهتزاز
+                const keyframes = `
+                    @keyframes shake {
+                        0%, 100% { transform: translateX(0); }
+                        10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+                        20%, 40%, 60%, 80% { transform: translateX(5px); }
+                    }
+                `;
+                
+                const style = document.createElement('style');
+                style.innerHTML = keyframes;
+                document.head.appendChild(style);
+                
+                setTimeout(() => {
+                    document.head.removeChild(style);
+                }, 500);
+            }
             
             // دالة جلب بيانات الطلاب
             function loadStudentsData() {
@@ -248,12 +558,13 @@
                 
                 database.ref('students').once('value')
                     .then(snapshot => {
-                        const students = snapshot.val();
+                        studentsData = snapshot.val();
                         hideLoading();
                         
-                        if (students) {
-                            displayStudents(students);
-                            showStatus(`تم تحميل ${Object.keys(students).length} طالب بنجاح`, 'success');
+                        if (studentsData) {
+                            filteredData = {...studentsData};
+                            displayStudents(filteredData);
+                            showStatus(`تم تحميل ${Object.keys(studentsData).length} طالب بنجاح`, 'success');
                         } else {
                             studentsTable.innerHTML = '<p style="text-align: center; color: var(--error-color);">لا توجد بيانات طلاب متاحة</p>';
                             showStatus('لا توجد بيانات طلاب في قاعدة البيانات', 'error');
@@ -267,30 +578,61 @@
                     });
             }
             
+            // دالة البحث عن الطلاب
+            function searchStudents() {
+                const searchTerm = searchInput.value.trim().toLowerCase();
+                
+                if (!studentsData) return;
+                
+                if (searchTerm === '') {
+                    filteredData = {...studentsData};
+                } else {
+                    filteredData = Object.fromEntries(
+                        Object.entries(studentsData).filter(([key, student]) => {
+                            return (
+                                (student.firstName && student.firstName.toLowerCase().includes(searchTerm)) ||
+                                (student.lastName && student.lastName.toLowerCase().includes(searchTerm)) ||
+                                (student.parentPhone && student.parentPhone.includes(searchTerm)) ||
+                                (student.address && student.address.toLowerCase().includes(searchTerm))
+                            );
+                        })
+                    );
+                }
+                
+                displayStudents(filteredData);
+                showStatus(`تم العثور على ${Object.keys(filteredData).length} نتيجة`, 'success');
+            }
+            
             // دالة عرض بيانات الطلاب في الجدول
             function displayStudents(students) {
+                if (!students || Object.keys(students).length === 0) {
+                    studentsTable.innerHTML = '<p style="text-align: center; color: var(--error-color);">لا توجد بيانات لعرضها</p>';
+                    return;
+                }
+
                 let tableHTML = `
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>الاسم</th>
-                                <th>اللقب</th>
-                                <th>اسم الأب</th>
-                                <th>اسم الأم</th>
-                                <th>تاريخ الميلاد</th>
-                                <th>مكان الميلاد</th>
-                                <th>العنوان</th>
-                                <th>رقم الهاتف</th>
-                                <th>الحالة الاجتماعية</th>
-                                <th>الحالة الصحية</th>
-                                <th>نوع المرض</th>
-                                <th>يتناول أدوية</th>
-                                <th>الزمرة الدموية</th>
-                                <th>ملاحظات</th>
-                                <th>تاريخ التسجيل</th>
-                            </tr>
-                        </thead>
-                        <tbody>
+                    <div class="printable">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>الاسم</th>
+                                    <th>اللقب</th>
+                                    <th>اسم الأب</th>
+                                    <th>اسم الأم</th>
+                                    <th>تاريخ الميلاد</th>
+                                    <th>مكان الميلاد</th>
+                                    <th>العنوان</th>
+                                    <th>رقم الهاتف</th>
+                                    <th>الحالة الاجتماعية</th>
+                                    <th>الحالة الصحية</th>
+                                    <th>نوع المرض</th>
+                                    <th>يتناول أدوية</th>
+                                    <th>الزمرة الدموية</th>
+                                    <th>ملاحظات</th>
+                                    <th>تاريخ التسجيل</th>
+                                </tr>
+                            </thead>
+                            <tbody>
                 `;
                 
                 Object.entries(students).forEach(([key, student]) => {
@@ -300,27 +642,227 @@
                             <td>${formatData(student.lastName)}</td>
                             <td>${formatData(student.fatherName)}</td>
                             <td>${formatData(student.motherName)}</td>
-                            <td>${formatDate(student.birthDate)}</td>
+                            <td class="latin-numbers">${formatDate(student.birthDate)}</td>
                             <td>${formatData(student.birthPlace)}</td>
                             <td>${formatData(student.address)}</td>
-                            <td>${formatData(student.parentPhone)}</td>
+                            <td class="latin-numbers">${formatData(student.parentPhone)}</td>
                             <td>${formatData(student.socialStatus)}</td>
                             <td>${student.isSick === 'نعم' ? 'مريض' : 'سليم'}</td>
                             <td>${formatData(student.sicknessType)}</td>
                             <td>${formatData(student.takesMedicine)}</td>
                             <td>${formatData(student.bloodType)}</td>
                             <td>${formatData(student.notes)}</td>
-                            <td>${formatDate(student.registrationDate)}</td>
+                            <td class="latin-numbers">${formatDate(student.registrationDate)}</td>
                         </tr>
                     `;
                 });
                 
                 tableHTML += `
-                        </tbody>
-                    </table>
+                            </tbody>
+                        </table>
+                    </div>
                 `;
                 
                 studentsTable.innerHTML = tableHTML;
+            }
+            
+            // دالة طباعة الجدول
+            function printTable() {
+                if (!filteredData || Object.keys(filteredData).length === 0) {
+                    showStatus('لا توجد بيانات متاحة للطباعة', 'error');
+                    return;
+                }
+
+                const printContent = `
+                    <html>
+                    <head>
+                        <title>قائمة الطلاب - المجمع القرآني</title>
+                        <style>
+                            @page {
+                                size: A4;
+                                margin: 1cm;
+                            }
+                            body {
+                                font-family: 'Arial', sans-serif;
+                                margin: 0;
+                                padding: 20px;
+                                direction: rtl;
+                            }
+                            h1 {
+                                text-align: center;
+                                color: #1a4d2e;
+                                margin-bottom: 20px;
+                            }
+                            .print-header {
+                                text-align: center;
+                                margin-bottom: 20px;
+                            }
+                            .print-logo {
+                                height: 80px;
+                                margin-bottom: 10px;
+                            }
+                            table {
+                                width: 100%;
+                                border-collapse: collapse;
+                                margin-top: 20px;
+                                font-size: 10pt;
+                                page-break-inside: auto;
+                            }
+                            th, td {
+                                border: 1px solid #ddd;
+                                padding: 6px;
+                                text-align: right;
+                            }
+                            th {
+                                background-color: #1a4d2e;
+                                color: white;
+                            }
+                            tr {
+                                page-break-inside: avoid;
+                                page-break-after: auto;
+                            }
+                            tr:nth-child(even) {
+                                background-color: #f9f9f9;
+                            }
+                            .footer {
+                                text-align: center;
+                                margin-top: 20px;
+                                font-size: 10pt;
+                                color: #666;
+                            }
+                        </style>
+                    </head>
+                    <body>
+                        <div class="print-header">
+                            <img src="https://i.ibb.co/jZrxhFsf/1-min.png" class="print-logo" alt="شعار المجمع القرآني">
+                            <h1>قائمة الطلاب المسجلين</h1>
+                            <p>تاريخ الطباعة: ${new Date().toLocaleDateString('ar-EG')}</p>
+                            ${searchInput.value ? `<p>نتائج البحث عن: "${searchInput.value}"</p>` : ''}
+                        </div>
+                        ${document.querySelector('.printable table').outerHTML}
+                        <div class="footer">
+                            <p>جميع الحقوق محفوظة &copy; المجمع القرآني حمزة بن عبدالمطلب ${new Date().getFullYear()}</p>
+                        </div>
+                    </body>
+                    </html>
+                `;
+
+                const printWindow = window.open('', '_blank');
+                printWindow.document.write(printContent);
+                printWindow.document.close();
+                
+                setTimeout(() => {
+                    printWindow.print();
+                    printWindow.close();
+                }, 500);
+            }
+            
+            // دالة التصدير إلى Excel
+            function exportToExcel() {
+                if (!filteredData || Object.keys(filteredData).length === 0) {
+                    showStatus('لا توجد بيانات متاحة للتصدير', 'error');
+                    return;
+                }
+
+                try {
+                    // إضافة شريط تقدم
+                    const progressBar = document.createElement('div');
+                    progressBar.style.position = 'fixed';
+                    progressBar.style.top = '0';
+                    progressBar.style.left = '0';
+                    progressBar.style.width = '100%';
+                    progressBar.style.height = '5px';
+                    progressBar.style.backgroundColor = '#f1f1f1';
+                    progressBar.style.zIndex = '9999';
+                    
+                    const progress = document.createElement('div');
+                    progress.style.height = '100%';
+                    progress.style.backgroundColor = '#4CAF50';
+                    progress.style.width = '0%';
+                    progressBar.appendChild(progress);
+                    document.body.appendChild(progressBar);
+
+                    // تحضير البيانات مع تحديث شريط التقدم
+                    const totalStudents = Object.keys(filteredData).length;
+                    let processed = 0;
+                    
+                    const excelData = Object.values(filteredData).map(student => {
+                        processed++;
+                        progress.style.width = `${(processed / totalStudents) * 100}%`;
+                        
+                        return {
+                            'الاسم': student.firstName || '',
+                            'اللقب': student.lastName || '',
+                            'اسم الأب': student.fatherName || '',
+                            'اسم الأم': student.motherName || '',
+                            'تاريخ الميلاد': student.birthDate ? formatExcelDate(student.birthDate) : '',
+                            'مكان الميلاد': student.birthPlace || '',
+                            'العنوان': student.address || '',
+                            'رقم الهاتف': student.parentPhone || '',
+                            'الحالة الاجتماعية': student.socialStatus || '',
+                            'الحالة الصحية': student.isSick === 'نعم' ? 'مريض' : 'سليم',
+                            'نوع المرض': student.sicknessType || '',
+                            'يتناول أدوية': student.takesMedicine || '',
+                            'الزمرة الدموية': student.bloodType || '',
+                            'ملاحظات': student.notes || '',
+                            'تاريخ التسجيل': student.registrationDate ? formatExcelDate(student.registrationDate) : ''
+                        };
+                    });
+
+                    // إنشاء ورقة عمل مع تنسيقات
+                    const ws = XLSX.utils.json_to_sheet(excelData);
+                    
+                    // تحديد عرض الأعمدة تلقائياً
+                    const wscols = [
+                        {wch: 15}, {wch: 15}, {wch: 15}, {wch: 15},
+                        {wch: 12}, {wch: 15}, {wch: 25}, {wch: 15},
+                        {wch: 20}, {wch: 15}, {wch: 20}, {wch: 15},
+                        {wch: 15}, {wch: 30}, {wch: 15}
+                    ];
+                    ws['!cols'] = wscols;
+                    
+                    // إضافة عنوان للجدول
+                    const title = [['قائمة الطلاب المسجلين - المجمع القرآني']];
+                    XLSX.utils.sheet_add_aoa(ws, title, { origin: 'A1' });
+                    
+                    // إضافة تاريخ التصدير ونتائج البحث إن وجدت
+                    const info = [
+                        [`تاريخ التصدير: ${new Date().toLocaleDateString('ar-EG')}`],
+                        [`عدد الطلاب: ${totalStudents}`],
+                        searchInput.value ? [`نتائج البحث عن: "${searchInput.value}"`] : []
+                    ];
+                    XLSX.utils.sheet_add_aoa(ws, info, { origin: 'A3' });
+                    
+                    // دمج خلايا العنوان والمعلومات
+                    ws['!merges'] = [
+                        { s: { r: 0, c: 0 }, e: { r: 0, c: 14 } },
+                        { s: { r: 2, c: 0 }, e: { r: 2, c: 14 } },
+                        searchInput.value ? { s: { r: 4, c: 0 }, e: { r: 4, c: 14 } } : null
+                    ].filter(Boolean);
+                    
+                    // إنشاء ملف Excel
+                    const wb = XLSX.utils.book_new();
+                    XLSX.utils.book_append_sheet(wb, ws, "الطلاب");
+                    
+                    // توليد ملف Excel مع تخصيص أكثر
+                    XLSX.writeFile(wb, `طلاب_المجمع_القرآني_${new Date().toISOString().slice(0,10)}.xlsx`, {
+                        bookType: 'xlsx',
+                        type: 'binary',
+                        cellStyles: true
+                    });
+                    
+                    document.body.removeChild(progressBar);
+                    showStatus(`تم تصدير ${totalStudents} سجل بنجاح إلى Excel`, 'success');
+                    
+                } catch (error) {
+                    showStatus('حدث خطأ أثناء التصدير: ' + error.message, 'error');
+                    console.error('تفاصيل الخطأ:', error);
+                    
+                    // إزالة شريط التقدم في حالة الخطأ
+                    if (document.body.contains(progressBar)) {
+                        document.body.removeChild(progressBar);
+                    }
+                }
             }
             
             // دالة تنسيق البيانات الفارغة
@@ -328,15 +870,22 @@
                 return data ? data : '<span class="empty-data">غير محدد</span>';
             }
             
-            // دالة تنسيق التاريخ
+            // دالة تنسيق التاريخ للعرض
             function formatDate(dateString) {
                 if (!dateString) return '<span class="empty-data">غير محدد</span>';
                 try {
                     const date = new Date(dateString);
-                    return isNaN(date.getTime()) ? dateString : date.toLocaleDateString('ar-EG');
+                    return isNaN(date.getTime()) ? dateString : date.toLocaleDateString('en-US');
                 } catch {
                     return dateString;
                 }
+            }
+            
+            // دالة تنسيق التاريخ لملف Excel
+            function formatExcelDate(dateString) {
+                if (!dateString) return '';
+                const date = new Date(dateString);
+                return isNaN(date.getTime()) ? dateString : date.toISOString().split('T')[0];
             }
             
             // دوال مساعدة للعرض
