@@ -3,14 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>تسجيل طالب جديد - المجمع القرآني حمزة بن عبدالمطلب</title>
+    <title>نتائج البراعم - المجمع القرآني حمزة بن عبدالمطلب</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="icon" href="https://i.ibb.co/jZrxhFsf/1-min.png" type="image/png">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
     <style>
-        /* أنماط CSS تبقى كما هي بدون تغيير */
         :root {
             --primary-color: #1a4d2e;
             --primary-dark: #0e3a23;
@@ -19,6 +16,8 @@
             --text-color: #333;
             --light-bg: #f9f9f7;
             --gold-color: #d4af37;
+            --silver-color: #c0c0c0;
+            --bronze-color: #cd7f32;
             --error-color: #e74c3c;
             --success-color: #2ecc71;
         }
@@ -68,20 +67,29 @@
         }
 
         .container {
-            max-width: 800px;
+            max-width: 1000px;
             margin: 3rem auto;
             padding: 0 1.5rem;
         }
 
-        .registration-form {
+        .search-section {
             background: white;
             border-radius: 15px;
             padding: 2.5rem;
             box-shadow: 0 5px 20px rgba(0,0,0,0.1);
-            position: relative;
+            margin-bottom: 2rem;
         }
 
-        .form-title {
+        .results-section {
+            background: white;
+            border-radius: 15px;
+            padding: 2.5rem;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+            display: none;
+        }
+
+        .section-title {
             color: var(--primary-color);
             text-align: center;
             margin-bottom: 2rem;
@@ -90,7 +98,7 @@
             position: relative;
         }
 
-        .form-title::after {
+        .section-title::after {
             content: '';
             position: absolute;
             bottom: -10px;
@@ -102,134 +110,91 @@
             border-radius: 3px;
         }
 
-        .section-title {
-            color: var(--primary-dark);
-            margin: 2rem 0 1rem;
-            padding-bottom: 0.5rem;
-            border-bottom: 2px solid var(--gold-color);
-            font-size: 1.3rem;
+        .search-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
         }
 
         .form-group {
-            margin-bottom: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
         }
 
         .form-group label {
-            display: block;
-            margin-bottom: 0.5rem;
             font-weight: 600;
             color: var(--primary-dark);
         }
 
-        .form-control {
-            width: 100%;
+        .form-group select, .form-group input {
             padding: 0.8rem 1rem;
             border: 1px solid #ddd;
             border-radius: 8px;
             font-size: 1rem;
+            background-color: #f9f9f9;
             transition: all 0.3s;
         }
 
-        .form-control:focus {
-            border-color: var(--primary-color);
+        .form-group select:focus, .form-group input:focus {
             outline: none;
-            box-shadow: 0 0 0 3px rgba(26, 77, 46, 0.2);
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(26, 77, 46, 0.1);
         }
 
-        .radio-group {
-            display: flex;
-            gap: 1rem;
-            margin-top: 0.5rem;
-        }
-
-        .radio-option {
-            display: flex;
-            align-items: center;
-        }
-
-        .radio-option input {
-            margin-left: 0.5rem;
-        }
-
-        .select-group {
-            position: relative;
-        }
-
-        .select-group select {
-            appearance: none;
-            -webkit-appearance: none;
-            -moz-appearance: none;
-            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
-            background-repeat: no-repeat;
-            background-position: right 1rem center;
-            background-size: 1em;
-        }
-
-        .error-message {
-            color: var(--error-color);
-            font-size: 0.9rem;
-            margin-top: 0.3rem;
-            display: none;
-        }
-
-        .submit-btn {
+        .search-btn {
             background: var(--primary-color);
             color: white;
             border: none;
-            padding: 1rem 2rem;
+            padding: 0.8rem 1.5rem;
             border-radius: 50px;
-            font-size: 1.1rem;
-            font-weight: 700;
+            font-size: 1rem;
+            font-weight: 600;
             cursor: pointer;
             transition: all 0.3s;
-            display: block;
-            width: 100%;
-            margin-top: 2rem;
+            margin-top: 1rem;
         }
 
-        .submit-btn:hover {
+        .search-btn:hover {
             background: var(--primary-dark);
             transform: translateY(-3px);
             box-shadow: 0 5px 15px rgba(0,0,0,0.2);
         }
 
-        .submit-btn:disabled {
-            background: #ccc;
-            cursor: not-allowed;
-            transform: none;
-            box-shadow: none;
+        .student-results {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
         }
 
-        .form-note {
+        .student-results th {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 12px;
             text-align: center;
-            margin-top: 1.5rem;
-            color: #666;
-            font-size: 0.9rem;
         }
 
-        .download-btn {
-            background: var(--gold-color);
+        .student-results td {
+            padding: 12px;
+            text-align: center;
+            border-bottom: 1px solid #eee;
+        }
+
+        .student-results tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        .student-results tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        .student-name {
+            font-weight: bold;
             color: var(--primary-dark);
-            border: none;
-            padding: 0.8rem 1.5rem;
-            border-radius: 50px;
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-            display: inline-block;
-            margin-top: 1rem;
-            text-decoration: none;
         }
 
-        .download-btn:hover {
-            background: #c9a227;
-            transform: translateY(-2px);
-            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
-        }
-
-        .print-btn {
-            background: var(--accent-color);
+        .back-btn {
+            background: var(--primary-color);
             color: white;
             border: none;
             padding: 0.8rem 1.5rem;
@@ -238,42 +203,17 @@
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s;
-            display: inline-block;
-            margin: 1rem 0.5rem 0;
+            display: block;
+            margin: 2rem auto;
             text-decoration: none;
-        }
-
-        .print-btn:hover {
-            background: #3a6a4a;
-            transform: translateY(-2px);
-            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
-        }
-
-        .recovery-section {
             text-align: center;
-            margin-top: 2rem;
-            padding: 1rem;
-            background-color: #f8f9fa;
-            border-radius: 8px;
-            display: none;
+            width: 200px;
         }
 
-        .recovery-btn {
-            background: var(--accent-color);
-            color: white;
-            border: none;
-            padding: 0.6rem 1.2rem;
-            border-radius: 50px;
-            font-size: 0.9rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-            display: inline-block;
-            margin-top: 0.5rem;
-        }
-
-        .recovery-btn:hover {
-            background: #3a6a4a;
+        .back-btn:hover {
+            background: var(--primary-dark);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
         }
 
         footer {
@@ -289,110 +229,14 @@
             color: #ccc;
         }
 
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0,0,0,0.7);
-            z-index: 1000;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .modal-content {
-            background-color: white;
-            padding: 2rem;
-            border-radius: 10px;
-            max-width: 500px;
-            width: 90%;
-            text-align: center;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
-            animation: modalFadeIn 0.3s ease-out;
-        }
-
-        @keyframes modalFadeIn {
-            from { opacity: 0; transform: translateY(-20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .modal-icon {
-            font-size: 4rem;
-            margin-bottom: 1rem;
-        }
-
-        .success-icon {
-            color: var(--success-color);
-        }
-
-        .error-icon {
-            color: var(--error-color);
-        }
-
-        .modal-title {
-            font-size: 1.5rem;
-            margin-bottom: 1rem;
-            color: var(--primary-dark);
-        }
-
-        .modal-message {
-            margin-bottom: 1.5rem;
-            font-size: 1.1rem;
-        }
-
-        .modal-btn {
-            background: var(--primary-color);
-            color: white;
-            border: none;
-            padding: 0.8rem 1.5rem;
-            border-radius: 50px;
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        .modal-btn:hover {
-            background: var(--primary-dark);
-        }
-
-        .spinner {
-            display: none;
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: rgba(255,255,255,0.8);
-            z-index: 100;
-            border-radius: 15px;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .spinner-inner {
-            width: 50px;
-            height: 50px;
-            border: 5px solid #f3f3f3;
-            border-top: 5px solid var(--primary-color);
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
+        /* Responsive styles */
         @media (max-width: 768px) {
             .container {
                 margin: 2rem auto;
                 padding: 0 1rem;
             }
             
-            .registration-form {
+            .search-section, .results-section {
                 padding: 1.5rem;
             }
             
@@ -400,198 +244,77 @@
                 font-size: 1.5rem;
             }
             
-            .form-title {
+            .section-title {
                 font-size: 1.5rem;
+            }
+            
+            .student-results {
+                font-size: 0.9rem;
+            }
+            
+            .student-results th, 
+            .student-results td {
+                padding: 8px;
             }
         }
     </style>
 </head>
 <body>
     <header>
-        <img src="https://i.ibb.co/jZrxhFsf/1-min.png" alt="شعار المدرسة" class="logo">
-        <h1>تسجيل طالب جديد</h1>
+        <img src="https://i.ibb.co/jZrxhFsf/1-min.png" alt="شعار المجمع" class="logo">
+        <h1>نتائج التلاميذ</h1>
     </header>
 
     <main class="container">
-        <form class="registration-form" id="studentRegistration">
-            <div class="spinner" id="formSpinner">
-                <div class="spinner-inner"></div>
-            </div>
-            
-            <h2 class="form-title">استمارة تسجيل برعم ماقبل التمدرس</h2>
-            
-            <!-- معلومات المتمدرس -->
-            <h3 class="section-title">معلومات عن المتمدرس</h3>
-            
-            <div class="form-group">
-                <label for="firstName">الاسم <span class="required">*</span></label>
-                <input type="text" id="firstName" class="form-control" required>
-                <div class="error-message" id="firstNameError">يجب إدخال اسم المتمدرس</div>
-            </div>
-            
-            <div class="form-group">
-                <label for="lastName">اللقب <span class="required">*</span></label>
-                <input type="text" id="lastName" class="form-control" required>
-                <div class="error-message" id="lastNameError">يجب إدخال لقب المتمدرس</div>
-            </div>
-            
-            <div class="form-group">
-                <label for="birthDate">تاريخ الميلاد (يجب أن يكون سنة 2020) <span class="required">*</span></label>
-                <input type="date" id="birthDate" class="form-control" required>
-                <div class="error-message" id="birthDateError">يجب أن يكون تاريخ الميلاد في سنة 2020</div>
-            </div>
-            
-            <div class="form-group">
-                <label for="birthPlace">مكان الميلاد <span class="required">*</span></label>
-                <input type="text" id="birthPlace" class="form-control" required>
-                <div class="error-message" id="birthPlaceError">يجب إدخال مكان الميلاد</div>
-            </div>
-            
-            <div class="form-group">
-                <label for="fatherName">اسم الأب <span class="required">*</span></label>
-                <input type="text" id="fatherName" class="form-control" required>
-                <div class="error-message" id="fatherNameError">يجب إدخال اسم الأب</div>
-            </div>
-            
-            <div class="form-group">
-                <label for="motherName">اسم ولقب الأم <span class="required">*</span></label>
-                <input type="text" id="motherName" class="form-control" required>
-                <div class="error-message" id="motherNameError">يجب إدخال اسم ولقب الأم</div>
-            </div>
-            
-            <div class="form-group">
-                <label for="address">العنوان <span class="required">*</span></label>
-                <textarea id="address" class="form-control" rows="3" required></textarea>
-                <div class="error-message" id="addressError">يجب إدخال العنوان</div>
-            </div>
-            
-            <div class="form-group">
-                <label>الحالة الاجتماعية <span class="required">*</span></label>
-                <div class="radio-group">
-                    <div class="radio-option">
-                        <input type="radio" id="socialStatusNormal" name="socialStatus" value="عادية" required>
-                        <label for="socialStatusNormal">عادية</label>
-                    </div>
-                    <div class="radio-option">
-                        <input type="radio" id="socialStatusOrphan" name="socialStatus" value="يتيم">
-                        <label for="socialStatusOrphan">يتيم</label>
-                    </div>
-                    <div class="radio-option">
-                        <input type="radio" id="socialStatusDivorced" name="socialStatus" value="مطلق">
-                        <label for="socialStatusDivorced">مطلق</label>
-                    </div>
+        <div class="search-section">
+            <h2 class="section-title">البحث عن نتائج التلميذ</h2>
+            <form class="search-form" id="searchForm">
+                <div class="form-group">
+                    <label for="teacher">اختر المعلمة:</label>
+                    <select id="teacher" required>
+                        <option value="">-- اختر المعلمة --</option>
+                        <option value="teacher1">نورية لعرابة</option>
+                        <option value="teacher2">منى مفرج</option>
+                        <option value="teacher3">إلهام عباز</option>
+                        <option value="teacher4">فريدة لعرابة</option>
+                        <option value="teacher5">كنزة بوحفص</option>
+                        <option value="teacher6">بركاهم بوحفص</option>
+                    </select>
                 </div>
-                <div class="error-message" id="socialStatusError">يجب اختيار الحالة الاجتماعية</div>
-            </div>
-            
-            <div class="form-group">
-                <label for="parentPhone">رقم هاتف الأب أو الأم <span class="required">*</span></label>
-                <input type="tel" id="parentPhone" class="form-control" required pattern="[0-9]{8,15}">
-                <div class="error-message" id="parentPhoneError">يجب إدخال رقم هاتف صحيح (8-15 رقم)</div>
-            </div>
-            
-            <div class="form-group" id="guardianGroup" style="display: none;">
-                <label for="guardianName">اسم الوصي في حالة غياب الولي</label>
-                <input type="text" id="guardianName" class="form-control">
-            </div>
-            
-            <!-- معلومات طبية -->
-            <h3 class="section-title">معلومات طبية</h3>
-            
-            <div class="form-group">
-                <label>هل ابنكم مريض؟ <span class="required">*</span></label>
-                <div class="radio-group">
-                    <div class="radio-option">
-                        <input type="radio" id="isSickYes" name="isSick" value="نعم" required>
-                        <label for="isSickYes">نعم</label>
-                    </div>
-                    <div class="radio-option">
-                        <input type="radio" id="isSickNo" name="isSick" value="لا">
-                        <label for="isSickNo">لا</label>
-                    </div>
+                
+                <div class="form-group">
+                    <label for="student">اختر اسم التلميذ:</label>
+                    <select id="student" disabled required>
+                        <option value="">-- اختر التلميذ بعد اختيار المعلمة --</option>
+                    </select>
                 </div>
-                <div class="error-message" id="isSickError">يجب اختيار الإجابة</div>
-            </div>
-            
-            <div class="form-group" id="sicknessTypeGroup" style="display: none;">
-                <label for="sicknessType">إذا كان مريض، ما نوع المرض</label>
-                <input type="text" id="sicknessType" class="form-control">
-            </div>
-            
-            <div class="form-group">
-                <label>هل يتناول أدوية؟ <span class="required">*</span></label>
-                <div class="radio-group">
-                    <div class="radio-option">
-                        <input type="radio" id="takesMedicineYes" name="takesMedicine" value="نعم" required>
-                        <label for="takesMedicineYes">نعم</label>
-                    </div>
-                    <div class="radio-option">
-                        <input type="radio" id="takesMedicineNo" name="takesMedicine" value="لا">
-                        <label for="takesMedicineNo">لا</label>
-                    </div>
-                </div>
-                <div class="error-message" id="takesMedicineError">يجب اختيار الإجابة</div>
-            </div>
-            
-            <div class="form-group select-group">
-                <label for="bloodType">نوع الزمرة الدموية</label>
-                <select id="bloodType" class="form-control">
-                    <option value="">-- اختر الزمرة الدموية --</option>
-                    <option value="A+">A+</option>
-                    <option value="A-">A-</option>
-                    <option value="B+">B+</option>
-                    <option value="B-">B-</option>
-                    <option value="AB+">AB+</option>
-                    <option value="AB-">AB-</option>
-                    <option value="O+">O+</option>
-                    <option value="O-">O-</option>
-                </select>
-            </div>
-            
-            <div class="form-group">
-                <label for="notes">ملاحظات إضافية (اختياري)</label>
-                <textarea id="notes" class="form-control" rows="2"></textarea>
-            </div>
-            
-            <button type="submit" class="submit-btn" id="submitBtn">تسجيل المتمدرس</button>
-            
-            <p class="form-note">سيتم مراجعة طلب التسجيل وإعلامكم بالنتيجة خلال 3 أيام عمل</p>
-            
-            <!-- قسم استعادة الاستمارة -->
-            <div class="recovery-section" id="recoverySection">
-                <p>إذا نسيت تحميل الاستمارة، يمكنك استعادتها بإدخال رقم التسجيل:</p>
-                <input type="text" id="recoveryNumber" class="form-control" placeholder="أدخل رقم التسجيل">
-                <button class="recovery-btn" id="recoveryBtn">استعادة الاستمارة</button>
-                <p id="recoveryMessage" style="display:none; color:var(--primary-color); margin-top:10px;"></p>
-            </div>
-        </form>
+                
+                <button type="submit" class="search-btn">عرض النتائج</button>
+            </form>
+        </div>
+
+        <div class="results-section" id="resultsSection">
+            <h2 class="section-title">نتائج التلميذ</h2>
+            <div id="studentInfo"></div>
+            <table class="student-results">
+                <thead>
+                    <tr>
+                        <th>المادة</th>
+                        <th>درجة الحفظ</th>
+                        <th>درجة التلاوة</th>
+                        <th>درجة السلوك</th>
+                        <th>المجموع</th>
+                        <th>التقييم</th>
+                    </tr>
+                </thead>
+                <tbody id="resultsTable">
+                    <!-- Results will be inserted here by JavaScript -->
+                </tbody>
+            </table>
+        </div>
+
+        <a href="#" class="back-btn">العودة إلى الصفحة الرئيسية</a>
     </main>
-
-    <!-- Success Modal -->
-    <div class="modal" id="successModal">
-        <div class="modal-content">
-            <i class="fas fa-check-circle modal-icon success-icon"></i>
-            <h3 class="modal-title">تم التسجيل بنجاح</h3>
-            <p class="modal-message" id="successMessage"></p>
-            <button class="modal-btn" id="successBtn">حسناً</button>
-            <a href="#" class="download-btn" id="downloadBtn" style="display: none;">
-                <i class="fas fa-download"></i> تحميل استمارة التسجيل
-            </a>
-            <button class="print-btn" id="printBtn" style="display: none;">
-                <i class="fas fa-print"></i> طباعة الاستمارة
-            </button>
-        </div>
-    </div>
-
-    <!-- Error Modal -->
-    <div class="modal" id="errorModal">
-        <div class="modal-content">
-            <i class="fas fa-times-circle modal-icon error-icon"></i>
-            <h3 class="modal-title">حدث خطأ</h3>
-            <p class="modal-message" id="errorMessage"></p>
-            <button class="modal-btn" id="errorBtn">حسناً</button>
-        </div>
-    </div>
 
     <footer>
         <div class="copyright">
@@ -599,488 +322,224 @@
         </div>
     </footer>
 
-    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-database-compat.js"></script>
-
     <script>
-        const firebaseConfig = {
-            apiKey: "AIzaSyAzx-JlJBJxtVZT2cXDtJiHbs6s9K-3hEY",
-            authDomain: "tahdiri-dc608.firebaseapp.com",
-            databaseURL: "https://tahdiri-dc608-default-rtdb.firebaseio.com",
-            projectId: "tahdiri-dc608",
-            storageBucket: "tahdiri-dc608.appspot.com",
-            messagingSenderId: "795586531700",
-            appId: "1:795586531700:web:d693fd56f4bed6aed4dc21",
-            measurementId: "G-H57ECZPTT7"
-        };
-
-        const app = firebase.initializeApp(firebaseConfig);
-        const database = firebase.database();
-        const { jsPDF } = window.jspdf;
-
         document.addEventListener('DOMContentLoaded', function() {
+            // Set current year in footer
             document.getElementById('year').textContent = new Date().getFullYear();
             
-            const form = document.getElementById('studentRegistration');
-            const submitBtn = document.getElementById('submitBtn');
-            const formSpinner = document.getElementById('formSpinner');
-            const successModal = document.getElementById('successModal');
-            const errorModal = document.getElementById('errorModal');
-            const successBtn = document.getElementById('successBtn');
-            const errorBtn = document.getElementById('errorBtn');
-            const successMessage = document.getElementById('successMessage');
-            const errorMessage = document.getElementById('errorMessage');
-            const downloadBtn = document.getElementById('downloadBtn');
-            const printBtn = document.getElementById('printBtn');
-            const recoverySection = document.getElementById('recoverySection');
-            const recoveryBtn = document.getElementById('recoveryBtn');
-            const recoveryNumber = document.getElementById('recoveryNumber');
-            const recoveryMessage = document.getElementById('recoveryMessage');
-            
-            let studentData = null;
-            let registrationNumber = null;
-            let registrationData = {};
-
-            // إظهار/إخفاء الحقول الشرطية
-            document.querySelectorAll('input[name="socialStatus"]').forEach(radio => {
-                radio.addEventListener('change', function() {
-                    document.getElementById('guardianGroup').style.display = 
-                        (this.value === 'يتيم' || this.value === 'مطلق') ? 'block' : 'none';
-                });
-            });
-
-            document.querySelectorAll('input[name="isSick"]').forEach(radio => {
-                radio.addEventListener('change', function() {
-                    document.getElementById('sicknessTypeGroup').style.display = 
-                        this.value === 'نعم' ? 'block' : 'none';
-                });
-            });
-
-            // التحقق من صحة البيانات
-            document.getElementById('birthDate').addEventListener('change', validateBirthDate);
-            document.getElementById('parentPhone').addEventListener('input', validatePhone);
-
-            function validateBirthDate() {
-                const input = document.getElementById('birthDate');
-                const error = document.getElementById('birthDateError');
-                const selectedDate = new Date(input.value);
-                const selectedYear = selectedDate.getFullYear();
-                
-                if (selectedYear !== 2020 || isNaN(selectedYear)) {
-                    error.style.display = 'block';
-                    input.setCustomValidity('يجب أن يكون تاريخ الميلاد في سنة 2020');
-                    return false;
-                } else {
-                    error.style.display = 'none';
-                    input.setCustomValidity('');
-                    return true;
+            // Teacher data with their students
+            const teachersData = {
+                teacher1: {
+                    name: "نورية لعرابة",
+                    students: [
+                        "محمد أحمد عبدالله", "أحمد خالد محمد", "عمر سعيد علي", 
+                        "يوسف إبراهيم محمود", "علي حسين عبدالرحمن", "خالد مصطفى أحمد",
+                        "أسامة عبدالله سليمان", "محمود كمال حسن", "عبدالرحمن وليد ناصر",
+                        "إبراهيم سعد علي", "سعيد محمد أمين", "طارق خالد إسماعيل",
+                        "حسين علي محمود", "مصطفى أحمد عمر", "أنس عبدالرحيم محمد",
+                        "ياسر خالد سعيد", "وائل محمد عبدالله", "هشام علي إبراهيم",
+                        "بسام أحمد كمال", "جمال عبدالله سليم", "رامي خالد ناصر",
+                        "سامي محمد حامد", "ناصر أحمد علي", "فارس عبدالرحمن سعد",
+                        "مازن خالد وائل", "وسام محمد هشام", "هاني أحمد جمال",
+                        "زياد خالد رامي", "عماد محمد سامي", "وليد أحمد ناصر",
+                        "نادر خالد فارس", "مجد محمد مازن", "باسل أحمد وسام",
+                        "جهاد خالد هاني", "وسيم محمد زياد"
+                    ]
+                },
+                teacher2: {
+                    name: "منى مفرج",
+                    students: [
+                        "أحمد سعيد محمود", "محمود عبدالله حسن", "عبدالرحمن علي محمد",
+                        "إسماعيل خالد عبدالكريم", "مصطفى عمر أحمد", "ياسين محمد إبراهيم",
+                        "سليم عبدالرحمن علي", "نعيم خالد سعد", "حسام محمد أمين",
+                        "رامي أحمد وليد", "سعد خالد ناصر", "مازن محمد طارق",
+                        "هشام أحمد حسين", "وائل خالد مصطفى", "جمال محمد أنس",
+                        "بسام أحمد ياسر", "نادر خالد وائل", "عماد محمد هشام",
+                        "وسام أحمد جمال", "زياد خالد بسام", "وليد محمد نادر",
+                        "فارس أحمد عماد", "مجد خالد وسام", "باسل محمد زياد",
+                        "هاني أحمد وليد", "جهاد خالد فارس", "وسيم محمد مجد",
+                        "رامي أحمد باسل", "سامي خالد هاني", "ناصر محمد جهاد",
+                        "طارق أحمد وسيم", "أنس خالد رامي", "ياسر محمد سامي",
+                        "خالد أحمد ناصر", "علي محمد طارق"
+                    ]
+                },
+                teacher3: {
+                    name: "إلهام عباز",
+                    students: [
+                        "علي حسين عبدالله", "يحيى محمد أحمد", "عبدالله خالد محمود",
+                        "سعيد عبدالرحمن علي", "طارق محمد إبراهيم", "نادر أحمد سعيد",
+                        "وليد خالد طارق", "مازن محمد نادر", "وسام أحمد وليد",
+                        "هشام خالد مازن", "جمال محمد وسام", "بسام أحمد هشام",
+                        "نعيم خالد جمال", "عماد محمد بسام", "زياد أحمد نعيم",
+                        "فارس خالد عماد", "مجد محمد زياد", "باسل أحمد فارس",
+                        "هاني خالد مجد", "جهاد محمد باسل", "وسيم أحمد هاني",
+                        "رامي خالد جهاد", "سامي محمد وسيم", "ناصر أحمد رامي",
+                        "طارق خالد سامي", "أنس محمد ناصر", "ياسر أحمد طارق",
+                        "خالد خالد أنس", "علي محمد ياسر", "محمد أحمد خالد",
+                        "أحمد خالد علي", "محمود محمد محمد", "عبدالرحمن أحمد أحمد",
+                        "إسماعيل خالد محمود", "مصطفى محمد عبدالرحمن"
+                    ]
+                },
+                teacher4: {
+                    name: "فريدة لعرابة",
+                    students: [
+                        "إبراهيم عبدالله محمد", "حسين علي محمود", "خالد أحمد عبدالرحمن",
+                        "محمود سعيد علي", "أحمد يوسف محمد", "ناصر خالد أحمد",
+                        "وليد محمد محمود", "مازن أحمد ناصر", "وسام خالد وليد",
+                        "هشام محمد مازن", "جمال أحمد وسام", "بسام خالد هشام",
+                        "نعيم محمد جمال", "عماد أحمد بسام", "زياد خالد نعيم",
+                        "فارس محمد عماد", "مجد أحمد زياد", "باسل خالد فارس",
+                        "هاني محمد مجد", "جهاد أحمد باسل", "وسيم خالد هاني",
+                        "رامي محمد جهاد", "سامي أحمد وسيم", "ناصر خالد رامي",
+                        "طارق محمد سامي", "أنس أحمد ناصر", "ياسر خالد طارق",
+                        "خالد محمد أنس", "علي أحمد ياسر", "محمد خالد خالد",
+                        "أحمد محمد علي", "محمود أحمد محمد", "عبدالرحمن خالد أحمد",
+                        "إسماعيل محمد محمود", "مصطفى أحمد عبدالرحمن"
+                    ]
+                },
+                teacher5: {
+                    name: "كنزة بوحفص",
+                    students: [
+                        "عبدالرحمن محمد أحمد", "محمد خالد عبدالله", "يوسف علي محمود",
+                        "أحمد عبدالرحمن سعيد", "مصطفى خالد محمد", "نادر أحمد مصطفى",
+                        "وليد محمد نادر", "مازن أحمد وليد", "وسام خالد مازن",
+                        "هشام محمد وسام", "جمال أحمد هشام", "بسام خالد جمال",
+                        "نعيم محمد بسام", "عماد أحمد نعيم", "زياد خالد عماد",
+                        "فارس محمد زياد", "مجد أحمد فارس", "باسل خالد مجد",
+                        "هاني محمد باسل", "جهاد أحمد هاني", "وسيم خالد جهاد",
+                        "رامي محمد وسيم", "سامي أحمد رامي", "ناصر خالد سامي",
+                        "طارق محمد ناصر", "أنس أحمد طارق", "ياسر خالد أنس",
+                        "خالد محمد ياسر", "علي أحمد خالد", "محمد خالد علي",
+                        "أحمد محمد محمد", "محمود أحمد أحمد", "عبدالرحمن خالد محمود",
+                        "إسماعيل محمد عبدالرحمن", "مصطفى أحمد إسماعيل"
+                    ]
+                },
+                teacher6: {
+                    name: "بركاهم بوحفص",
+                    students: [
+                        "مصطفى أحمد خالد", "نادر محمد مصطفى", "وليد خالد نادر",
+                        "مازن أحمد وليد", "وسام محمد مازن", "هشام خالد وسام",
+                        "جمال أحمد هشام", "بسام محمد جمال", "نعيم خالد بسام",
+                        "عماد أحمد نعيم", "زياد محمد عماد", "فارس خالد زياد",
+                        "مجد أحمد فارس", "باسل محمد مجد", "هاني خالد باسل",
+                        "جهاد أحمد هاني", "وسيم محمد جهاد", "رامي خالد وسيم",
+                        "سامي أحمد رامي", "ناصر محمد سامي", "طارق خالد ناصر",
+                        "أنس أحمد طارق", "ياسر محمد أنس", "خالد خالد ياسر",
+                        "علي أحمد خالد", "محمد محمد علي", "أحمد خالد محمد",
+                        "محمود أحمد أحمد", "عبدالرحمن محمد محمود", "إسماعيل خالد عبدالرحمن",
+                        "مصطفى أحمد إسماعيل", "نادر محمد مصطفى", "وليد خالد نادر",
+                        "مازن أحمد وليد", "وسام محمد مازن"
+                    ]
                 }
-            }
-
-            function validatePhone() {
-                const input = document.getElementById('parentPhone');
-                const error = document.getElementById('parentPhoneError');
-                const isValid = input.checkValidity();
-                
-                error.style.display = isValid ? 'none' : 'block';
-                return isValid;
-            }
-
-            function validateRequiredFields() {
-                let isValid = true;
-                const requiredFields = ['firstName', 'lastName', 'birthPlace', 'fatherName', 'motherName', 'address'];
-                
-                requiredFields.forEach(field => {
-                    const input = document.getElementById(field);
-                    const error = document.getElementById(field + 'Error');
-                    if (!input.value.trim()) {
-                        error.style.display = 'block';
-                        isValid = false;
-                    } else {
-                        error.style.display = 'none';
-                    }
-                });
-
-                const requiredRadios = [
-                    {name: 'socialStatus', errorId: 'socialStatusError'},
-                    {name: 'isSick', errorId: 'isSickError'},
-                    {name: 'takesMedicine', errorId: 'takesMedicineError'}
+            };
+            
+            // Generate random results data for each student
+            function generateRandomResults() {
+                const subjects = [
+                    "حفظ الجزء الأول", "حفظ الجزء الثاني", "حفظ الجزء الثالث",
+                    "تلاوة سورة البقرة", "تلاوة سورة آل عمران", "تلاوة سورة النساء"
                 ];
                 
-                requiredRadios.forEach(radio => {
-                    const checked = document.querySelector(`input[name="${radio.name}"]:checked`);
-                    const error = document.getElementById(radio.errorId);
-                    if (!checked) {
-                        error.style.display = 'block';
-                        isValid = false;
-                    } else {
-                        error.style.display = 'none';
-                    }
+                const results = [];
+                
+                for (let i = 0; i < subjects.length; i++) {
+                    const memorization = Math.floor(Math.random() * 20) + 80; // 80-100
+                    const recitation = Math.floor(Math.random() * 20) + 80; // 80-100
+                    const behavior = Math.floor(Math.random() * 10) + 90; // 90-100
+                    const total = Math.round((memorization * 0.5) + (recitation * 0.3) + (behavior * 0.2));
+                    
+                    let evaluation = "";
+                    if (total >= 95) evaluation = "ممتاز";
+                    else if (total >= 85) evaluation = "جيد جداً";
+                    else if (total >= 75) evaluation = "جيد";
+                    else evaluation = "مقبول";
+                    
+                    results.push({
+                        subject: subjects[i],
+                        memorization: memorization,
+                        recitation: recitation,
+                        behavior: behavior,
+                        total: total,
+                        evaluation: evaluation
+                    });
+                }
+                
+                return results;
+            }
+            
+            // Store results for all students
+            const allStudentsResults = {};
+            Object.keys(teachersData).forEach(teacherId => {
+                teachersData[teacherId].students.forEach(student => {
+                    allStudentsResults[student] = generateRandomResults();
                 });
-
-                return isValid;
-            }
-
-            // إظهار/إخفاء النوافذ المنبثقة
-            function showSuccessModal() {
-                successModal.style.display = 'flex';
-            }
-
-            function showErrorModal() {
-                errorModal.style.display = 'flex';
-            }
-
-            successBtn.addEventListener('click', () => {
-                successModal.style.display = 'none';
-                recoverySection.style.display = 'block';
             });
-
-            errorBtn.addEventListener('click', () => errorModal.style.display = 'none');
-
-            window.addEventListener('click', function(event) {
-                if (event.target === successModal) successModal.style.display = 'none';
-                if (event.target === errorModal) errorModal.style.display = 'none';
+            
+            // Teacher select change event
+            document.getElementById('teacher').addEventListener('change', function() {
+                const teacherSelect = this;
+                const studentSelect = document.getElementById('student');
+                
+                studentSelect.innerHTML = '<option value="">-- اختر التلميذ --</option>';
+                studentSelect.disabled = !teacherSelect.value;
+                
+                if (teacherSelect.value) {
+                    const teacher = teachersData[teacherSelect.value];
+                    teacher.students.forEach(student => {
+                        const option = document.createElement('option');
+                        option.value = student;
+                        option.textContent = student;
+                        studentSelect.appendChild(option);
+                    });
+                }
             });
-
-            // إنشاء ملف PDF
-            function generateRegistrationPDF(data = studentData, regNumber = registrationNumber) {
-                return new Promise((resolve) => {
-                    const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
-                    
-                    // إضافة الخط العربي
-                    doc.addFont('https://cdn.jsdelivr.net/gh/arabic-fonts/amiri-font@1.0.0/Amiri-Regular.ttf', 'Amiri', 'normal');
-                    doc.addFont('https://cdn.jsdelivr.net/gh/arabic-fonts/amiri-font@1.0.0/Amiri-Bold.ttf', 'Amiri', 'bold');
-                    doc.setFont('Amiri');
-
-                    // رأس الصفحة
-                    const logoUrl = 'https://i.ibb.co/jZrxhFsf/1-min.png';
-                    doc.addImage(logoUrl, 'PNG', 15, 15, 40, 40);
-                    
-                    doc.setFontSize(18);
-                    doc.setTextColor(26, 77, 46);
-                    doc.setFont('Amiri', 'bold');
-                    doc.text('المجمع القرآني حمزة بن عبدالمطلب', 105, 25, { align: 'center' });
-                    doc.setFontSize(16);
-                    doc.text('استمارة التسجيل الأولية', 105, 35, { align: 'center' });
-                    
-                    doc.setFontSize(10);
-                    doc.setTextColor(100);
-                    doc.text(`رقم التسجيل: ${regNumber}`, 190, 20, { align: 'right' });
-                    doc.text(`تاريخ التسجيل: ${new Date(data.registrationDate).toLocaleDateString('ar-EG')}`, 190, 30, { align: 'right' });
-                    
-                    doc.setDrawColor(214, 175, 55);
-                    doc.setLineWidth(0.5);
-                    doc.line(15, 45, 195, 45);
-                    
-                    // معلومات الطالب
-                    doc.setFontSize(12);
-                    doc.setTextColor(0);
-                    doc.setFont('Amiri', 'bold');
-                    doc.text('معلومات المتمدرس:', 15, 55);
-                    doc.setFont('Amiri', 'normal');
-                    
-                    const studentInfo = [
-                        ['الاسم الكامل:', `${data.firstName} ${data.lastName}`],
-                        ['تاريخ الميلاد:', formatArabicDate(data.birthDate)],
-                        ['مكان الميلاد:', data.birthPlace],
-                        ['اسم الأب:', data.fatherName],
-                        ['اسم الأم:', data.motherName],
-                        ['العنوان:', data.address],
-                        ['الحالة الاجتماعية:', data.socialStatus],
-                        ['رقم هاتف ولي الأمر:', data.parentPhone],
-                        ['الوصي (إن وجد):', data.guardianName || 'لا يوجد']
-                    ];
-                    
-                    doc.autoTable({
-                        startY: 60,
-                        body: studentInfo,
-                        theme: 'grid',
-                        headStyles: { fillColor: [26, 77, 46], textColor: 255, font: 'Amiri', fontStyle: 'bold', halign: 'right' },
-                        columnStyles: { 0: { fontStyle: 'bold', cellWidth: 50, font: 'Amiri' }, 1: { font: 'Amiri' } },
-                        margin: { right: 15 },
-                        styles: { font: 'Amiri', fontStyle: 'normal', halign: 'right', cellPadding: 3 }
-                    });
-                    
-                    // المعلومات الطبية
-                    doc.setFont('Amiri', 'bold');
-                    doc.text('المعلومات الطبية:', 15, doc.autoTable.previous.finalY + 10);
-                    doc.setFont('Amiri', 'normal');
-                    
-                    const medicalInfo = [
-                        ['الحالة الصحية:', data.isSick === 'نعم' ? `مريض (${data.sicknessType || 'غير محدد'})` : 'سليم'],
-                        ['يتناول أدوية:', data.takesMedicine],
-                        ['الزمرة الدموية:', data.bloodType || 'غير محدد'],
-                        ['ملاحظات إضافية:', data.notes || 'لا يوجد']
-                    ];
-                    
-                    doc.autoTable({
-                        startY: doc.autoTable.previous.finalY + 15,
-                        body: medicalInfo,
-                        theme: 'grid',
-                        columnStyles: { 0: { fontStyle: 'bold', cellWidth: 50, font: 'Amiri' }, 1: { font: 'Amiri' } },
-                        margin: { right: 15 },
-                        styles: { font: 'Amiri', fontStyle: 'normal', halign: 'right', cellPadding: 3 }
-                    });
-                    
-                    // قسم الإدارة
-                    const footerY = doc.autoTable.previous.finalY + 20;
-                    doc.setDrawColor(214, 175, 55);
-                    doc.setLineWidth(0.5);
-                    doc.line(15, footerY, 195, footerY);
-                    
-                    doc.setFont('Amiri', 'bold');
-                    doc.text('قسم الإدارة:', 15, footerY + 10);
-                    doc.setFont('Amiri', 'normal');
-                    
-                    const adminInfo = [
-                        ['حقوق اشتراك الولي السنوية:', '________________________'],
-                        ['مصادقة الإدارة:', '________________________'],
-                        ['إمضاء الولي على صحة المعلومات:', '________________________'],
-                        ['تاريخ:', '________________________']
-                    ];
-                    
-                    doc.autoTable({
-                        startY: footerY + 15,
-                        body: adminInfo,
-                        theme: 'grid',
-                        columnStyles: { 0: { fontStyle: 'bold', cellWidth: 70, font: 'Amiri' }, 1: { font: 'Amiri', cellWidth: 70 } },
-                        margin: { right: 15 },
-                        styles: { font: 'Amiri', fontStyle: 'normal', halign: 'right', cellPadding: 5 }
-                    });
-                    
-                    // تذييل الصفحة
-                    doc.setFontSize(10);
-                    doc.setTextColor(100);
-                    doc.text('شكراً لتسجيلكم في المجمع القرآني حمزة بن عبدالمطلب', 105, 285, { align: 'center' });
-                    doc.text('سيتم التواصل معكم خلال 3 أيام عمل', 105, 290, { align: 'center' });
-                    
-                    resolve(doc);
-                });
-            }
-
-            function formatArabicDate(dateString) {
-                if (!dateString) return '';
-                const date = new Date(dateString);
-                return date.toLocaleDateString('ar-EG');
-            }
-
-            // إرسال النموذج
-            form.addEventListener('submit', function(e) {
+            
+            // Form submission
+            document.getElementById('searchForm').addEventListener('submit', function(e) {
                 e.preventDefault();
                 
-                const isBirthDateValid = validateBirthDate();
-                const isPhoneValid = validatePhone();
-                const isRequiredFieldsValid = validateRequiredFields();
+                const teacherSelect = document.getElementById('teacher');
+                const studentSelect = document.getElementById('student');
+                const resultsSection = document.getElementById('resultsSection');
+                const studentInfo = document.getElementById('studentInfo');
+                const resultsTable = document.getElementById('resultsTable');
                 
-                if (isBirthDateValid && isPhoneValid && isRequiredFieldsValid) {
-                    formSpinner.style.display = 'flex';
-                    submitBtn.disabled = true;
+                if (teacherSelect.value && studentSelect.value) {
+                    const teacher = teachersData[teacherSelect.value];
+                    const studentName = studentSelect.value;
+                    const studentResults = allStudentsResults[studentName];
                     
-                    studentData = {
-                        firstName: document.getElementById('firstName').value.trim(),
-                        lastName: document.getElementById('lastName').value.trim(),
-                        birthDate: document.getElementById('birthDate').value,
-                        birthPlace: document.getElementById('birthPlace').value.trim(),
-                        fatherName: document.getElementById('fatherName').value.trim(),
-                        motherName: document.getElementById('motherName').value.trim(),
-                        address: document.getElementById('address').value.trim(),
-                        socialStatus: document.querySelector('input[name="socialStatus"]:checked').value,
-                        parentPhone: document.getElementById('parentPhone').value.trim(),
-                        isSick: document.querySelector('input[name="isSick"]:checked').value,
-                        sicknessType: document.getElementById('sicknessType').value.trim(),
-                        takesMedicine: document.querySelector('input[name="takesMedicine"]:checked').value,
-                        bloodType: document.getElementById('bloodType').value,
-                        guardianName: document.getElementById('guardianName').value.trim(),
-                        notes: document.getElementById('notes').value.trim(),
-                        registrationDate: new Date().toISOString(),
-                        status: 'pending',
-                        registrationNumber: `${new Date().getFullYear()}${(new Date().getMonth() + 1).toString().padStart(2, '0')}${new Date().getDate().toString().padStart(2, '0')}-${Math.floor(1000 + Math.random() * 9000)}`
-                    };
+                    // Display student info
+                    studentInfo.innerHTML = `
+                        <div style="background-color: #f8f8f8; padding: 1rem; border-radius: 8px; margin-bottom: 1.5rem; border-right: 4px solid var(--primary-color);">
+                            <h3 style="color: var(--primary-dark); margin-bottom: 0.5rem;">معلومات التلميذ</h3>
+                            <p style="font-size: 1.1rem;"><strong>اسم التلميذ:</strong> ${studentName}</p>
+                            <p style="font-size: 1.1rem;"><strong>المعلمة:</strong> ${teacher.name}</p>
+                        </div>
+                    `;
                     
-                    registrationNumber = studentData.registrationNumber;
-                    
-                    const studentId = studentData.firstName + '_' + studentData.lastName + '_' + new Date().getTime();
-                    
-                    // حفظ بيانات التسجيل محلياً للاسترجاع
-                    registrationData[registrationNumber] = studentData;
-                    
-                    // حفظ في localStorage للاسترجاع
-                    localStorage.setItem('lastRegistration', JSON.stringify({
-                        number: registrationNumber,
-                        data: studentData
-                    }));
-                    
-                    database.ref('students/' + studentId).set(studentData)
-                        .then(() => {
-                            formSpinner.style.display = 'none';
-                            const studentName = studentData.firstName + ' ' + studentData.lastName;
-                            successMessage.innerHTML = `
-                                تم تسجيل الطالب <strong>${studentName}</strong> بنجاح<br>
-                                رقم التسجيل: <strong>${registrationNumber}</strong>
-                                <br><small>الرجاء الاحتفاظ برقم التسجيل لاستعادة الاستمارة لاحقاً</small>
-                            `;
-                            
-                            // تفعيل أزرار التحميل والطباعة
-                            downloadBtn.style.display = 'inline-block';
-                            printBtn.style.display = 'inline-block';
-                            
-                            // إعادة تعيين معالجات الأحداث لتجنب التراكم
-                            downloadBtn.onclick = null;
-                            printBtn.onclick = null;
-                            
-                            downloadBtn.addEventListener('click', function(e) {
-                                e.preventDefault();
-                                downloadBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري التحميل...';
-                                generateRegistrationPDF(studentData, registrationNumber)
-                                    .then(doc => {
-                                        doc.save(`استمارة_تسجيل_${studentData.firstName}_${studentData.lastName}.pdf`);
-                                        downloadBtn.innerHTML = '<i class="fas fa-download"></i> تحميل استمارة التسجيل';
-                                    })
-                                    .catch(error => {
-                                        console.error('خطأ في التحميل:', error);
-                                        alert('حدث خطأ أثناء إنشاء ملف PDF');
-                                        downloadBtn.innerHTML = '<i class="fas fa-download"></i> تحميل استمارة التسجيل';
-                                    });
-                            });
-                            
-                            printBtn.addEventListener('click', function(e) {
-                                e.preventDefault();
-                                printBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري التحضير للطباعة...';
-                                generateRegistrationPDF(studentData, registrationNumber)
-                                    .then(doc => {
-                                        const blob = doc.output('blob');
-                                        const url = URL.createObjectURL(blob);
-                                        const iframe = document.createElement('iframe');
-                                        iframe.style.display = 'none';
-                                        iframe.src = url;
-                                        document.body.appendChild(iframe);
-                                        iframe.onload = () => {
-                                            iframe.contentWindow.print();
-                                            printBtn.innerHTML = '<i class="fas fa-print"></i> طباعة الاستمارة';
-                                        };
-                                    })
-                                    .catch(error => {
-                                        console.error('خطأ في الطباعة:', error);
-                                        alert('حدث خطأ أثناء التحضير للطباعة');
-                                        printBtn.innerHTML = '<i class="fas fa-print"></i> طباعة الاستمارة';
-                                    });
-                            });
-                            
-                            showSuccessModal();
-                            form.reset();
-                            submitBtn.disabled = false;
-                            document.getElementById('guardianGroup').style.display = 'none';
-                            document.getElementById('sicknessTypeGroup').style.display = 'none';
-                        })
-                        .catch((error) => {
-                            formSpinner.style.display = 'none';
-                            submitBtn.disabled = false;
-                            errorMessage.textContent = 'حدث خطأ أثناء حفظ البيانات: ' + error.message;
-                            showErrorModal();
-                        });
-                } else {
-                    const firstError = document.querySelector('.error-message[style="display: block;"]');
-                    if (firstError) {
-                        firstError.previousElementSibling.scrollIntoView({
-                            behavior: 'smooth',
-                            block: 'center'
-                        });
-                    }
-                }
-            });
-
-            // استعادة الاستمارة
-            recoveryBtn.addEventListener('click', function() {
-                const regNumber = recoveryNumber.value.trim();
-                if (!regNumber) {
-                    recoveryMessage.textContent = 'الرجاء إدخال رقم التسجيل';
-                    recoveryMessage.style.display = 'block';
-                    recoveryMessage.style.color = 'var(--error-color)';
-                    return;
-                }
-                
-                recoveryBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري البحث...';
-                
-                // البحث في البيانات المحفوظة محلياً
-                if (registrationData[regNumber]) {
-                    generateRegistrationPDF(registrationData[regNumber], regNumber)
-                        .then(doc => {
-                            doc.save(`استمارة_تسجيل_${registrationData[regNumber].firstName}_${registrationData[regNumber].lastName}.pdf`);
-                            recoveryMessage.textContent = 'تم تحميل الاستمارة بنجاح';
-                            recoveryMessage.style.display = 'block';
-                            recoveryMessage.style.color = 'var(--success-color)';
-                            recoveryBtn.innerHTML = 'استعادة الاستمارة';
-                        })
-                        .catch(error => {
-                            recoveryMessage.textContent = 'حدث خطأ أثناء إنشاء الملف';
-                            recoveryMessage.style.display = 'block';
-                            recoveryMessage.style.color = 'var(--error-color)';
-                            recoveryBtn.innerHTML = 'استعادة الاستمارة';
-                        });
-                    return;
-                }
-                
-                // البحث في localStorage
-                const lastRegistration = JSON.parse(localStorage.getItem('lastRegistration'));
-                if (lastRegistration && lastRegistration.number === regNumber) {
-                    generateRegistrationPDF(lastRegistration.data, regNumber)
-                        .then(doc => {
-                            doc.save(`استمارة_تسجيل_${lastRegistration.data.firstName}_${lastRegistration.data.lastName}.pdf`);
-                            recoveryMessage.textContent = 'تم تحميل الاستمارة بنجاح';
-                            recoveryMessage.style.display = 'block';
-                            recoveryMessage.style.color = 'var(--success-color)';
-                            recoveryBtn.innerHTML = 'استعادة الاستمارة';
-                        })
-                        .catch(error => {
-                            recoveryMessage.textContent = 'حدث خطأ أثناء إنشاء الملف';
-                            recoveryMessage.style.display = 'block';
-                            recoveryMessage.style.color = 'var(--error-color)';
-                            recoveryBtn.innerHTML = 'استعادة الاستمارة';
-                        });
-                    return;
-                }
-                
-                // البحث في قاعدة البيانات إذا لم تكن محفوظة محلياً
-                database.ref('students').orderByChild('registrationNumber').equalTo(regNumber).once('value')
-                    .then(snapshot => {
-                        if (snapshot.exists()) {
-                            snapshot.forEach(childSnapshot => {
-                                const data = childSnapshot.val();
-                                generateRegistrationPDF(data, regNumber)
-                                    .then(doc => {
-                                        doc.save(`استمارة_تسجيل_${data.firstName}_${data.lastName}.pdf`);
-                                        recoveryMessage.textContent = 'تم تحميل الاستمارة بنجاح';
-                                        recoveryMessage.style.display = 'block';
-                                        recoveryMessage.style.color = 'var(--success-color)';
-                                        recoveryBtn.innerHTML = 'استعادة الاستمارة';
-                                    })
-                                    .catch(error => {
-                                        recoveryMessage.textContent = 'حدث خطأ أثناء إنشاء الملف';
-                                        recoveryMessage.style.display = 'block';
-                                        recoveryMessage.style.color = 'var(--error-color)';
-                                        recoveryBtn.innerHTML = 'استعادة الاستمارة';
-                                    });
-                            });
-                        } else {
-                            recoveryMessage.textContent = 'لم يتم العثور على رقم التسجيل';
-                            recoveryMessage.style.display = 'block';
-                            recoveryMessage.style.color = 'var(--error-color)';
-                            recoveryBtn.innerHTML = 'استعادة الاستمارة';
-                        }
-                    })
-                    .catch(error => {
-                        recoveryMessage.textContent = 'حدث خطأ أثناء البحث عن الاستمارة';
-                        recoveryMessage.style.display = 'block';
-                        recoveryMessage.style.color = 'var(--error-color)';
-                        recoveryBtn.innerHTML = 'استعادة الاستمارة';
+                    // Display results
+                    resultsTable.innerHTML = '';
+                    studentResults.forEach(result => {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td>${result.subject}</td>
+                            <td>${result.memorization}</td>
+                            <td>${result.recitation}</td>
+                            <td>${result.behavior}</td>
+                            <td><strong>${result.total}</strong></td>
+                            <td>${result.evaluation}</td>
+                        `;
+                        resultsTable.appendChild(row);
                     });
+                    
+                    // Show results section
+                    resultsSection.style.display = 'block';
+                    
+                    // Scroll to results
+                    resultsSection.scrollIntoView({ behavior: 'smooth' });
+                }
             });
-
-            // تحديد نطاق تاريخ الميلاد
-            const maxDate = new Date('2020-12-31');
-            const minDate = new Date('2020-01-01');
-            document.getElementById('birthDate').max = maxDate.toISOString().split('T')[0];
-            document.getElementById('birthDate').min = minDate.toISOString().split('T')[0];
         });
     </script>
 </body>
