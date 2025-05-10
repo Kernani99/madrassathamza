@@ -574,6 +574,12 @@
             <h3 class="modal-title">تم التسجيل بنجاح</h3>
             <p class="modal-message" id="successMessage"></p>
             <button class="modal-btn" id="successBtn">حسناً</button>
+            <a href="#" class="download-btn" id="downloadBtn" style="display: none;">
+                <i class="fas fa-download"></i> تحميل استمارة التسجيل
+            </a>
+            <button class="print-btn" id="printBtn" style="display: none;">
+                <i class="fas fa-print"></i> طباعة الاستمارة
+            </button>
         </div>
     </div>
 
@@ -911,7 +917,7 @@
                             successMessage.innerHTML = `
                                 تم تسجيل الطالب <strong>${studentName}</strong> بنجاح<br>
                                 رقم التسجيل: <strong>${registrationNumber}</strong>
-                                <br><small>الآن يمكنك التقدم إلى ادارة المدرسة لإمضاء الاستمارة مصحوبا بصورتين شمسيتين</small>
+                                <br><small>الرجاء الاحتفاظ برقم التسجيل لاستعادة الاستمارة لاحقاً</small>
                             `;
                             
                             // تفعيل أزرار التحميل والطباعة
