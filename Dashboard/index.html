@@ -286,6 +286,15 @@
             background-color: #f1f1f1;
         }
 
+        th[onclick] {
+            transition: background-color 0.3s;
+            cursor: pointer;
+        }
+
+        th[onclick]:hover {
+            background-color: var(--primary-light);
+        }
+
         /* الرسائل والحالة */
         .status {
             margin: 1rem 0;
@@ -638,6 +647,7 @@
             
             let studentsData = null;
             let filteredData = null;
+            let sortOrder = 'desc'; // 'asc' أو 'desc'
             
             // التحقق من حالة تسجيل الدخول
             checkLoginStatus();
@@ -763,6 +773,12 @@
                 showStatus(`تم العثور على ${Object.keys(filteredData).length} نتيجة`, 'success');
             }
             
+            // دالة مساعدة لعرض نوع التسجيل
+            function getRegistrationTypeDisplay(registrationType) {
+                if (!registrationType) return '';
+                return registrationType === 'new' ? 'تسجيل جديد' : 'مسجل من قبل';
+            }
+            
             // دالة عرض بيانات الطلاب في الجدول
             function displayStudents(students) {
                 if (!students || Object.keys(students).length === 0) {
@@ -770,12 +786,22 @@
                     return;
                 }
 
+                // تحويل البيانات إلى مصفوفة وترتيبها حسب تاريخ التسجيل
+                const studentsArray = Object.entries(students).map(([key, student]) => ({ key, ...student }));
+                
+                studentsArray.sort((a, b) => {
+                    const dateA = new Date(a.registrationDate || 0);
+                    const dateB = new Date(b.registrationDate || 0);
+                    return sortOrder === 'desc' ? dateB - dateA : dateA - dateB;
+                });
+
                 let tableHTML = `
                     <div class="printable">
                         <table>
                             <thead>
                                 <tr>
                                     <th>العمليات</th>
+                                    <th>نوع التسجيل</th>
                                     <th>الاسم</th>
                                     <th>اللقب</th>
                                     <th>اسم الأب</th>
@@ -790,13 +816,16 @@
                                     <th>يتناول أدوية</th>
                                     <th>الزمرة الدموية</th>
                                     <th>ملاحظات</th>
-                                    <th>تاريخ التسجيل</th>
+                                    <th onclick="toggleSortOrder()" style="cursor:pointer;">
+                                        تاريخ التسجيل 
+                                        <i class="fas fa-sort${sortOrder === 'desc' ? '-down' : '-up'}"></i>
+                                    </th>
                                 </tr>
                             </thead>
                             <tbody>
                 `;
                 
-                Object.entries(students).forEach(([key, student]) => {
+                studentsArray.forEach(({ key, ...student }) => {
                     tableHTML += `
                         <tr>
                             <td>
@@ -804,6 +833,7 @@
                                     <i class="fas fa-print"></i> استمارة
                                 </button>
                             </td>
+                            <td>${getRegistrationTypeDisplay(student.registrationType)}</td>
                             <td>${formatData(student.firstName)}</td>
                             <td>${formatData(student.lastName)}</td>
                             <td>${formatData(student.fatherName)}</td>
@@ -830,6 +860,12 @@
                 `;
                 
                 studentsTable.innerHTML = tableHTML;
+            }
+            
+            // دالة تبديل اتجاه الترتيب
+            window.toggleSortOrder = function() {
+                sortOrder = sortOrder === 'desc' ? 'asc' : 'desc';
+                displayStudents(filteredData || studentsData);
             }
             
             // دالة طباعة الجدول
@@ -957,6 +993,7 @@
                         progress.style.width = `${(processed / totalStudents) * 100}%`;
                         
                         return {
+                            'نوع التسجيل': getRegistrationTypeDisplay(student.registrationType),
                             'الاسم': student.firstName || '',
                             'اللقب': student.lastName || '',
                             'اسم الأب': student.fatherName || '',
@@ -983,7 +1020,7 @@
                         {wch: 15}, {wch: 15}, {wch: 15}, {wch: 15},
                         {wch: 12}, {wch: 15}, {wch: 25}, {wch: 15},
                         {wch: 20}, {wch: 15}, {wch: 20}, {wch: 15},
-                        {wch: 15}, {wch: 30}, {wch: 15}
+                        {wch: 15}, {wch: 30}, {wch: 15}, {wch: 15}
                     ];
                     ws['!cols'] = wscols;
                     
@@ -1001,9 +1038,9 @@
                     
                     // دمج الخلايا
                     ws['!merges'] = [
-                        { s: { r: 0, c: 0 }, e: { r: 0, c: 14 } },
-                        { s: { r: 2, c: 0 }, e: { r: 2, c: 14 } },
-                        searchInput.value ? { s: { r: 4, c: 0 }, e: { r: 4, c: 14 } } : null
+                        { s: { r: 0, c: 0 }, e: { r: 0, c: 15 } },
+                        { s: { r: 2, c: 0 }, e: { r: 2, c: 15 } },
+                        searchInput.value ? { s: { r: 4, c: 0 }, e: { r: 4, c: 15 } } : null
                     ].filter(Boolean);
                     
                     // إنشاء ملف Excel
@@ -1047,6 +1084,7 @@
                     <div class="info-item"><span class="info-label">الاسم الكامل:</span> ${student.firstName || ''} ${student.lastName || ''}</div>
                     <div class="info-item"><span class="info-label">اسم الأب:</span> ${student.fatherName || 'غير محدد'}</div>
                     <div class="info-item"><span class="info-label">اسم الأم:</span> ${student.motherName || 'غير محدد'}</div>
+                    <div class="info-item"><span class="info-label">نوع التسجيل:</span> ${student.registrationType ? getRegistrationTypeDisplay(student.registrationType) : 'غير محدد'}</div>
                     <div class="info-item"><span class="info-label">تاريخ الميلاد:</span> ${formatDate(student.birthDate) || 'غير محدد'}</div>
                     <div class="info-item"><span class="info-label">مكان الميلاد:</span> ${student.birthPlace || 'غير محدد'}</div>
                     <div class="info-item"><span class="info-label">العنوان:</span> ${student.address || 'غير محدد'}</div>
