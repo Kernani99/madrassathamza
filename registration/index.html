@@ -10,7 +10,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
     <style>
-        /* أنماط CSS تبقى كما هي بدون تغيير */
         :root {
             --primary-color: #1a4d2e;
             --primary-dark: #0e3a23;
@@ -317,6 +316,117 @@
             100% { transform: rotate(360deg); }
         }
 
+        /* أنماط نافذة الشروط */
+        .terms-modal {
+            display: flex;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.95);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+            padding: 1rem;
+        }
+        
+        .terms-content {
+            background-color: white;
+            border-radius: 10px;
+            padding: 2rem;
+            max-width: 800px;
+            width: 100%;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 5px 25px rgba(0,0,0,0.5);
+            position: relative;
+        }
+        
+        .terms-title {
+            color: var(--primary-color);
+            text-align: center;
+            margin-bottom: 1.5rem;
+            font-size: 1.8rem;
+            font-weight: 700;
+        }
+        
+        .terms-list {
+            margin-bottom: 2rem;
+        }
+        
+        .terms-list ol {
+            padding-right: 1.5rem;
+        }
+        
+        .terms-list li {
+            margin-bottom: 1rem;
+            line-height: 1.6;
+        }
+        
+        .terms-footer {
+            text-align: center;
+            margin-top: 2rem;
+            font-weight: 600;
+            color: var(--primary-dark);
+        }
+        
+        .terms-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+        
+        .terms-btn {
+            padding: 0.8rem 2rem;
+            border-radius: 50px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: none;
+            font-size: 1rem;
+        }
+        
+        .accept-btn {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        .accept-btn:hover {
+            background-color: var(--primary-dark);
+        }
+        
+        .reject-btn {
+            background-color: #f1f1f1;
+            color: var(--error-color);
+            border: 1px solid #ddd;
+        }
+        
+        .reject-btn:hover {
+            background-color: #e5e5e5;
+        }
+        
+        .registration-type {
+            margin-bottom: 2rem;
+            padding: 1rem;
+            background-color: #f9f9f7;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+        }
+        
+        .registration-type label {
+            display: block;
+            margin-bottom: 1rem;
+            font-weight: 600;
+            color: var(--primary-dark);
+        }
+        
+        .radio-options {
+            display: flex;
+            gap: 2rem;
+        }
+
         @media (max-width: 768px) {
             .container {
                 margin: 2rem auto;
@@ -334,17 +444,80 @@
             .form-title {
                 font-size: 1.5rem;
             }
+
+            .radio-options {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .terms-content {
+                padding: 1.5rem;
+            }
+
+            .terms-title {
+                font-size: 1.5rem;
+            }
         }
     </style>
 </head>
 <body>
-    <header>
+    <!-- نافذة الشروط والأحكام -->
+    <div class="terms-modal" id="termsModal">
+        <div class="terms-content">
+            <h2 class="terms-title">شروط التسجيل في المجمع القرآني حمزة بن عبدالمطلب</h2>
+            
+            <div class="terms-list">
+                <ol>
+                    <li><strong>المادة 01:</strong> احترام أوقات الدخول والخروج</li>
+                    <li><strong>المادة 02:</strong> النظافة والهندام واللباس المحتشم ومنع القزع</li>
+                    <li><strong>المادة 03:</strong> الالتزام باللباس المدرسي (المئزر والخمار بالنسبة للإناث)</li>
+                    <li><strong>المادة 04:</strong> المسؤول عن التلميذ هو الولي أو الوصي المسجل في التعهد</li>
+                    <li><strong>المادة 05:</strong> إعلام الولي إدارة المدرسة القرءانية بكل تغيير يطرأ على العنوان أو رقم الهاتف</li>
+                    <li><strong>المادة 06:</strong> المشاركة في كل النشاطات والمسابقات والرحلات التي تنظمها المدرسة</li>
+                    <li><strong>المادة 07:</strong> إشعار المدرسة في حالة التوقف عن الدراسة</li>
+                    <li><strong>المادة 08:</strong> الاستجابة لدعوات المدرسة</li>
+                    <li><strong>المادة 09:</strong> أيام الدراسة (من السبت إلى الأربعاء)</li>
+                    <li><strong>المادة 10:</strong> ضرورة إعلام إدارة المدرسة بأي مشكل صحي أو نفسي للبرعم</li>
+                    <li><strong>المادة 11:</strong> ضرورة التزام الولي بأيام الاستقبال المحددة وعدم إحراج الإدارة والمعلمة</li>
+                    <li><strong>المادة 12:</strong> ضرورة متابعة الطالب في الحفظ والمراجعة وأداء الواجبات</li>
+                    <li><strong>المادة 13:</strong> تعفى المدرسة من أي مسؤولية ناتجة عن تأخر ولي الأمر في استلام ابنه أو ابنته بعد انتهاء الدوام الدراسي</li>
+                    <li><strong>المادة 14:</strong> الغيابات المتكررة غير المبررة غير مسموح بها</li>
+                </ol>
+            </div>
+            
+            <p class="terms-footer">
+                كل هذه الشروط والآداب هدفها الارتقاء بالتلميذ(ة) إلى مصاف الذرية الصالحة النّافعة
+            </p>
+            
+            <div class="terms-buttons">
+                <button class="terms-btn accept-btn" id="acceptTerms">أوافق على الشروط</button>
+                <button class="terms-btn reject-btn" id="rejectTerms">لا أوافق</button>
+            </div>
+        </div>
+    </div>
+
+    <header id="mainHeader" style="display:none;">
         <img src="https://i.ibb.co/jZrxhFsf/1-min.png" alt="شعار المدرسة" class="logo">
         <h1>تسجيل طالب جديد</h1>
     </header>
 
-    <main class="container">
+    <main class="container" id="mainContent" style="display:none;">
         <form class="registration-form" id="studentRegistration">
+            <!-- نوع التسجيل -->
+            <div class="registration-type">
+                <label>نوع التسجيل <span class="required">*</span></label>
+                <div class="radio-options">
+                    <div class="radio-option">
+                        <input type="radio" id="newRegistration" name="registrationType" value="new" checked required>
+                        <label for="newRegistration">تسجيل جديد</label>
+                    </div>
+                    <div class="radio-option">
+                        <input type="radio" id="secondLevel" name="registrationType" value="secondLevel" required>
+                        <label for="secondLevel">مسجل من قبل (تسجيل في المستوى الثاني)</label>
+                    </div>
+                </div>
+            </div>
+            
             <div class="spinner" id="formSpinner">
                 <div class="spinner-inner"></div>
             </div>
@@ -510,7 +683,7 @@
         </div>
     </div>
 
-    <footer>
+    <footer id="mainFooter" style="display:none;">
         <div class="copyright">
             <p>جميع الحقوق محفوظة &copy; المجمع القرآني حمزة بن عبدالمطلب <span id="year"></span></p>
         </div>
@@ -520,22 +693,43 @@
     <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-database-compat.js"></script>
 
     <script>
-        const firebaseConfig = {
-            apiKey: "AIzaSyAzx-JlJBJxtVZT2cXDtJiHbs6s9K-3hEY",
-            authDomain: "tahdiri-dc608.firebaseapp.com",
-            databaseURL: "https://tahdiri-dc608-default-rtdb.firebaseio.com",
-            projectId: "tahdiri-dc608",
-            storageBucket: "tahdiri-dc608.appspot.com",
-            messagingSenderId: "795586531700",
-            appId: "1:795586531700:web:d693fd56f4bed6aed4dc21",
-            measurementId: "G-H57ECZPTT7"
-        };
-
-        const app = firebase.initializeApp(firebaseConfig);
-        const database = firebase.database();
-        const { jsPDF } = window.jspdf;
-
+        // إظهار نافذة الشروط أولاً
         document.addEventListener('DOMContentLoaded', function() {
+            const termsModal = document.getElementById('termsModal');
+            const acceptBtn = document.getElementById('acceptTerms');
+            const rejectBtn = document.getElementById('rejectTerms');
+            const mainHeader = document.getElementById('mainHeader');
+            const mainContent = document.getElementById('mainContent');
+            const mainFooter = document.getElementById('mainFooter');
+            
+            // إخفاء المحتوى الرئيسي حتى يتم قبول الشروط
+            termsModal.style.display = 'flex';
+            
+            acceptBtn.addEventListener('click', function() {
+                termsModal.style.display = 'none';
+                mainHeader.style.display = 'block';
+                mainContent.style.display = 'block';
+                mainFooter.style.display = 'block';
+                document.body.style.overflow = 'auto';
+                
+                // حفظ موافقة المستخدم في localStorage
+                localStorage.setItem('termsAccepted', 'true');
+            });
+            
+            rejectBtn.addEventListener('click', function() {
+                alert('عذراً، لا يمكنك التسجيل دون الموافقة على شروط المدرسة');
+                // يمكنك توجيه المستخدم إلى صفحة أخرى
+                // window.location.href = 'https://example.com';
+            });
+            
+            // التحقق إذا كان المستخدم قد وافق مسبقاً على الشروط
+            if(localStorage.getItem('termsAccepted') === 'true') {
+                termsModal.style.display = 'none';
+                mainHeader.style.display = 'block';
+                mainContent.style.display = 'block';
+                mainFooter.style.display = 'block';
+            }
+            
             document.getElementById('year').textContent = new Date().getFullYear();
             
             const form = document.getElementById('studentRegistration');
@@ -614,17 +808,26 @@
                 const requiredRadios = [
                     {name: 'socialStatus', errorId: 'socialStatusError'},
                     {name: 'isSick', errorId: 'isSickError'},
-                    {name: 'takesMedicine', errorId: 'takesMedicineError'}
+                    {name: 'takesMedicine', errorId: 'takesMedicineError'},
+                    {name: 'registrationType', errorId: 'registrationTypeError'}
                 ];
                 
                 requiredRadios.forEach(radio => {
                     const checked = document.querySelector(`input[name="${radio.name}"]:checked`);
                     const error = document.getElementById(radio.errorId);
                     if (!checked) {
-                        error.style.display = 'block';
+                        if (!error) {
+                            const errorElement = document.createElement('div');
+                            errorElement.className = 'error-message';
+                            errorElement.id = radio.errorId;
+                            errorElement.textContent = 'يجب اختيار نوع التسجيل';
+                            document.querySelector(`input[name="${radio.name}"]`).closest('.radio-options').after(errorElement);
+                        } else {
+                            error.style.display = 'block';
+                        }
                         isValid = false;
                     } else {
-                        error.style.display = 'none';
+                        if (error) error.style.display = 'none';
                     }
                 });
 
@@ -664,6 +867,7 @@
                     submitBtn.disabled = true;
                     
                     studentData = {
+                        registrationType: document.querySelector('input[name="registrationType"]:checked').value,
                         firstName: document.getElementById('firstName').value.trim(),
                         lastName: document.getElementById('lastName').value.trim(),
                         birthDate: document.getElementById('birthDate').value,
@@ -687,6 +891,21 @@
                     registrationNumber = studentData.registrationNumber;
                     
                     const studentId = studentData.firstName + '_' + studentData.lastName + '_' + new Date().getTime();
+                    
+                    const firebaseConfig = {
+                        apiKey: "AIzaSyAzx-JlJBJxtVZT2cXDtJiHbs6s9K-3hEY",
+                        authDomain: "tahdiri-dc608.firebaseapp.com",
+                        databaseURL: "https://tahdiri-dc608-default-rtdb.firebaseio.com",
+                        projectId: "tahdiri-dc608",
+                        storageBucket: "tahdiri-dc608.appspot.com",
+                        messagingSenderId: "795586531700",
+                        appId: "1:795586531700:web:d693fd56f4bed6aed4dc21",
+                        measurementId: "G-H57ECZPTT7"
+                    };
+
+                    // Initialize Firebase
+                    const app = firebase.initializeApp(firebaseConfig);
+                    const database = firebase.database();
                     
                     database.ref('students/' + studentId).set(studentData)
                         .then(() => {
