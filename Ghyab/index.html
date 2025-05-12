@@ -199,6 +199,7 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            // العناصر الرئيسية
             const teacherSelect = document.getElementById('teacherSelect');
             const genderSelect = document.getElementById('genderSelect');
             const attendanceDate = document.getElementById('attendanceDate');
@@ -209,38 +210,43 @@
             const messageDiv = document.getElementById('message');
             const loadingDiv = document.getElementById('loading');
 
-            // تعيين تاريخ اليوم كقيمة افتراضية
-            const today = new Date();
-            attendanceDate.value = today.toISOString().substr(0, 10);
+            // تعيين تاريخ اليوم
+            attendanceDate.value = new Date().toISOString().substr(0, 10);
 
-            // جلب قائمة المعلمين عند تحميل الصفحة
+            // جلب المعلمين عند تحميل الصفحة
             fetchTeachers();
 
-            // حدث تحميل الطلاب
+            // أحداث الأزرار
             loadStudentsBtn.addEventListener('click', loadStudents);
-
-            // حدث حفظ البيانات
             saveBtn.addEventListener('click', saveAttendanceData);
 
+            // دالة جلب المعلمين
             async function fetchTeachers() {
                 showLoading();
                 try {
-                    // جلب المعلمين من جدول البيانات
-                    const sheetId = '1esP8qSmlkCt0R4Pu2P20XI2Pl2mL2WgPrZqmW__O7jE';
-                    const url = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:json&sheet=MALE`;
+                    const teachers = new Set();
                     
-                    const response = await fetch(url);
-                    const text = await response.text();
-                    const jsonText = text.match(/google\.visualization\.Query\.setResponse\(([\s\S\w]+)\);/)[1];
-                    const data = JSON.parse(jsonText);
+                    // جلب المعلمين من ورقة الذكور
+                    const maleData = await fetchSheetData('MALE');
+                    maleData.forEach(row => {
+                        if (row.المعلم) teachers.add(row.المعلم);
+                    });
                     
-                    const teachers = extractTeachers(data);
+                    // جلب المعلمين من ورقة الإناث
+                    const femaleData = await fetchSheetData('FEMALE');
+                    femaleData.forEach(row => {
+                        if (row.المعلم) teachers.add(row.المعلم);
+                    });
                     
-                    if (teachers.length > 0) {
-                        populateTeacherSelect(teachers);
-                    } else {
-                        throw new Error('لا توجد بيانات للمعلمين');
-                    }
+                    // تعبئة القائمة المنسدلة
+                    teacherSelect.innerHTML = '<option value="">-- اختر المعلم --</option>';
+                    Array.from(teachers).sort().forEach(teacher => {
+                        const option = document.createElement('option');
+                        option.value = teacher;
+                        option.textContent = teacher;
+                        teacherSelect.appendChild(option);
+                    });
+                    
                 } catch (error) {
                     showMessage(`حدث خطأ: ${error.message}`, 'error');
                     console.error('Error fetching teachers:', error);
@@ -249,40 +255,7 @@
                 }
             }
 
-            function extractTeachers(data) {
-                const teachers = new Set();
-                try {
-                    const cols = data.table.cols;
-                    const rows = data.table.rows;
-                    
-                    const teacherColIndex = cols.findIndex(col => col.label === "المعلم");
-                    
-                    if (teacherColIndex === -1) {
-                        throw new Error('عمود المعلم غير موجود في الجدول');
-                    }
-                    
-                    rows.forEach(row => {
-                        const teacher = row.c[teacherColIndex]?.v;
-                        if (teacher) {
-                            teachers.add(teacher);
-                        }
-                    });
-                } catch (e) {
-                    console.error('Error extracting teachers:', e);
-                }
-                return Array.from(teachers);
-            }
-
-            function populateTeacherSelect(teachers) {
-                teacherSelect.innerHTML = '<option value="">-- اختر المعلم --</option>';
-                teachers.forEach(teacher => {
-                    const option = document.createElement('option');
-                    option.value = teacher;
-                    option.textContent = teacher;
-                    teacherSelect.appendChild(option);
-                });
-            }
-
+            // دالة جلب بيانات الطلاب
             async function loadStudents() {
                 const teacher = teacherSelect.value;
                 const gender = genderSelect.value;
@@ -300,15 +273,8 @@
                 
                 showLoading();
                 try {
-                    const sheetId = '1esP8qSmlkCt0R4Pu2P20XI2Pl2mL2WgPrZqmW__O7jE';
-                    const url = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:json&sheet=${gender}`;
-                    
-                    const response = await fetch(url);
-                    const text = await response.text();
-                    const jsonText = text.match(/google\.visualization\.Query\.setResponse\(([\s\S\w]+)\);/)[1];
-                    const data = JSON.parse(jsonText);
-                    
-                    const students = extractStudents(data, teacher);
+                    const sheetData = await fetchSheetData(gender);
+                    const students = sheetData.filter(row => row.المعلم === teacher);
                     
                     if (students.length > 0) {
                         displayStudents(students);
@@ -324,54 +290,74 @@
                 }
             }
 
-            function extractStudents(data, teacher) {
-                const students = [];
+            // دالة جلب البيانات من الجدول
+            async function fetchSheetData(sheetName) {
+                const sheetId = '1esP8qSmlkCt0R4Pu2P20XI2Pl2mL2WgPrZqmW__O7jE';
+                const url = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(sheetName)}`;
+                
+                try {
+                    const response = await fetch(url);
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    
+                    const text = await response.text();
+                    const jsonText = text.match(/google\.visualization\.Query\.setResponse\(([\s\S]+)\);/)[1];
+                    const data = JSON.parse(jsonText);
+                    
+                    return processSheetData(data);
+                } catch (error) {
+                    console.error('Error fetching sheet data:', error);
+                    throw error;
+                }
+            }
+
+            // دالة معالجة بيانات الجدول
+            function processSheetData(data) {
+                const results = [];
                 try {
                     const cols = data.table.cols;
                     const rows = data.table.rows;
                     
-                    const teacherColIndex = cols.findIndex(col => col.label === "المعلم");
-                    const nameColIndex = cols.findIndex(col => col.label === "الاسم");
-                    
-                    if (teacherColIndex === -1 || nameColIndex === -1) {
-                        throw new Error('هيكل الجدول غير متطابق');
-                    }
-                    
-                    rows.forEach((row, index) => {
-                        const rowTeacher = row.c[teacherColIndex]?.v;
-                        if (rowTeacher === teacher) {
-                            students.push({
-                                id: index,
-                                name: row.c[nameColIndex]?.v || 'بدون اسم'
-                            });
-                        }
+                    // تحويل الصفوف إلى كائنات
+                    rows.forEach(row => {
+                        const obj = {};
+                        row.c.forEach((cell, index) => {
+                            if (cols[index] && cols[index].label) {
+                                obj[cols[index].label] = cell ? cell.v : null;
+                            }
+                        });
+                        results.push(obj);
                     });
+                    
+                    return results;
                 } catch (e) {
-                    console.error('Error extracting students:', e);
+                    console.error('Error processing sheet data:', e);
+                    return [];
                 }
-                return students;
             }
 
+            // دالة عرض الطلاب
             function displayStudents(students) {
                 studentsList.innerHTML = '';
                 
-                students.forEach(student => {
+                students.forEach((student, index) => {
                     const row = document.createElement('tr');
                     
                     row.innerHTML = `
-                        <td>${student.name}</td>
+                        <td>${student.الاسم || 'بدون اسم'}</td>
                         <td>
                             <div class="status-option">
                                 <label>
-                                    <input type="radio" name="attendance_${student.id}" value="حاضر" checked class="status-radio">
+                                    <input type="radio" name="attendance_${index}" value="حاضر" checked class="status-radio">
                                     حاضر
                                 </label>
                                 <label>
-                                    <input type="radio" name="attendance_${student.id}" value="غائب" class="status-radio">
+                                    <input type="radio" name="attendance_${index}" value="غائب" class="status-radio">
                                     غائب
                                 </label>
                                 <label>
-                                    <input type="radio" name="attendance_${student.id}" value="معذور" class="status-radio">
+                                    <input type="radio" name="attendance_${index}" value="معذور" class="status-radio">
                                     معذور
                                 </label>
                             </div>
@@ -383,6 +369,7 @@
                 });
             }
 
+            // دالة حفظ بيانات الغياب
             async function saveAttendanceData() {
                 const teacher = teacherSelect.value;
                 const gender = genderSelect.value;
@@ -398,30 +385,28 @@
                 const attendanceRecords = [];
                 const rows = studentsList.querySelectorAll('tr');
                 
-                rows.forEach(row => {
+                rows.forEach((row, index) => {
                     const name = row.cells[0].textContent;
                     const status = row.querySelector('input[type="radio"]:checked').value;
                     const notes = row.querySelector('.notes-input').value;
                     
                     attendanceRecords.push({
-                        teacher,
-                        date,
-                        gender,
-                        name,
-                        status,
-                        notes
+                        المعلم: teacher,
+                        التاريخ: date,
+                        الجنس: gender === 'MALE' ? 'ذكر' : 'أنثى',
+                        الاسم: name,
+                        الحضور: status,
+                        الملاحظات: notes
                     });
                 });
                 
                 try {
-                    // هنا سيتم إرسال البيانات إلى Google Apps Script
+                    // هنا يمكنك إرسال البيانات إلى Google Apps Script
                     // هذا مثال للتوضيح فقط
-                    
-                    // يمكنك استبدال هذا الكود بالاتصال الفعلي بـ Google Apps Script
                     console.log('بيانات الحضور:', attendanceRecords);
-                    showMessage('تم حفظ بيانات الغياب بنجاح', 'success');
+                    showMessage('تم حفظ بيانات الغياب بنجاح (وهمي)', 'success');
                     
-                    // مثال لاستخدام Google Apps Script:
+                    // لإرسال البيانات فعلياً، استخدم:
                     /*
                     const scriptUrl = 'رابط_سكربت_جوجل_هنا';
                     const response = await fetch(scriptUrl, {
@@ -451,6 +436,7 @@
                 }
             }
 
+            // دالة عرض الرسائل
             function showMessage(msg, type) {
                 messageDiv.textContent = msg;
                 messageDiv.className = `message ${type}`;
@@ -461,6 +447,7 @@
                 }, 5000);
             }
 
+            // دوال التحميل
             function showLoading() {
                 loadingDiv.style.display = 'block';
             }
