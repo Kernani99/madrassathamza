@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>نظام تسجيل الغياب للمعلمين</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #1a4d2e;
+            --secondary-color: #f5f5dc;
+            --accent-color: #d4af37;
+            --text-color: #333;
+            --light-bg: #f9f9f7;
+        }
+
+        body {
+            font-family: 'Cairo', sans-serif;
+            background-color: var(--light-bg);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 1rem;
+            text-align: center;
+            border-radius: 8px 8px 0 0;
+            margin-bottom: 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+
+        input, select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-family: 'Cairo', sans-serif;
+        }
+
+        button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-family: 'Cairo', sans-serif;
+            font-size: 1rem;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            background-color: var(--accent-color);
+        }
+
+        .attendance-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        .attendance-table th, 
+        .attendance-table td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: center;
+        }
+
+        .attendance-table th {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .status-option {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .status-radio {
+            margin-left: 5px;
+        }
+
+        .message {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+            display: none;
+        }
+
+        .success {
+            background-color: #d4edda;
+            color: #155724;
+        }
+
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 20px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>نظام تسجيل غياب الطلاب</h1>
+        </div>
+
+        <div class="form-group">
+            <label for="teacherSelect">اختر المعلم:</label>
+            <select id="teacherSelect" class="form-control">
+                <option value="">-- اختر المعلم --</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="attendanceDate">تاريخ تسجيل الغياب:</label>
+            <input type="date" id="attendanceDate" class="form-control">
+        </div>
+
+        <button id="loadStudentsBtn" class="btn">تحميل الطلاب</button>
+
+        <div id="studentsSection" style="display: none;">
+            <h2>قائمة الطلاب</h2>
+            <table class="attendance-table">
+                <thead>
+                    <tr>
+                        <th>الاسم</th>
+                        <th>الجنس</th>
+                        <th>الحضور</th>
+                        <th>ملاحظات</th>
+                    </tr>
+                </thead>
+                <tbody id="studentsList">
+                    <!-- سيتم ملؤها بالجافاسكريبت -->
+                </tbody>
+            </table>
+
+            <button id="saveBtn">حفظ البيانات</button>
+        </div>
+
+        <div id="message" class="message"></div>
+        <div id="loading" class="loading">
+            <p>جاري معالجة البيانات...</p>
+        </div>
+    </div>
+
+    <script>
+        // رابط Google Apps Script الخاص بك
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwSlVikA33s3q3HwYz5Mf1h3_HhxsYkXFeZAJ0wpcmYZLUXjENsivhvUBwc8APOUOpYoQ/exec';
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const teacherSelect = document.getElementById('teacherSelect');
+            const attendanceDate = document.getElementById('attendanceDate');
+            const loadStudentsBtn = document.getElementById('loadStudentsBtn');
+            const studentsSection = document.getElementById('studentsSection');
+            const studentsList = document.getElementById('studentsList');
+            const saveBtn = document.getElementById('saveBtn');
+            const messageDiv = document.getElementById('message');
+            const loadingDiv = document.getElementById('loading');
+
+            // تعيين تاريخ اليوم كقيمة افتراضية
+            const today = new Date();
+            attendanceDate.value = today.toISOString().substr(0, 10);
+
+            // جلب بيانات المعلمين عند تحميل الصفحة
+            fetchTeachers();
+
+            // حدث تحميل الطلاب
+            loadStudentsBtn.addEventListener('click', function() {
+                const teacher = teacherSelect.value;
+                const date = attendanceDate.value;
+                
+                if (!teacher || !date) {
+                    showMessage('الرجاء اختيار المعلم وتاريخ الغياب', 'error');
+                    return;
+                }
+                
+                fetchStudents(teacher);
+            });
+
+            // حدث حفظ البيانات
+            saveBtn.addEventListener('click', saveAttendanceData);
+
+            async function fetchTeachers() {
+                showLoading();
+                try {
+                    const response = await fetch(`${SCRIPT_URL}?action=getTeachers`);
+                    const data = await response.json();
+                    
+                    if (data.success) {
+                        data.teachers.forEach(teacher => {
+                            const option = document.createElement('option');
+                            option.value = teacher;
+                            option.textContent = teacher;
+                            teacherSelect.appendChild(option);
+                        });
+                    } else {
+                        throw new Error(data.message || 'حدث خطأ أثناء جلب المعلمين');
+                    }
+                } catch (error) {
+                    showMessage(`حدث خطأ: ${error.message}`, 'error');
+                    console.error(error);
+                } finally {
+                    hideLoading();
+                }
+            }
+
+            async function fetchStudents(teacher) {
+                showLoading();
+                try {
+                    const response = await fetch(`${SCRIPT_URL}?action=getStudents&teacher=${encodeURIComponent(teacher)}`);
+                    const data = await response.json();
+                    
+                    if (data.success) {
+                        displayStudents(data.students);
+                        studentsSection.style.display = 'block';
+                    } else {
+                        throw new Error(data.message || 'حدث خطأ أثناء جلب الطلاب');
+                    }
+                } catch (error) {
+                    showMessage(`حدث خطأ: ${error.message}`, 'error');
+                    console.error(error);
+                } finally {
+                    hideLoading();
+                }
+            }
+
+            function displayStudents(students) {
+                studentsList.innerHTML = '';
+                
+                students.forEach(student => {
+                    const row = document.createElement('tr');
+                    
+                    row.innerHTML = `
+                        <td>${student.name}</td>
+                        <td>${student.gender}</td>
+                        <td>
+                            <div class="status-option">
+                                <label>
+                                    <input type="radio" name="attendance_${student.id}" value="حاضر" checked class="status-radio">
+                                    حاضر
+                                </label>
+                                <label>
+                                    <input type="radio" name="attendance_${student.id}" value="غائب" class="status-radio">
+                                    غائب
+                                </label>
+                                <label>
+                                    <input type="radio" name="attendance_${student.id}" value="معذور" class="status-radio">
+                                    معذور
+                                </label>
+                            </div>
+                        </td>
+                        <td><input type="text" class="notes-input" placeholder="ملاحظات"></td>
+                    `;
+                    
+                    studentsList.appendChild(row);
+                });
+            }
+
+            async function saveAttendanceData() {
+                const teacher = teacherSelect.value;
+                const date = attendanceDate.value;
+                
+                if (!teacher || !date) {
+                    showMessage('الرجاء اختيار المعلم وتاريخ الغياب', 'error');
+                    return;
+                }
+                
+                showLoading();
+                
+                const attendanceRecords = [];
+                const rows = studentsList.querySelectorAll('tr');
+                
+                rows.forEach(row => {
+                    const name = row.cells[0].textContent;
+                    const gender = row.cells[1].textContent;
+                    const status = row.querySelector('input[type="radio"]:checked').value;
+                    const notes = row.querySelector('.notes-input').value;
+                    
+                    attendanceRecords.push({
+                        teacher,
+                        date,
+                        name,
+                        gender,
+                        status,
+                        notes
+                    });
+                });
+                
+                try {
+                    const response = await fetch(SCRIPT_URL, {
+                        method: 'POST',
+                        body: JSON.stringify({
+                            action: 'saveAttendance',
+                            records: attendanceRecords
+                        }),
+                        headers: {
+                            'Content-Type': 'application/json'
+                        }
+                    });
+                    
+                    const result = await response.json();
+                    
+                    if (result.success) {
+                        showMessage('تم حفظ بيانات الغياب بنجاح', 'success');
+                    } else {
+                        throw new Error(result.message || 'حدث خطأ أثناء الحفظ');
+                    }
+                } catch (error) {
+                    showMessage(`حدث خطأ: ${error.message}`, 'error');
+                    console.error(error);
+                } finally {
+                    hideLoading();
+                }
+            }
+
+            function showMessage(msg, type) {
+                messageDiv.textContent = msg;
+                messageDiv.className = `message ${type}`;
+                messageDiv.style.display = 'block';
+                
+                setTimeout(() => {
+                    messageDiv.style.display = 'none';
+                }, 5000);
+            }
+
+            function showLoading() {
+                loadingDiv.style.display = 'block';
+            }
+
+            function hideLoading() {
+                loadingDiv.style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>
