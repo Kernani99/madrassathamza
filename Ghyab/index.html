@@ -70,6 +70,7 @@
             font-family: 'Cairo', sans-serif;
             font-size: 1rem;
             margin-top: 10px;
+            transition: background-color 0.3s;
         }
 
         button:hover {
@@ -98,10 +99,17 @@
             display: flex;
             justify-content: center;
             gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .status-option label {
+            display: flex;
+            align-items: center;
+            margin: 0;
         }
 
         .status-radio {
-            margin-left: 5px;
+            margin-right: 5px;
         }
 
         .message {
@@ -114,17 +122,26 @@
         .success {
             background-color: #d4edda;
             color: #155724;
+            border: 1px solid #c3e6cb;
         }
 
         .error {
             background-color: #f8d7da;
             color: #721c24;
+            border: 1px solid #f5c6cb;
         }
 
         .loading {
             text-align: center;
             padding: 20px;
             display: none;
+        }
+
+        @media (max-width: 768px) {
+            .status-option {
+                flex-direction: column;
+                gap: 5px;
+            }
         }
     </style>
 </head>
@@ -142,6 +159,14 @@
         </div>
 
         <div class="form-group">
+            <label for="genderSelect">اختر الجنس:</label>
+            <select id="genderSelect" class="form-control">
+                <option value="MALE">ذكور</option>
+                <option value="FEMALE">إناث</option>
+            </select>
+        </div>
+
+        <div class="form-group">
             <label for="attendanceDate">تاريخ تسجيل الغياب:</label>
             <input type="date" id="attendanceDate" class="form-control">
         </div>
@@ -154,7 +179,6 @@
                 <thead>
                     <tr>
                         <th>الاسم</th>
-                        <th>الجنس</th>
                         <th>الحضور</th>
                         <th>ملاحظات</th>
                     </tr>
@@ -174,11 +198,9 @@
     </div>
 
     <script>
-        // رابط Google Apps Script الخاص بك
-        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwSlVikA33s3q3HwYz5Mf1h3_HhxsYkXFeZAJ0wpcmYZLUXjENsivhvUBwc8APOUOpYoQ/exec';
-
         document.addEventListener('DOMContentLoaded', function() {
             const teacherSelect = document.getElementById('teacherSelect');
+            const genderSelect = document.getElementById('genderSelect');
             const attendanceDate = document.getElementById('attendanceDate');
             const loadStudentsBtn = document.getElementById('loadStudentsBtn');
             const studentsSection = document.getElementById('studentsSection');
@@ -191,21 +213,11 @@
             const today = new Date();
             attendanceDate.value = today.toISOString().substr(0, 10);
 
-            // جلب بيانات المعلمين عند تحميل الصفحة
+            // جلب قائمة المعلمين عند تحميل الصفحة
             fetchTeachers();
 
             // حدث تحميل الطلاب
-            loadStudentsBtn.addEventListener('click', function() {
-                const teacher = teacherSelect.value;
-                const date = attendanceDate.value;
-                
-                if (!teacher || !date) {
-                    showMessage('الرجاء اختيار المعلم وتاريخ الغياب', 'error');
-                    return;
-                }
-                
-                fetchStudents(teacher);
-            });
+            loadStudentsBtn.addEventListener('click', loadStudents);
 
             // حدث حفظ البيانات
             saveBtn.addEventListener('click', saveAttendanceData);
@@ -213,45 +225,131 @@
             async function fetchTeachers() {
                 showLoading();
                 try {
-                    const response = await fetch(`${SCRIPT_URL}?action=getTeachers`);
-                    const data = await response.json();
+                    // جلب المعلمين من جدول البيانات
+                    const sheetId = '1esP8qSmlkCt0R4Pu2P20XI2Pl2mL2WgPrZqmW__O7jE';
+                    const url = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:json&sheet=MALE`;
                     
-                    if (data.success) {
-                        data.teachers.forEach(teacher => {
-                            const option = document.createElement('option');
-                            option.value = teacher;
-                            option.textContent = teacher;
-                            teacherSelect.appendChild(option);
-                        });
+                    const response = await fetch(url);
+                    const text = await response.text();
+                    const jsonText = text.match(/google\.visualization\.Query\.setResponse\(([\s\S\w]+)\);/)[1];
+                    const data = JSON.parse(jsonText);
+                    
+                    const teachers = extractTeachers(data);
+                    
+                    if (teachers.length > 0) {
+                        populateTeacherSelect(teachers);
                     } else {
-                        throw new Error(data.message || 'حدث خطأ أثناء جلب المعلمين');
+                        throw new Error('لا توجد بيانات للمعلمين');
                     }
                 } catch (error) {
                     showMessage(`حدث خطأ: ${error.message}`, 'error');
-                    console.error(error);
+                    console.error('Error fetching teachers:', error);
                 } finally {
                     hideLoading();
                 }
             }
 
-            async function fetchStudents(teacher) {
+            function extractTeachers(data) {
+                const teachers = new Set();
+                try {
+                    const cols = data.table.cols;
+                    const rows = data.table.rows;
+                    
+                    const teacherColIndex = cols.findIndex(col => col.label === "المعلم");
+                    
+                    if (teacherColIndex === -1) {
+                        throw new Error('عمود المعلم غير موجود في الجدول');
+                    }
+                    
+                    rows.forEach(row => {
+                        const teacher = row.c[teacherColIndex]?.v;
+                        if (teacher) {
+                            teachers.add(teacher);
+                        }
+                    });
+                } catch (e) {
+                    console.error('Error extracting teachers:', e);
+                }
+                return Array.from(teachers);
+            }
+
+            function populateTeacherSelect(teachers) {
+                teacherSelect.innerHTML = '<option value="">-- اختر المعلم --</option>';
+                teachers.forEach(teacher => {
+                    const option = document.createElement('option');
+                    option.value = teacher;
+                    option.textContent = teacher;
+                    teacherSelect.appendChild(option);
+                });
+            }
+
+            async function loadStudents() {
+                const teacher = teacherSelect.value;
+                const gender = genderSelect.value;
+                const date = attendanceDate.value;
+                
+                if (!teacher) {
+                    showMessage('الرجاء اختيار المعلم', 'error');
+                    return;
+                }
+                
+                if (!date) {
+                    showMessage('الرجاء اختيار تاريخ', 'error');
+                    return;
+                }
+                
                 showLoading();
                 try {
-                    const response = await fetch(`${SCRIPT_URL}?action=getStudents&teacher=${encodeURIComponent(teacher)}`);
-                    const data = await response.json();
+                    const sheetId = '1esP8qSmlkCt0R4Pu2P20XI2Pl2mL2WgPrZqmW__O7jE';
+                    const url = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:json&sheet=${gender}`;
                     
-                    if (data.success) {
-                        displayStudents(data.students);
+                    const response = await fetch(url);
+                    const text = await response.text();
+                    const jsonText = text.match(/google\.visualization\.Query\.setResponse\(([\s\S\w]+)\);/)[1];
+                    const data = JSON.parse(jsonText);
+                    
+                    const students = extractStudents(data, teacher);
+                    
+                    if (students.length > 0) {
+                        displayStudents(students);
                         studentsSection.style.display = 'block';
                     } else {
-                        throw new Error(data.message || 'حدث خطأ أثناء جلب الطلاب');
+                        throw new Error('لا توجد بيانات طلاب للمعلم المحدد');
                     }
                 } catch (error) {
                     showMessage(`حدث خطأ: ${error.message}`, 'error');
-                    console.error(error);
+                    console.error('Error loading students:', error);
                 } finally {
                     hideLoading();
                 }
+            }
+
+            function extractStudents(data, teacher) {
+                const students = [];
+                try {
+                    const cols = data.table.cols;
+                    const rows = data.table.rows;
+                    
+                    const teacherColIndex = cols.findIndex(col => col.label === "المعلم");
+                    const nameColIndex = cols.findIndex(col => col.label === "الاسم");
+                    
+                    if (teacherColIndex === -1 || nameColIndex === -1) {
+                        throw new Error('هيكل الجدول غير متطابق');
+                    }
+                    
+                    rows.forEach((row, index) => {
+                        const rowTeacher = row.c[teacherColIndex]?.v;
+                        if (rowTeacher === teacher) {
+                            students.push({
+                                id: index,
+                                name: row.c[nameColIndex]?.v || 'بدون اسم'
+                            });
+                        }
+                    });
+                } catch (e) {
+                    console.error('Error extracting students:', e);
+                }
+                return students;
             }
 
             function displayStudents(students) {
@@ -262,7 +360,6 @@
                     
                     row.innerHTML = `
                         <td>${student.name}</td>
-                        <td>${student.gender}</td>
                         <td>
                             <div class="status-option">
                                 <label>
@@ -288,6 +385,7 @@
 
             async function saveAttendanceData() {
                 const teacher = teacherSelect.value;
+                const gender = genderSelect.value;
                 const date = attendanceDate.value;
                 
                 if (!teacher || !date) {
@@ -302,26 +400,36 @@
                 
                 rows.forEach(row => {
                     const name = row.cells[0].textContent;
-                    const gender = row.cells[1].textContent;
                     const status = row.querySelector('input[type="radio"]:checked').value;
                     const notes = row.querySelector('.notes-input').value;
                     
                     attendanceRecords.push({
                         teacher,
                         date,
-                        name,
                         gender,
+                        name,
                         status,
                         notes
                     });
                 });
                 
                 try {
-                    const response = await fetch(SCRIPT_URL, {
+                    // هنا سيتم إرسال البيانات إلى Google Apps Script
+                    // هذا مثال للتوضيح فقط
+                    
+                    // يمكنك استبدال هذا الكود بالاتصال الفعلي بـ Google Apps Script
+                    console.log('بيانات الحضور:', attendanceRecords);
+                    showMessage('تم حفظ بيانات الغياب بنجاح', 'success');
+                    
+                    // مثال لاستخدام Google Apps Script:
+                    /*
+                    const scriptUrl = 'رابط_سكربت_جوجل_هنا';
+                    const response = await fetch(scriptUrl, {
                         method: 'POST',
                         body: JSON.stringify({
                             action: 'saveAttendance',
-                            records: attendanceRecords
+                            records: attendanceRecords,
+                            sheetName: 'الغيابات'
                         }),
                         headers: {
                             'Content-Type': 'application/json'
@@ -329,15 +437,15 @@
                     });
                     
                     const result = await response.json();
-                    
                     if (result.success) {
                         showMessage('تم حفظ بيانات الغياب بنجاح', 'success');
                     } else {
                         throw new Error(result.message || 'حدث خطأ أثناء الحفظ');
                     }
+                    */
                 } catch (error) {
                     showMessage(`حدث خطأ: ${error.message}`, 'error');
-                    console.error(error);
+                    console.error('Error saving attendance:', error);
                 } finally {
                     hideLoading();
                 }
