@@ -3,7 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="نظام متكامل لتسجيل غياب الطلاب للمعلمين">
     <title>نظام تسجيل الغياب للمعلمين</title>
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -398,7 +397,6 @@
             }
         }
 
-        /* Animation for form sections */
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
@@ -541,13 +539,25 @@
         <p>جميع الحقوق محفوظة &copy; <span id="currentYear"></span> - نظام تسجيل الغياب للمعلمين</p>
     </div>
 
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-database-compat.js"></script>
+
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             // تعيين السنة الحالية في التذييل
             document.getElementById('currentYear').textContent = new Date().getFullYear();
             
-            // رابط السكربت الخاص بك
-            const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby-uK9FYoJN9d70ZLkLgEekoO1BXb9F8ZeQkD-QRnADPyfGOu22ITV_aSOOGeLwiUCjrQ/exec';
+            // تهيئة Firebase
+            const firebaseConfig = {
+                databaseURL: "https://madrassa-de8ee-default-rtdb.firebaseio.com/"
+            };
+            
+            firebase.initializeApp(firebaseConfig);
+            const database = firebase.database();
+            
+            // معرف ملف Google Sheets (استبدله بمعرف ملفك)
+            const SHEET_ID = '1esP8qSmlkCt0R4Pu2P20XI2Pl2mL2WgPrZqmW__O7jE';
             
             // العناصر الرئيسية
             const teacherSelect = document.getElementById('teacherSelect');
@@ -606,58 +616,34 @@
                 }
             }
 
-            // دالة تغيير المعلم
-            function handleTeacherChange() {
-                const teacher = this.value;
-                loadStudentsBtn.disabled = !teacher;
-                currentTeacher = teacher;
+            // دالة تعبئة قائمة المعلمين
+            function populateTeacherSelect(teachers) {
+                teacherSelect.innerHTML = '<option value="">-- اختر المعلم --</option>';
+                teachers.forEach(teacher => {
+                    const option = document.createElement('option');
+                    option.value = teacher;
+                    option.textContent = teacher;
+                    teacherSelect.appendChild(option);
+                });
             }
 
-            // دالة جلب المعلمين
+            // دالة جلب المعلمين من Google Sheets
             async function fetchTeachers(gender) {
                 showLoading();
                 teacherSelect.innerHTML = '<option value="">-- جاري التحميل --</option>';
                 teacherSelect.disabled = true;
                 
                 try {
-                    // استخدام التخزين المؤقت المحلي إذا كان متاحًا
-                    const cacheKey = `teachers_${gender}`;
-                    const cachedData = localStorage.getItem(cacheKey);
+                    const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${gender}`;
+                    const response = await fetch(url);
                     
-                    if (cachedData) {
-                        const { data, timestamp } = JSON.parse(cachedData);
-                        // إذا كانت البيانات حديثة (أقل من يوم)، استخدمها
-                        if (Date.now() - timestamp < 24 * 60 * 60 * 1000) {
-                            populateTeacherSelect(data);
-                            showMessage(`تم تحميل ${data.length} معلم(ين) من الذاكرة المؤقتة`, 'success');
-                            return;
-                        }
-                    }
-                    
-                    const sheetId = '1esP8qSmlkCt0R4Pu2P20XI2Pl2mL2WgPrZqmW__O7jE';
-                    const url = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:json&sheet=${gender}`;
-                    
-                    const response = await fetchWithTimeout(url, {
-                        timeout: 10000 // 10 ثواني
-                    });
-                    
-                    if (!response.ok) {
-                        throw new Error(`خطأ في الاتصال: ${response.status}`);
-                    }
+                    if (!response.ok) throw new Error('فشل في جلب البيانات');
                     
                     const text = await response.text();
                     const json = parseGoogleSheetsData(text);
                     const teachers = extractTeachers(json);
                     
-                    if (teachers.length === 0) {
-                        throw new Error('لا يوجد معلمون في هذه الفئة');
-                    }
-                    
-                    // حفظ في التخزين المؤقت المحلي
-                    localStorage.setItem(cacheKey, JSON.stringify({
-                        data: teachers,
-                        timestamp: Date.now()
-                    }));
+                    if (teachers.length === 0) throw new Error('لا يوجد معلمون في هذه الفئة');
                     
                     populateTeacherSelect(teachers);
                     showMessage(`تم تحميل ${teachers.length} معلم(ين)`, 'success');
@@ -672,79 +658,56 @@
                 }
             }
 
-            // دالة جلب البيانات مع مهلة زمنية
-            function fetchWithTimeout(url, options = {}) {
-                const { timeout = 8000 } = options;
-                
-                const controller = new AbortController();
-                const timeoutId = setTimeout(() => controller.abort(), timeout);
-                
-                return fetch(url, {
-                    ...options,
-                    signal: controller.signal
-                }).finally(() => clearTimeout(timeoutId));
-            }
-
-            // دالة تحليل بيانات جوجل شيتس
+            // دالة تحليل بيانات Google Sheets
             function parseGoogleSheetsData(text) {
                 try {
                     const jsonStart = text.indexOf('{');
                     const jsonEnd = text.lastIndexOf('}') + 1;
-                    const jsonText = text.substring(jsonStart, jsonEnd);
-                    return JSON.parse(jsonText);
+                    return JSON.parse(text.substring(jsonStart, jsonEnd));
                 } catch (e) {
                     throw new Error('تعذر تحليل بيانات الجدول');
                 }
             }
 
-            // دالة استخراج المعلمين
+            // دالة استخراج المعلمين من البيانات
             function extractTeachers(data) {
-                try {
-                    const teachers = new Set();
-                    const teacherColIndex = findColumnIndex(data, ['المعلم', 'اسم المعلم', 'المعلم/المعلمة', 'Teacher', 'teacher']);
-                    
-                    if (teacherColIndex === -1) {
-                        console.error('أعمدة البيانات المتاحة:', data.table.cols.map(c => c.label));
-                        throw new Error('تعذر العثور على عمود المعلم');
-                    }
-                    
-                    data.table.rows.forEach(row => {
-                        if (row.c && row.c[teacherColIndex] && row.c[teacherColIndex].v) {
-                            const teacherName = sanitizeInput(row.c[teacherColIndex].v.toString().trim());
-                            if (teacherName) teachers.add(teacherName);
-                        }
-                    });
-                    
-                    return Array.from(teachers).sort((a, b) => a.localeCompare(b));
-                } catch (e) {
-                    console.error('Error extracting teachers:', e);
-                    return [];
+                const teachers = new Set();
+                const teacherColIndex = findColumnIndex(data, ['المعلم', 'اسم المعلم', 'المعلم/المعلمة']);
+                
+                if (teacherColIndex === -1) {
+                    console.error('أعمدة البيانات المتاحة:', data.table.cols.map(c => c.label));
+                    throw new Error('تعذر العثور على عمود المعلم');
                 }
+                
+                data.table.rows.forEach(row => {
+                    if (row.c && row.c[teacherColIndex] && row.c[teacherColIndex].v) {
+                        const teacherName = row.c[teacherColIndex].v.toString().trim();
+                        if (teacherName) teachers.add(teacherName);
+                    }
+                });
+                
+                return Array.from(teachers).sort((a, b) => a.localeCompare(b));
             }
 
             // دالة مساعدة للعثور على العمود
             function findColumnIndex(data, possibleNames) {
                 for (let name of possibleNames) {
                     const index = data.table.cols.findIndex(col => 
-                        col.label && col.label.toString().trim().includes(name.trim())
+                        col.label && col.label.toString().includes(name)
                     );
                     if (index !== -1) return index;
                 }
                 return -1;
             }
 
-            // دالة تعبئة قائمة المعلمين
-            function populateTeacherSelect(teachers) {
-                teacherSelect.innerHTML = '<option value="">-- اختر المعلم --</option>';
-                teachers.forEach(teacher => {
-                    const option = document.createElement('option');
-                    option.value = teacher;
-                    option.textContent = teacher;
-                    teacherSelect.appendChild(option);
-                });
+            // دالة تغيير المعلم
+            function handleTeacherChange() {
+                const teacher = this.value;
+                loadStudentsBtn.disabled = !teacher;
+                currentTeacher = teacher;
             }
 
-            // دالة جلب بيانات الطلاب
+            // دالة جلب الطلاب من Google Sheets
             async function loadStudents() {
                 currentTeacher = teacherSelect.value;
                 currentGender = genderSelect.value;
@@ -754,13 +717,10 @@
                 
                 showLoading();
                 try {
-                    const sheetId = '1esP8qSmlkCt0R4Pu2P20XI2Pl2mL2WgPrZqmW__O7jE';
-                    const url = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:json&sheet=${currentGender}`;
+                    const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${currentGender}`;
+                    const response = await fetch(url);
                     
-                    const response = await fetchWithTimeout(url);
-                    if (!response.ok) {
-                        throw new Error('فشل في جلب بيانات الطلاب');
-                    }
+                    if (!response.ok) throw new Error('فشل في جلب بيانات الطلاب');
                     
                     const text = await response.text();
                     const data = parseGoogleSheetsData(text);
@@ -783,6 +743,30 @@
                 }
             }
 
+            // دالة استخراج الطلاب من البيانات
+            function extractStudents(data, teacher) {
+                const students = [];
+                const teacherColIndex = findColumnIndex(data, ['المعلم', 'اسم المعلم']);
+                const nameColIndex = findColumnIndex(data, ['الاسم', 'اسم الطالب']);
+                
+                if (teacherColIndex === -1 || nameColIndex === -1) {
+                    throw new Error('هيكل الجدول غير متطابق');
+                }
+                
+                data.table.rows.forEach((row, index) => {
+                    if (row.c && row.c[teacherColIndex] && row.c[teacherColIndex].v && 
+                        row.c[teacherColIndex].v.toString().trim() === teacher.trim()) {
+                        const name = row.c[nameColIndex]?.v || 'بدون اسم';
+                        students.push({
+                            id: index,
+                            name: name.toString().trim()
+                        });
+                    }
+                });
+                
+                return students;
+            }
+
             // دالة التحقق من صحة النموذج
             function validateForm() {
                 if (!currentTeacher || !currentGender || !currentDate) {
@@ -793,49 +777,12 @@
                 const selectedDate = new Date(currentDate);
                 const today = new Date();
                 
-                // التحقق من أن التاريخ ليس في المستقبل
                 if (selectedDate > today) {
                     showMessage('لا يمكن اختيار تاريخ في المستقبل', 'error');
                     return false;
                 }
                 
                 return true;
-            }
-
-            // دالة استخراج الطلاب
-            function extractStudents(data, teacher) {
-                const students = [];
-                try {
-                    const teacherColIndex = findColumnIndex(data, ['المعلم', 'اسم المعلم', 'المعلم/المعلمة', 'Teacher', 'teacher']);
-                    const nameColIndex = findColumnIndex(data, ['الاسم', 'اسم الطالب', 'Student', 'Name', 'student']);
-                    
-                    if (teacherColIndex === -1 || nameColIndex === -1) {
-                        throw new Error('هيكل الجدول غير متطابق');
-                    }
-                    
-                    data.table.rows.forEach((row, index) => {
-                        if (row.c && row.c[teacherColIndex] && row.c[teacherColIndex].v && 
-                            row.c[teacherColIndex].v.toString().trim() === teacher.trim()) {
-                            const studentName = row.c[nameColIndex]?.v || 'بدون اسم';
-                            students.push({
-                                id: index,
-                                name: sanitizeInput(studentName.toString().trim())
-                            });
-                        }
-                    });
-                    
-                    return students;
-                } catch (e) {
-                    console.error('Error extracting students:', e);
-                    return [];
-                }
-            }
-
-            // دالة تنقية المدخلات
-            function sanitizeInput(input) {
-                const div = document.createElement('div');
-                div.textContent = input;
-                return div.innerHTML;
             }
 
             // دالة عرض الطلاب
@@ -903,7 +850,7 @@
                 }
             }
 
-            // دالة عرض السجلات السابقة
+            // دالة عرض السجلات السابقة من Firebase
             async function viewPreviousRecords() {
                 if (!currentTeacher || !currentGender) {
                     showMessage('الرجاء اختيار الجنس والمعلم أولاً', 'error');
@@ -912,9 +859,22 @@
                 
                 showLoading();
                 try {
-                    // في نظام حقيقي، هنا ستجلب السجلات السابقة من قاعدة البيانات
-                    // سنستخدم بيانات وهمية للتوضيح
-                    previousRecordsData = await fetchPreviousRecords(currentTeacher, currentGender);
+                    const snapshot = await database.ref(`attendance/${currentGender}/${currentTeacher}`).once('value');
+                    const recordsData = snapshot.val();
+                    
+                    if (!recordsData) {
+                        throw new Error('لا توجد سجلات سابقة للمعلم المحدد');
+                    }
+                    
+                    previousRecordsData = Object.keys(recordsData).map(date => {
+                        return {
+                            date: date,
+                            totalStudents: recordsData[date].metadata?.totalStudents || 0,
+                            present: recordsData[date].metadata?.present || 0,
+                            absent: recordsData[date].metadata?.absent || 0,
+                            excused: recordsData[date].metadata?.excused || 0
+                        };
+                    });
                     
                     if (previousRecordsData.length > 0) {
                         displayPreviousRecords(previousRecordsData);
@@ -931,32 +891,6 @@
                 } finally {
                     hideLoading();
                 }
-            }
-
-            // دالة جلب السجلات السابقة (وهمية للتوضيح)
-            function fetchPreviousRecords(teacher, gender) {
-                return new Promise(resolve => {
-                    setTimeout(() => {
-                        // بيانات وهمية
-                        const records = [];
-                        const today = new Date();
-                        
-                        for (let i = 1; i <= 5; i++) {
-                            const date = new Date(today);
-                            date.setDate(today.getDate() - i);
-                            
-                            records.push({
-                                date: date.toISOString().split('T')[0],
-                                totalStudents: Math.floor(Math.random() * 10) + 20,
-                                present: Math.floor(Math.random() * 10) + 15,
-                                absent: Math.floor(Math.random() * 5) + 1,
-                                excused: Math.floor(Math.random() * 5) + 1
-                            });
-                        }
-                        
-                        resolve(records);
-                    }, 1000);
-                });
             }
 
             // دالة عرض السجلات السابقة
@@ -1003,12 +937,78 @@
             }
 
             // دالة عرض تفاصيل السجل
-            function viewRecordDetails(date) {
-                // في نظام حقيقي، هنا ستجلب تفاصيل السجل من قاعدة البيانات
-                alert(`عرض تفاصيل السجل لليوم ${formatDate(date)}`);
+            async function viewRecordDetails(date) {
+                showLoading();
+                try {
+                    const snapshot = await database.ref(`attendance/${currentGender}/${currentTeacher}/${date}/students`).once('value');
+                    const students = snapshot.val();
+                    
+                    if (!students) {
+                        throw new Error('لا توجد بيانات للتاريخ المحدد');
+                    }
+                    
+                    studentsData = Object.keys(students).map(key => {
+                        return {
+                            id: key,
+                            name: students[key].name,
+                            status: students[key].status,
+                            notes: students[key].notes || ''
+                        };
+                    });
+                    
+                    displayStudentsWithAttendance(studentsData);
+                    studentsSection.classList.remove('hidden');
+                    previousRecordsSection.classList.add('hidden');
+                    
+                    showMessage(`عرض سجل الحضور بتاريخ ${formatDate(date)}`, 'success');
+                } catch (error) {
+                    showMessage(`حدث خطأ أثناء جلب التفاصيل: ${error.message}`, 'error');
+                } finally {
+                    hideLoading();
+                }
             }
 
-            // دالة حفظ بيانات الغياب
+            // دالة عرض الطلاب مع بيانات الحضور
+            function displayStudentsWithAttendance(students) {
+                studentsList.innerHTML = '';
+                
+                if (students.length === 0) {
+                    noStudentsDiv.classList.remove('hidden');
+                    return;
+                }
+                
+                noStudentsDiv.classList.add('hidden');
+                
+                students.forEach(student => {
+                    const row = document.createElement('tr');
+                    row.dataset.studentName = student.name.toLowerCase();
+                    
+                    row.innerHTML = `
+                        <td>${student.name}</td>
+                        <td>
+                            <div class="status-option">
+                                <label>
+                                    <input type="radio" name="attendance_${student.id}" value="حاضر" ${student.status === 'حاضر' ? 'checked' : ''} class="status-radio">
+                                    <span class="present">حاضر</span>
+                                </label>
+                                <label>
+                                    <input type="radio" name="attendance_${student.id}" value="غائب" ${student.status === 'غائب' ? 'checked' : ''} class="status-radio">
+                                    <span class="absent">غائب</span>
+                                </label>
+                                <label>
+                                    <input type="radio" name="attendance_${student.id}" value="معذور" ${student.status === 'معذور' ? 'checked' : ''} class="status-radio">
+                                    <span class="excused">معذور</span>
+                                </label>
+                            </div>
+                        </td>
+                        <td><input type="text" class="notes-input" placeholder="ملاحظات" value="${student.notes || ''}"></td>
+                    `;
+                    
+                    studentsList.appendChild(row);
+                });
+            }
+
+            // دالة حفظ بيانات الغياب في Firebase
             async function saveAttendanceData() {
                 if (!currentTeacher || !currentDate) {
                     showMessage('الرجاء اختيار المعلم وتاريخ الغياب', 'error');
@@ -1016,10 +1016,12 @@
                 }
                 
                 showLoading();
+                saveBtn.disabled = true;
                 
                 const attendanceRecords = [];
                 const rows = studentsList.querySelectorAll('tr');
                 
+                // جمع بيانات الطلاب
                 rows.forEach(row => {
                     if (row.style.display === 'none') return;
                     
@@ -1028,49 +1030,59 @@
                     const notes = row.querySelector('.notes-input').value;
                     
                     attendanceRecords.push({
-                        teacher: currentTeacher,
-                        date: currentDate,
-                        gender: currentGender === 'MALE' ? 'ذكر' : 'أنثى',
                         name: name,
                         status: status,
-                        notes: notes || ''
+                        notes: notes || '',
+                        timestamp: new Date().toISOString()
                     });
                 });
                 
                 try {
-                    const response = await fetchWithTimeout(SCRIPT_URL, {
-                        method: 'POST',
-                        body: JSON.stringify({
-                            action: 'saveAttendance',
-                            records: attendanceRecords
-                        }),
-                        headers: {
-                            'Content-Type': 'application/json'
+                    // حساب الإحصائيات
+                    const stats = {
+                        present: attendanceRecords.filter(r => r.status === 'حاضر').length,
+                        absent: attendanceRecords.filter(r => r.status === 'غائب').length,
+                        excused: attendanceRecords.filter(r => r.status === 'معذور').length,
+                        totalStudents: attendanceRecords.length,
+                        lastUpdated: new Date().toISOString()
+                    };
+                    
+                    // إنشاء مسار الحفظ في Firebase
+                    const attendancePath = `attendance/${currentGender}/${currentTeacher}/${currentDate}`;
+                    
+                    // حفظ البيانات
+                    const updates = {
+                        [`${attendancePath}/metadata`]: {
+                            date: currentDate,
+                            teacher: currentTeacher,
+                            gender: currentGender,
+                            ...stats
                         }
+                    };
+                    
+                    // إضافة سجلات الطلاب
+                    attendanceRecords.forEach((record, index) => {
+                        updates[`${attendancePath}/students/${index}`] = record;
                     });
                     
-                    const result = await response.json();
-                    if (result.success) {
-                        showMessage(result.message, 'success');
-                        studentsSection.classList.add('hidden');
-                    } else {
-                        throw new Error(result.message || 'حدث خطأ أثناء الحفظ');
-                    }
+                    // تنفيذ عملية الحفظ
+                    await database.ref().update(updates);
+                    
+                    showMessage('تم حفظ بيانات الغياب بنجاح', 'success');
+                    studentsSection.classList.add('hidden');
+                    
                 } catch (error) {
-                    showMessage(`حدث خطأ: ${error.message}`, 'error');
-                    console.error('Error saving attendance:', error);
+                    console.error('Firebase save error:', error);
+                    showMessage(`حدث خطأ أثناء الحفظ: ${error.message}`, 'error');
                 } finally {
                     hideLoading();
+                    saveBtn.disabled = false;
                 }
             }
 
             // دالة تصدير إلى Excel
             function exportToExcel() {
-                // في نظام حقيقي، هنا سيتم تصدير البيانات إلى Excel
                 showMessage('سيتم تنفيذ عملية التصدير في النسخة الكاملة من النظام', 'info');
-                
-                // يمكن استخدام مكتبة مثل SheetJS لإنشاء ملف Excel
-                // مثال: https://sheetjs.com/
             }
 
             // دالة إعادة تعيين النموذج
