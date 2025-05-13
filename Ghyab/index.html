@@ -6,6 +6,7 @@
     <title>نظام تسجيل الغياب للمعلمين</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600&display=swap" rel="stylesheet">
     <style>
+        /* الأنماط تبقى كما هي في الإصدار السابق */
         :root {
             --primary-color: #1a4d2e;
             --secondary-color: #f5f5dc;
@@ -207,7 +208,6 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // العناصر الرئيسية
             const teacherSelect = document.getElementById('teacherSelect');
             const genderSelect = document.getElementById('genderSelect');
             const attendanceDate = document.getElementById('attendanceDate');
@@ -219,8 +219,7 @@
             const loadingDiv = document.getElementById('loading');
 
             // تعيين تاريخ اليوم كقيمة افتراضية
-            const today = new Date();
-            attendanceDate.value = today.toISOString().substr(0, 10);
+            attendanceDate.value = new Date().toISOString().substr(0, 10);
 
             // حدث تغيير الجنس
             genderSelect.addEventListener('change', async function() {
@@ -258,17 +257,15 @@
                     
                     const response = await fetch(url);
                     if (!response.ok) {
-                        throw new Error('فشل في جلب البيانات من السيرفر');
+                        throw new Error(`خطأ في الاتصال: ${response.status}`);
                     }
                     
                     const text = await response.text();
-                    const jsonMatch = text.match(/google\.visualization\.Query\.setResponse\(([\s\S]+)\);/);
+                    const jsonStart = text.indexOf('{');
+                    const jsonEnd = text.lastIndexOf('}') + 1;
+                    const jsonText = text.substring(jsonStart, jsonEnd);
                     
-                    if (!jsonMatch || !jsonMatch[1]) {
-                        throw new Error('صيغة البيانات غير صحيحة');
-                    }
-                    
-                    const data = JSON.parse(jsonMatch[1]);
+                    const data = JSON.parse(jsonText);
                     const teachers = extractTeachers(data);
                     
                     if (teachers.length === 0) {
@@ -279,8 +276,8 @@
                     showMessage(`تم تحميل ${teachers.length} معلم(ين)`, 'success');
                     
                 } catch (error) {
-                    console.error('Error:', error);
-                    teacherSelect.innerHTML = '<option value="">-- خطأ في التحميل --</option>';
+                    console.error('Error fetching teachers:', error);
+                    teacherSelect.innerHTML = '<option value="">-- فشل في التحميل --</option>';
                     showMessage(`حدث خطأ: ${error.message}`, 'error');
                 } finally {
                     teacherSelect.disabled = false;
@@ -292,8 +289,8 @@
             function extractTeachers(data) {
                 const teachers = new Set();
                 try {
-                    // البحث عن عمود المعلم بعدة أسماء محتملة
-                    const teacherColIndex = findColumnIndex(data, ['المعلم', 'اسم المعلم', 'المعلم/المعلمة', 'Name', 'Teacher']);
+                    // البحث عن عمود المعلم بأسماء مختلفة
+                    const teacherColIndex = findColumnIndex(data, ['المعلم', 'اسم المعلم', 'المعلم/المعلمة', 'Teacher', 'teacher']);
                     
                     if (teacherColIndex === -1) {
                         console.error('أعمدة البيانات المتاحة:', data.table.cols.map(c => c.label));
@@ -301,9 +298,8 @@
                     }
                     
                     data.table.rows.forEach(row => {
-                        const teacherName = row.c[teacherColIndex]?.v;
-                        if (teacherName && typeof teacherName === 'string' && teacherName.trim() !== '') {
-                            teachers.add(teacherName.trim());
+                        if (row.c && row.c[teacherColIndex] && row.c[teacherColIndex].v) {
+                            teachers.add(row.c[teacherColIndex].v.toString().trim());
                         }
                     });
                     
@@ -317,7 +313,7 @@
             // دالة مساعدة للعثور على العمود
             function findColumnIndex(data, possibleNames) {
                 for (let name of possibleNames) {
-                    const index = data.table.cols.findIndex(col => col.label === name);
+                    const index = data.table.cols.findIndex(col => col.label && col.label.toString().includes(name));
                     if (index !== -1) return index;
                 }
                 return -1;
@@ -356,13 +352,11 @@
                     }
                     
                     const text = await response.text();
-                    const jsonMatch = text.match(/google\.visualization\.Query\.setResponse\(([\s\S]+)\);/);
+                    const jsonStart = text.indexOf('{');
+                    const jsonEnd = text.lastIndexOf('}') + 1;
+                    const jsonText = text.substring(jsonStart, jsonEnd);
                     
-                    if (!jsonMatch || !jsonMatch[1]) {
-                        throw new Error('صيغة بيانات الطلاب غير صحيحة');
-                    }
-                    
-                    const data = JSON.parse(jsonMatch[1]);
+                    const data = JSON.parse(jsonText);
                     const students = extractStudents(data, teacher);
                     
                     if (students.length > 0) {
@@ -385,20 +379,20 @@
             function extractStudents(data, teacher) {
                 const students = [];
                 try {
-                    const teacherColIndex = findColumnIndex(data, ['المعلم', 'اسم المعلم', 'المعلم/المعلمة', 'Name', 'Teacher']);
-                    const nameColIndex = findColumnIndex(data, ['الاسم', 'اسم الطالب', 'Student', 'Name']);
+                    const teacherColIndex = findColumnIndex(data, ['المعلم', 'اسم المعلم', 'المعلم/المعلمة', 'Teacher', 'teacher']);
+                    const nameColIndex = findColumnIndex(data, ['الاسم', 'اسم الطالب', 'Student', 'Name', 'student']);
                     
                     if (teacherColIndex === -1 || nameColIndex === -1) {
                         throw new Error('هيكل الجدول غير متطابق');
                     }
                     
                     data.table.rows.forEach((row, index) => {
-                        const rowTeacher = row.c[teacherColIndex]?.v;
-                        if (rowTeacher && rowTeacher.trim() === teacher.trim()) {
+                        if (row.c && row.c[teacherColIndex] && row.c[teacherColIndex].v && 
+                            row.c[teacherColIndex].v.toString().trim() === teacher.trim()) {
                             const studentName = row.c[nameColIndex]?.v || 'بدون اسم';
                             students.push({
                                 id: index,
-                                name: studentName.trim()
+                                name: studentName.toString().trim()
                             });
                         }
                     });
@@ -474,7 +468,7 @@
                 });
                 
                 try {
-                    // هنا يمكنك إرسال البيانات إلى Google Apps Script
+                    // هنا سيتم إرسال البيانات إلى Google Apps Script
                     console.log('بيانات الحضور الجاهزة للحفظ:', attendanceRecords);
                     showMessage('تم تحضير بيانات الغياب للحفظ', 'success');
                     
