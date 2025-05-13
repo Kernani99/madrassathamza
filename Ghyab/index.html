@@ -3,107 +3,245 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="نظام متكامل لتسجيل غياب الطلاب للمعلمين">
     <title>نظام تسجيل الغياب للمعلمين</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
             --primary-color: #1a4d2e;
+            --primary-light: #4a785e;
             --secondary-color: #f5f5dc;
             --accent-color: #d4af37;
+            --accent-dark: #b38f2a;
             --text-color: #333;
             --light-bg: #f9f9f7;
+            --border-radius: 8px;
+            --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        * {
+            box-sizing: border-box;
         }
 
         body {
-            font-family: 'Cairo', sans-serif;
+            font-family: 'Tajawal', sans-serif;
             background-color: var(--light-bg);
             color: var(--text-color);
             margin: 0;
-            padding: 20px;
+            padding: 0;
             line-height: 1.6;
         }
 
-        .header {
-            background-color: var(--primary-color);
-            color: white;
-            padding: 1rem;
-            text-align: center;
-            border-radius: 8px 8px 0 0;
-            margin-bottom: 20px;
+        .container {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 0 15px;
         }
 
-        .container {
-            max-width: 1000px;
-            margin: 0 auto;
-            padding: 20px;
+        .header {
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-light));
+            color: white;
+            padding: 1.5rem;
+            text-align: center;
+            border-radius: var(--border-radius);
+            margin-bottom: 25px;
+            box-shadow: var(--box-shadow);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="rgba(255,255,255,0.1)"><path d="M30,10L50,30L70,10L90,30L70,50L90,70L70,90L50,70L30,90L10,70L30,50L10,30L30,10Z"/></svg>');
+            opacity: 0.2;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 1.8rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .header p {
+            margin: 0.5rem 0 0;
+            opacity: 0.9;
+            font-size: 1rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .card {
             background: white;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            padding: 25px;
+            margin-bottom: 25px;
+        }
+
+        .card-title {
+            color: var(--primary-color);
+            margin-top: 0;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 2px solid var(--secondary-color);
+            font-size: 1.3rem;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 1.5rem;
         }
 
         .form-group {
-            margin-bottom: 1.5rem;
+            margin-bottom: 1rem;
         }
 
         label {
             display: block;
             margin-bottom: 0.5rem;
-            font-weight: 600;
+            font-weight: 500;
             color: var(--primary-color);
+        }
+
+        .input-icon {
+            position: relative;
+        }
+
+        .input-icon i {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--primary-light);
         }
 
         input, select {
             width: 100%;
-            padding: 10px;
+            padding: 12px 15px;
+            padding-right: 15px;
             border: 1px solid #ddd;
-            border-radius: 4px;
-            font-family: 'Cairo', sans-serif;
+            border-radius: var(--border-radius);
+            font-family: 'Tajawal', sans-serif;
+            font-size: 1rem;
+            transition: border-color 0.3s, box-shadow 0.3s;
         }
 
-        button {
+        input:focus, select:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(26, 77, 46, 0.2);
+        }
+
+        .input-icon input {
+            padding-left: 40px;
+        }
+
+        button, .btn {
             background-color: var(--primary-color);
             color: white;
             border: none;
-            padding: 10px 20px;
-            border-radius: 4px;
+            padding: 12px 25px;
+            border-radius: var(--border-radius);
             cursor: pointer;
-            font-family: 'Cairo', sans-serif;
+            font-family: 'Tajawal', sans-serif;
             font-size: 1rem;
-            margin-top: 10px;
-            transition: background-color 0.3s;
+            font-weight: 500;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
         }
 
-        button:hover {
+        button:hover, .btn:hover {
+            background-color: var(--primary-light);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        button:active, .btn:active {
+            transform: translateY(0);
+        }
+
+        button:disabled, .btn:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .btn-secondary {
+            background-color: #6c757d;
+        }
+
+        .btn-secondary:hover {
+            background-color: #5a6268;
+        }
+
+        .btn-accent {
             background-color: var(--accent-color);
         }
 
-        button:disabled {
-            background-color: #cccccc;
-            cursor: not-allowed;
+        .btn-accent:hover {
+            background-color: var(--accent-dark);
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+
+        .attendance-table-container {
+            overflow-x: auto;
+            margin: 25px 0;
+            border-radius: var(--border-radius);
+            box-shadow: 0 0 0 1px #ddd;
         }
 
         .attendance-table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 20px;
-        }
-
-        .attendance-table th, 
-        .attendance-table td {
-            border: 1px solid #ddd;
-            padding: 10px;
-            text-align: center;
+            min-width: 600px;
         }
 
         .attendance-table th {
             background-color: var(--primary-color);
             color: white;
+            padding: 15px;
+            text-align: center;
+            font-weight: 500;
+        }
+
+        .attendance-table td {
+            border: 1px solid #e0e0e0;
+            padding: 12px;
+            text-align: center;
+            vertical-align: middle;
+        }
+
+        .attendance-table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        .attendance-table tr:hover {
+            background-color: #f0f0f0;
         }
 
         .status-option {
             display: flex;
             justify-content: center;
-            gap: 10px;
+            gap: 12px;
             flex-wrap: wrap;
         }
 
@@ -112,18 +250,51 @@
             align-items: center;
             margin: 0;
             cursor: pointer;
+            padding: 8px 12px;
+            border-radius: 20px;
+            transition: all 0.2s;
+            background-color: #f5f5f5;
+        }
+
+        .status-option label:hover {
+            background-color: #e0e0e0;
         }
 
         .status-radio {
-            margin-right: 5px;
+            margin-left: 5px;
             cursor: pointer;
         }
 
-        .message {
-            padding: 10px;
-            margin: 10px 0;
+        .status-option input:checked + span {
+            font-weight: bold;
+        }
+
+        input[type="radio"]:checked + span.present {
+            color: #28a745;
+        }
+
+        input[type="radio"]:checked + span.absent {
+            color: #dc3545;
+        }
+
+        input[type="radio"]:checked + span.excused {
+            color: #ffc107;
+        }
+
+        .notes-input {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid #ddd;
             border-radius: 4px;
+            font-family: 'Tajawal', sans-serif;
+        }
+
+        .message {
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: var(--border-radius);
             display: none;
+            font-weight: 500;
         }
 
         .success {
@@ -138,75 +309,243 @@
             border: 1px solid #f5c6cb;
         }
 
+        .warning {
+            background-color: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeeba;
+        }
+
+        .info {
+            background-color: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+
         .loading {
             text-align: center;
-            padding: 20px;
+            padding: 30px;
             display: none;
         }
 
+        .loading-spinner {
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            border-radius: 50%;
+            border-top: 4px solid var(--primary-color);
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 15px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .no-data {
+            text-align: center;
+            padding: 30px;
+            color: #6c757d;
+            font-size: 1.1rem;
+        }
+
+        .search-box {
+            margin-bottom: 20px;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .logo {
+            height: 60px;
+            margin-bottom: 15px;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            padding: 20px 0;
+            color: #6c757d;
+            font-size: 0.9rem;
+            border-top: 1px solid #eee;
+        }
+
         @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.5rem;
+            }
+            
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .button-group {
+                flex-direction: column;
+            }
+            
+            .button-group button {
+                width: 100%;
+            }
+            
             .status-option {
                 flex-direction: column;
-                gap: 5px;
+                gap: 8px;
             }
+            
+            .status-option label {
+                justify-content: center;
+            }
+        }
+
+        /* Animation for form sections */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .animated-section {
+            animation: fadeIn 0.5s ease-out forwards;
         }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
+            <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj48cGF0aCBmaWxsPSJ3aGl0ZSIgZD0iTTQ5NiAyNDBIMjc2VjIwYzAtMTEuMDQ2LTguOTU0LTIwLTIwLTIwcy0yMCA4Ljk1NC0yMCAyMHYyMjBIMjBjLTExLjA0NiAwLTIwIDguOTU0LTIwIDIwczguOTU0IDIwIDIwIDBoMjE2djIyMGMwIDExLjA0NiA4Ljk1NCAyMCAyMCAyMHMxOS45OTktOC45NTQgMTkuOTk5LTIwVjI4MGgyMTZjMTEuMDQ2IDAgMjAtOC45NTQgMjAtMjBzLTguOTU0LTIwLTIwLTIweiIvPjwvc3ZnPg==" alt="Logo" class="logo">
             <h1>نظام تسجيل غياب الطلاب</h1>
+            <p>نظام إلكتروني متكامل لتسجيل ومتابعة غياب الطلاب</p>
         </div>
 
-        <div class="form-group">
-            <label for="genderSelect">اختر الجنس:</label>
-            <select id="genderSelect" class="form-control">
-                <option value="">-- اختر الجنس --</option>
-                <option value="MALE">ذكور</option>
-                <option value="FEMALE">إناث</option>
-            </select>
+        <div class="card animated-section">
+            <h2 class="card-title">بيانات تسجيل الغياب</h2>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="genderSelect">الجنس</label>
+                    <div class="input-icon">
+                        <i class="fas fa-venus-mars"></i>
+                        <select id="genderSelect" class="form-control" required>
+                            <option value="">-- اختر الجنس --</option>
+                            <option value="MALE">ذكور</option>
+                            <option value="FEMALE">إناث</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="teacherSelect">المعلم</label>
+                    <div class="input-icon">
+                        <i class="fas fa-chalkboard-teacher"></i>
+                        <select id="teacherSelect" class="form-control" disabled required>
+                            <option value="">-- اختر المعلم --</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="attendanceDate">تاريخ التسجيل</label>
+                    <div class="input-icon">
+                        <i class="fas fa-calendar-alt"></i>
+                        <input type="date" id="attendanceDate" class="form-control" required>
+                    </div>
+                </div>
+            </div>
+
+            <div class="button-group">
+                <button id="loadStudentsBtn" class="btn" disabled>
+                    <i class="fas fa-users"></i> تحميل الطلاب
+                </button>
+                <button id="viewPreviousBtn" class="btn btn-secondary" disabled>
+                    <i class="fas fa-history"></i> عرض سجلات سابقة
+                </button>
+            </div>
         </div>
 
-        <div class="form-group">
-            <label for="teacherSelect">اختر المعلم:</label>
-            <select id="teacherSelect" class="form-control" disabled>
-                <option value="">-- اختر المعلم --</option>
-            </select>
+        <div id="studentsSection" class="card hidden animated-section">
+            <div class="search-box">
+                <div class="input-icon">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="studentSearch" placeholder="ابحث عن طالب..." class="form-control">
+                </div>
+            </div>
+
+            <h2 class="card-title">قائمة الطلاب</h2>
+            <div class="attendance-table-container">
+                <table class="attendance-table">
+                    <thead>
+                        <tr>
+                            <th width="30%">الاسم</th>
+                            <th width="40%">الحضور</th>
+                            <th width="30%">ملاحظات</th>
+                        </tr>
+                    </thead>
+                    <tbody id="studentsList">
+                        <!-- سيتم ملؤها بالجافاسكريبت -->
+                    </tbody>
+                </table>
+                <div id="noStudents" class="no-data hidden">
+                    <i class="fas fa-user-graduate" style="font-size: 2rem; margin-bottom: 10px;"></i>
+                    <p>لا يوجد طلاب لعرضهم</p>
+                </div>
+            </div>
+
+            <div class="button-group">
+                <button id="saveBtn" class="btn">
+                    <i class="fas fa-save"></i> حفظ البيانات
+                </button>
+                <button id="exportBtn" class="btn btn-accent">
+                    <i class="fas fa-file-export"></i> تصدير إلى Excel
+                </button>
+                <button id="cancelBtn" class="btn btn-secondary">
+                    <i class="fas fa-times"></i> إلغاء
+                </button>
+            </div>
         </div>
 
-        <div class="form-group">
-            <label for="attendanceDate">تاريخ تسجيل الغياب:</label>
-            <input type="date" id="attendanceDate" class="form-control">
-        </div>
-
-        <button id="loadStudentsBtn" class="btn" disabled>تحميل الطلاب</button>
-
-        <div id="studentsSection" style="display: none;">
-            <h2>قائمة الطلاب</h2>
-            <table class="attendance-table">
-                <thead>
-                    <tr>
-                        <th>الاسم</th>
-                        <th>الحضور</th>
-                        <th>ملاحظات</th>
-                    </tr>
-                </thead>
-                <tbody id="studentsList">
-                    <!-- سيتم ملؤها بالجافاسكريبت -->
-                </tbody>
-            </table>
-
-            <button id="saveBtn">حفظ البيانات</button>
+        <div id="previousRecordsSection" class="card hidden animated-section">
+            <h2 class="card-title">السجلات السابقة</h2>
+            <div class="attendance-table-container">
+                <table class="attendance-table">
+                    <thead>
+                        <tr>
+                            <th width="25%">التاريخ</th>
+                            <th width="25%">عدد الطلاب</th>
+                            <th width="25%">الحاضرون</th>
+                            <th width="25%">الإجراءات</th>
+                        </tr>
+                    </thead>
+                    <tbody id="previousRecordsList">
+                        <!-- سيتم ملؤها بالجافاسكريبت -->
+                    </tbody>
+                </table>
+                <div id="noRecords" class="no-data hidden">
+                    <i class="fas fa-history" style="font-size: 2rem; margin-bottom: 10px;"></i>
+                    <p>لا توجد سجلات سابقة</p>
+                </div>
+            </div>
+            <div class="button-group">
+                <button id="backToFormBtn" class="btn">
+                    <i class="fas fa-arrow-right"></i> العودة للنموذج
+                </button>
+            </div>
         </div>
 
         <div id="message" class="message"></div>
         <div id="loading" class="loading">
+            <div class="loading-spinner"></div>
             <p>جاري معالجة البيانات...</p>
         </div>
     </div>
 
+    <div class="footer">
+        <p>جميع الحقوق محفوظة &copy; <span id="currentYear"></span> - نظام تسجيل الغياب للمعلمين</p>
+    </div>
+
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            // تعيين السنة الحالية في التذييل
+            document.getElementById('currentYear').textContent = new Date().getFullYear();
+            
             // رابط السكربت الخاص بك
             const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby-uK9FYoJN9d70ZLkLgEekoO1BXb9F8ZeQkD-QRnADPyfGOu22ITV_aSOOGeLwiUCjrQ/exec';
             
@@ -215,65 +554,110 @@
             const genderSelect = document.getElementById('genderSelect');
             const attendanceDate = document.getElementById('attendanceDate');
             const loadStudentsBtn = document.getElementById('loadStudentsBtn');
+            const viewPreviousBtn = document.getElementById('viewPreviousBtn');
             const studentsSection = document.getElementById('studentsSection');
+            const previousRecordsSection = document.getElementById('previousRecordsSection');
             const studentsList = document.getElementById('studentsList');
+            const previousRecordsList = document.getElementById('previousRecordsList');
             const saveBtn = document.getElementById('saveBtn');
+            const exportBtn = document.getElementById('exportBtn');
+            const cancelBtn = document.getElementById('cancelBtn');
+            const backToFormBtn = document.getElementById('backToFormBtn');
+            const studentSearch = document.getElementById('studentSearch');
             const messageDiv = document.getElementById('message');
             const loadingDiv = document.getElementById('loading');
+            const noStudentsDiv = document.getElementById('noStudents');
+            const noRecordsDiv = document.getElementById('noRecords');
 
             // تعيين تاريخ اليوم كقيمة افتراضية
-            attendanceDate.value = new Date().toISOString().substr(0, 10);
+            attendanceDate.valueAsDate = new Date();
+            
+            // تخزين البيانات المحلية
+            let currentTeacher = null;
+            let currentGender = null;
+            let currentDate = null;
+            let studentsData = [];
+            let previousRecordsData = [];
 
-            // حدث تغيير الجنس
-            genderSelect.addEventListener('change', async function() {
+            // أحداث النموذج
+            genderSelect.addEventListener('change', handleGenderChange);
+            teacherSelect.addEventListener('change', handleTeacherChange);
+            loadStudentsBtn.addEventListener('click', loadStudents);
+            viewPreviousBtn.addEventListener('click', viewPreviousRecords);
+            saveBtn.addEventListener('click', saveAttendanceData);
+            exportBtn.addEventListener('click', exportToExcel);
+            cancelBtn.addEventListener('click', resetForm);
+            backToFormBtn.addEventListener('click', showMainForm);
+            studentSearch.addEventListener('input', filterStudents);
+
+            // دالة تغيير الجنس
+            async function handleGenderChange() {
                 const gender = this.value;
                 if (gender) {
+                    currentGender = gender;
                     await fetchTeachers(gender);
                     teacherSelect.disabled = false;
+                    viewPreviousBtn.disabled = false;
                 } else {
                     teacherSelect.innerHTML = '<option value="">-- اختر المعلم --</option>';
                     teacherSelect.disabled = true;
                     loadStudentsBtn.disabled = true;
+                    viewPreviousBtn.disabled = true;
                 }
-            });
+            }
 
-            // حدث تغيير المعلم
-            teacherSelect.addEventListener('change', function() {
-                loadStudentsBtn.disabled = !this.value;
-            });
+            // دالة تغيير المعلم
+            function handleTeacherChange() {
+                const teacher = this.value;
+                loadStudentsBtn.disabled = !teacher;
+                currentTeacher = teacher;
+            }
 
-            // حدث تحميل الطلاب
-            loadStudentsBtn.addEventListener('click', loadStudents);
-
-            // حدث حفظ البيانات
-            saveBtn.addEventListener('click', saveAttendanceData);
-
-            // دالة جلب المعلمين حسب الجنس
+            // دالة جلب المعلمين
             async function fetchTeachers(gender) {
                 showLoading();
                 teacherSelect.innerHTML = '<option value="">-- جاري التحميل --</option>';
                 teacherSelect.disabled = true;
                 
                 try {
+                    // استخدام التخزين المؤقت المحلي إذا كان متاحًا
+                    const cacheKey = `teachers_${gender}`;
+                    const cachedData = localStorage.getItem(cacheKey);
+                    
+                    if (cachedData) {
+                        const { data, timestamp } = JSON.parse(cachedData);
+                        // إذا كانت البيانات حديثة (أقل من يوم)، استخدمها
+                        if (Date.now() - timestamp < 24 * 60 * 60 * 1000) {
+                            populateTeacherSelect(data);
+                            showMessage(`تم تحميل ${data.length} معلم(ين) من الذاكرة المؤقتة`, 'success');
+                            return;
+                        }
+                    }
+                    
                     const sheetId = '1esP8qSmlkCt0R4Pu2P20XI2Pl2mL2WgPrZqmW__O7jE';
                     const url = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:json&sheet=${gender}`;
                     
-                    const response = await fetch(url);
+                    const response = await fetchWithTimeout(url, {
+                        timeout: 10000 // 10 ثواني
+                    });
+                    
                     if (!response.ok) {
                         throw new Error(`خطأ في الاتصال: ${response.status}`);
                     }
                     
                     const text = await response.text();
-                    const jsonStart = text.indexOf('{');
-                    const jsonEnd = text.lastIndexOf('}') + 1;
-                    const jsonText = text.substring(jsonStart, jsonEnd);
-                    
-                    const data = JSON.parse(jsonText);
-                    const teachers = extractTeachers(data);
+                    const json = parseGoogleSheetsData(text);
+                    const teachers = extractTeachers(json);
                     
                     if (teachers.length === 0) {
                         throw new Error('لا يوجد معلمون في هذه الفئة');
                     }
+                    
+                    // حفظ في التخزين المؤقت المحلي
+                    localStorage.setItem(cacheKey, JSON.stringify({
+                        data: teachers,
+                        timestamp: Date.now()
+                    }));
                     
                     populateTeacherSelect(teachers);
                     showMessage(`تم تحميل ${teachers.length} معلم(ين)`, 'success');
@@ -288,11 +672,35 @@
                 }
             }
 
-            // دالة استخراج المعلمين من البيانات
-            function extractTeachers(data) {
-                const teachers = new Set();
+            // دالة جلب البيانات مع مهلة زمنية
+            function fetchWithTimeout(url, options = {}) {
+                const { timeout = 8000 } = options;
+                
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), timeout);
+                
+                return fetch(url, {
+                    ...options,
+                    signal: controller.signal
+                }).finally(() => clearTimeout(timeoutId));
+            }
+
+            // دالة تحليل بيانات جوجل شيتس
+            function parseGoogleSheetsData(text) {
                 try {
-                    // البحث عن عمود المعلم بأسماء مختلفة
+                    const jsonStart = text.indexOf('{');
+                    const jsonEnd = text.lastIndexOf('}') + 1;
+                    const jsonText = text.substring(jsonStart, jsonEnd);
+                    return JSON.parse(jsonText);
+                } catch (e) {
+                    throw new Error('تعذر تحليل بيانات الجدول');
+                }
+            }
+
+            // دالة استخراج المعلمين
+            function extractTeachers(data) {
+                try {
+                    const teachers = new Set();
                     const teacherColIndex = findColumnIndex(data, ['المعلم', 'اسم المعلم', 'المعلم/المعلمة', 'Teacher', 'teacher']);
                     
                     if (teacherColIndex === -1) {
@@ -302,7 +710,8 @@
                     
                     data.table.rows.forEach(row => {
                         if (row.c && row.c[teacherColIndex] && row.c[teacherColIndex].v) {
-                            teachers.add(row.c[teacherColIndex].v.toString().trim());
+                            const teacherName = sanitizeInput(row.c[teacherColIndex].v.toString().trim());
+                            if (teacherName) teachers.add(teacherName);
                         }
                     });
                     
@@ -316,7 +725,9 @@
             // دالة مساعدة للعثور على العمود
             function findColumnIndex(data, possibleNames) {
                 for (let name of possibleNames) {
-                    const index = data.table.cols.findIndex(col => col.label && col.label.toString().includes(name));
+                    const index = data.table.cols.findIndex(col => 
+                        col.label && col.label.toString().trim().includes(name.trim())
+                    );
                     if (index !== -1) return index;
                 }
                 return -1;
@@ -335,47 +746,60 @@
 
             // دالة جلب بيانات الطلاب
             async function loadStudents() {
-                const teacher = teacherSelect.value;
-                const gender = genderSelect.value;
-                const date = attendanceDate.value;
+                currentTeacher = teacherSelect.value;
+                currentGender = genderSelect.value;
+                currentDate = attendanceDate.value;
                 
-                if (!teacher || !gender || !date) {
-                    showMessage('الرجاء اختيار جميع الحقول المطلوبة', 'error');
-                    return;
-                }
+                if (!validateForm()) return;
                 
                 showLoading();
                 try {
                     const sheetId = '1esP8qSmlkCt0R4Pu2P20XI2Pl2mL2WgPrZqmW__O7jE';
-                    const url = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:json&sheet=${gender}`;
+                    const url = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:json&sheet=${currentGender}`;
                     
-                    const response = await fetch(url);
+                    const response = await fetchWithTimeout(url);
                     if (!response.ok) {
                         throw new Error('فشل في جلب بيانات الطلاب');
                     }
                     
                     const text = await response.text();
-                    const jsonStart = text.indexOf('{');
-                    const jsonEnd = text.lastIndexOf('}') + 1;
-                    const jsonText = text.substring(jsonStart, jsonEnd);
+                    const data = parseGoogleSheetsData(text);
+                    studentsData = extractStudents(data, currentTeacher);
                     
-                    const data = JSON.parse(jsonText);
-                    const students = extractStudents(data, teacher);
-                    
-                    if (students.length > 0) {
-                        displayStudents(students);
-                        studentsSection.style.display = 'block';
-                        showMessage(`تم تحميل ${students.length} طالب(ة)`, 'success');
+                    if (studentsData.length > 0) {
+                        displayStudents(studentsData);
+                        studentsSection.classList.remove('hidden');
+                        previousRecordsSection.classList.add('hidden');
+                        showMessage(`تم تحميل ${studentsData.length} طالب(ة)`, 'success');
                     } else {
                         throw new Error('لا توجد بيانات طلاب للمعلم المحدد');
                     }
                 } catch (error) {
-                    studentsSection.style.display = 'none';
+                    studentsSection.classList.add('hidden');
                     showMessage(`حدث خطأ: ${error.message}`, 'error');
                     console.error('Error loading students:', error);
                 } finally {
                     hideLoading();
                 }
+            }
+
+            // دالة التحقق من صحة النموذج
+            function validateForm() {
+                if (!currentTeacher || !currentGender || !currentDate) {
+                    showMessage('الرجاء اختيار جميع الحقول المطلوبة', 'error');
+                    return false;
+                }
+                
+                const selectedDate = new Date(currentDate);
+                const today = new Date();
+                
+                // التحقق من أن التاريخ ليس في المستقبل
+                if (selectedDate > today) {
+                    showMessage('لا يمكن اختيار تاريخ في المستقبل', 'error');
+                    return false;
+                }
+                
+                return true;
             }
 
             // دالة استخراج الطلاب
@@ -395,7 +819,7 @@
                             const studentName = row.c[nameColIndex]?.v || 'بدون اسم';
                             students.push({
                                 id: index,
-                                name: studentName.toString().trim()
+                                name: sanitizeInput(studentName.toString().trim())
                             });
                         }
                     });
@@ -407,12 +831,27 @@
                 }
             }
 
+            // دالة تنقية المدخلات
+            function sanitizeInput(input) {
+                const div = document.createElement('div');
+                div.textContent = input;
+                return div.innerHTML;
+            }
+
             // دالة عرض الطلاب
             function displayStudents(students) {
                 studentsList.innerHTML = '';
                 
+                if (students.length === 0) {
+                    noStudentsDiv.classList.remove('hidden');
+                    return;
+                }
+                
+                noStudentsDiv.classList.add('hidden');
+                
                 students.forEach(student => {
                     const row = document.createElement('tr');
+                    row.dataset.studentName = student.name.toLowerCase();
                     
                     row.innerHTML = `
                         <td>${student.name}</td>
@@ -420,15 +859,15 @@
                             <div class="status-option">
                                 <label>
                                     <input type="radio" name="attendance_${student.id}" value="حاضر" checked class="status-radio">
-                                    حاضر
+                                    <span class="present">حاضر</span>
                                 </label>
                                 <label>
                                     <input type="radio" name="attendance_${student.id}" value="غائب" class="status-radio">
-                                    غائب
+                                    <span class="absent">غائب</span>
                                 </label>
                                 <label>
                                     <input type="radio" name="attendance_${student.id}" value="معذور" class="status-radio">
-                                    معذور
+                                    <span class="excused">معذور</span>
                                 </label>
                             </div>
                         </td>
@@ -439,13 +878,139 @@
                 });
             }
 
+            // دالة تصفية الطلاب
+            function filterStudents() {
+                const searchTerm = this.value.toLowerCase();
+                const rows = studentsList.querySelectorAll('tr');
+                
+                let visibleCount = 0;
+                
+                rows.forEach(row => {
+                    const studentName = row.dataset.studentName;
+                    if (studentName.includes(searchTerm)) {
+                        row.style.display = '';
+                        visibleCount++;
+                    } else {
+                        row.style.display = 'none';
+                    }
+                });
+                
+                if (visibleCount === 0 && searchTerm) {
+                    noStudentsDiv.classList.remove('hidden');
+                    noStudentsDiv.querySelector('p').textContent = 'لا توجد نتائج مطابقة للبحث';
+                } else {
+                    noStudentsDiv.classList.add('hidden');
+                }
+            }
+
+            // دالة عرض السجلات السابقة
+            async function viewPreviousRecords() {
+                if (!currentTeacher || !currentGender) {
+                    showMessage('الرجاء اختيار الجنس والمعلم أولاً', 'error');
+                    return;
+                }
+                
+                showLoading();
+                try {
+                    // في نظام حقيقي، هنا ستجلب السجلات السابقة من قاعدة البيانات
+                    // سنستخدم بيانات وهمية للتوضيح
+                    previousRecordsData = await fetchPreviousRecords(currentTeacher, currentGender);
+                    
+                    if (previousRecordsData.length > 0) {
+                        displayPreviousRecords(previousRecordsData);
+                        previousRecordsSection.classList.remove('hidden');
+                        studentsSection.classList.add('hidden');
+                        showMessage(`تم تحميل ${previousRecordsData.length} سجل سابق`, 'success');
+                    } else {
+                        throw new Error('لا توجد سجلات سابقة للمعلم المحدد');
+                    }
+                } catch (error) {
+                    previousRecordsSection.classList.add('hidden');
+                    showMessage(`حدث خطأ: ${error.message}`, 'error');
+                    console.error('Error loading previous records:', error);
+                } finally {
+                    hideLoading();
+                }
+            }
+
+            // دالة جلب السجلات السابقة (وهمية للتوضيح)
+            function fetchPreviousRecords(teacher, gender) {
+                return new Promise(resolve => {
+                    setTimeout(() => {
+                        // بيانات وهمية
+                        const records = [];
+                        const today = new Date();
+                        
+                        for (let i = 1; i <= 5; i++) {
+                            const date = new Date(today);
+                            date.setDate(today.getDate() - i);
+                            
+                            records.push({
+                                date: date.toISOString().split('T')[0],
+                                totalStudents: Math.floor(Math.random() * 10) + 20,
+                                present: Math.floor(Math.random() * 10) + 15,
+                                absent: Math.floor(Math.random() * 5) + 1,
+                                excused: Math.floor(Math.random() * 5) + 1
+                            });
+                        }
+                        
+                        resolve(records);
+                    }, 1000);
+                });
+            }
+
+            // دالة عرض السجلات السابقة
+            function displayPreviousRecords(records) {
+                previousRecordsList.innerHTML = '';
+                
+                if (records.length === 0) {
+                    noRecordsDiv.classList.remove('hidden');
+                    return;
+                }
+                
+                noRecordsDiv.classList.add('hidden');
+                
+                records.forEach(record => {
+                    const row = document.createElement('tr');
+                    
+                    row.innerHTML = `
+                        <td>${formatDate(record.date)}</td>
+                        <td>${record.totalStudents}</td>
+                        <td>حاضر: ${record.present} | غائب: ${record.absent} | معذور: ${record.excused}</td>
+                        <td>
+                            <button class="btn btn-accent btn-sm view-record" data-date="${record.date}">
+                                <i class="fas fa-eye"></i> عرض
+                            </button>
+                        </td>
+                    `;
+                    
+                    previousRecordsList.appendChild(row);
+                });
+                
+                // إضافة أحداث لأزرار العرض
+                document.querySelectorAll('.view-record').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const recordDate = this.dataset.date;
+                        viewRecordDetails(recordDate);
+                    });
+                });
+            }
+
+            // دالة تنسيق التاريخ
+            function formatDate(dateString) {
+                const options = { year: 'numeric', month: 'long', day: 'numeric' };
+                return new Date(dateString).toLocaleDateString('ar-EG', options);
+            }
+
+            // دالة عرض تفاصيل السجل
+            function viewRecordDetails(date) {
+                // في نظام حقيقي، هنا ستجلب تفاصيل السجل من قاعدة البيانات
+                alert(`عرض تفاصيل السجل لليوم ${formatDate(date)}`);
+            }
+
             // دالة حفظ بيانات الغياب
             async function saveAttendanceData() {
-                const teacher = teacherSelect.value;
-                const gender = genderSelect.value;
-                const date = attendanceDate.value;
-                
-                if (!teacher || !date) {
+                if (!currentTeacher || !currentDate) {
                     showMessage('الرجاء اختيار المعلم وتاريخ الغياب', 'error');
                     return;
                 }
@@ -456,14 +1021,16 @@
                 const rows = studentsList.querySelectorAll('tr');
                 
                 rows.forEach(row => {
+                    if (row.style.display === 'none') return;
+                    
                     const name = row.cells[0].textContent;
                     const status = row.querySelector('input[type="radio"]:checked').value;
                     const notes = row.querySelector('.notes-input').value;
                     
                     attendanceRecords.push({
-                        teacher: teacher,
-                        date: date,
-                        gender: gender === 'MALE' ? 'ذكر' : 'أنثى',
+                        teacher: currentTeacher,
+                        date: currentDate,
+                        gender: currentGender === 'MALE' ? 'ذكر' : 'أنثى',
                         name: name,
                         status: status,
                         notes: notes || ''
@@ -471,7 +1038,7 @@
                 });
                 
                 try {
-                    const response = await fetch(SCRIPT_URL, {
+                    const response = await fetchWithTimeout(SCRIPT_URL, {
                         method: 'POST',
                         body: JSON.stringify({
                             action: 'saveAttendance',
@@ -485,7 +1052,7 @@
                     const result = await response.json();
                     if (result.success) {
                         showMessage(result.message, 'success');
-                        studentsSection.style.display = 'none';
+                        studentsSection.classList.add('hidden');
                     } else {
                         throw new Error(result.message || 'حدث خطأ أثناء الحفظ');
                     }
@@ -495,6 +1062,27 @@
                 } finally {
                     hideLoading();
                 }
+            }
+
+            // دالة تصدير إلى Excel
+            function exportToExcel() {
+                // في نظام حقيقي، هنا سيتم تصدير البيانات إلى Excel
+                showMessage('سيتم تنفيذ عملية التصدير في النسخة الكاملة من النظام', 'info');
+                
+                // يمكن استخدام مكتبة مثل SheetJS لإنشاء ملف Excel
+                // مثال: https://sheetjs.com/
+            }
+
+            // دالة إعادة تعيين النموذج
+            function resetForm() {
+                studentsSection.classList.add('hidden');
+                studentsList.innerHTML = '';
+                studentSearch.value = '';
+            }
+
+            // دالة العودة للنموذج الرئيسي
+            function showMainForm() {
+                previousRecordsSection.classList.add('hidden');
             }
 
             // دالة عرض الرسائل
