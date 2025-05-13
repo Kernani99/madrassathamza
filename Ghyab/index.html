@@ -6,7 +6,6 @@
     <title>نظام تسجيل الغياب للمعلمين</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600&display=swap" rel="stylesheet">
     <style>
-        /* الأنماط تبقى كما هي في الإصدار السابق */
         :root {
             --primary-color: #1a4d2e;
             --secondary-color: #f5f5dc;
@@ -208,6 +207,10 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            // رابط السكربت الخاص بك
+            const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyBLVQ2F5RjYI_VqjdLtHT9O5M2zy79Cc_W7nGg1-upcHmQdkr7ZHF1XxYDpkEPwwC5cQ/exec';
+            
+            // العناصر الرئيسية
             const teacherSelect = document.getElementById('teacherSelect');
             const genderSelect = document.getElementById('genderSelect');
             const attendanceDate = document.getElementById('attendanceDate');
@@ -458,29 +461,21 @@
                     const notes = row.querySelector('.notes-input').value;
                     
                     attendanceRecords.push({
-                        المعلم: teacher,
-                        التاريخ: date,
-                        الجنس: gender === 'MALE' ? 'ذكر' : 'أنثى',
-                        الاسم: name,
-                        الحضور: status,
-                        الملاحظات: notes
+                        teacher: teacher,
+                        date: date,
+                        gender: gender === 'MALE' ? 'ذكر' : 'أنثى',
+                        name: name,
+                        status: status,
+                        notes: notes || ''
                     });
                 });
                 
                 try {
-                    // هنا سيتم إرسال البيانات إلى Google Apps Script
-                    console.log('بيانات الحضور الجاهزة للحفظ:', attendanceRecords);
-                    showMessage('تم تحضير بيانات الغياب للحفظ', 'success');
-                    
-                    // يمكنك تفعيل هذا الجزء بعد إنشاء سكربت Google Apps Script
-                    /*
-                    const scriptUrl = 'رابط_سكربت_جوجل_هنا';
-                    const response = await fetch(scriptUrl, {
+                    const response = await fetch(SCRIPT_URL, {
                         method: 'POST',
                         body: JSON.stringify({
                             action: 'saveAttendance',
-                            records: attendanceRecords,
-                            sheetName: 'الغيابات'
+                            records: attendanceRecords
                         }),
                         headers: {
                             'Content-Type': 'application/json'
@@ -489,11 +484,11 @@
                     
                     const result = await response.json();
                     if (result.success) {
-                        showMessage('تم حفظ بيانات الغياب بنجاح', 'success');
+                        showMessage(result.message, 'success');
+                        studentsSection.style.display = 'none';
                     } else {
                         throw new Error(result.message || 'حدث خطأ أثناء الحفظ');
                     }
-                    */
                 } catch (error) {
                     showMessage(`حدث خطأ: ${error.message}`, 'error');
                     console.error('Error saving attendance:', error);
