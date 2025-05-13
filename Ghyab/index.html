@@ -77,6 +77,11 @@
             background-color: var(--accent-color);
         }
 
+        button:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+        }
+
         .attendance-table {
             width: 100%;
             border-collapse: collapse;
@@ -106,10 +111,12 @@
             display: flex;
             align-items: center;
             margin: 0;
+            cursor: pointer;
         }
 
         .status-radio {
             margin-right: 5px;
+            cursor: pointer;
         }
 
         .message {
@@ -152,17 +159,18 @@
         </div>
 
         <div class="form-group">
-            <label for="teacherSelect">اختر المعلم:</label>
-            <select id="teacherSelect" class="form-control">
-                <option value="">-- اختر المعلم --</option>
+            <label for="genderSelect">اختر الجنس:</label>
+            <select id="genderSelect" class="form-control">
+                <option value="">-- اختر الجنس --</option>
+                <option value="MALE">ذكور</option>
+                <option value="FEMALE">إناث</option>
             </select>
         </div>
 
         <div class="form-group">
-            <label for="genderSelect">اختر الجنس:</label>
-            <select id="genderSelect" class="form-control">
-                <option value="MALE">ذكور</option>
-                <option value="FEMALE">إناث</option>
+            <label for="teacherSelect">اختر المعلم:</label>
+            <select id="teacherSelect" class="form-control" disabled>
+                <option value="">-- اختر المعلم --</option>
             </select>
         </div>
 
@@ -171,7 +179,7 @@
             <input type="date" id="attendanceDate" class="form-control">
         </div>
 
-        <button id="loadStudentsBtn" class="btn">تحميل الطلاب</button>
+        <button id="loadStudentsBtn" class="btn" disabled>تحميل الطلاب</button>
 
         <div id="studentsSection" style="display: none;">
             <h2>قائمة الطلاب</h2>
@@ -210,49 +218,120 @@
             const messageDiv = document.getElementById('message');
             const loadingDiv = document.getElementById('loading');
 
-            // تعيين تاريخ اليوم
-            attendanceDate.value = new Date().toISOString().substr(0, 10);
+            // تعيين تاريخ اليوم كقيمة افتراضية
+            const today = new Date();
+            attendanceDate.value = today.toISOString().substr(0, 10);
 
-            // جلب المعلمين عند تحميل الصفحة
-            fetchTeachers();
+            // حدث تغيير الجنس
+            genderSelect.addEventListener('change', async function() {
+                const gender = this.value;
+                if (gender) {
+                    await fetchTeachers(gender);
+                    teacherSelect.disabled = false;
+                } else {
+                    teacherSelect.innerHTML = '<option value="">-- اختر المعلم --</option>';
+                    teacherSelect.disabled = true;
+                    loadStudentsBtn.disabled = true;
+                }
+            });
 
-            // أحداث الأزرار
+            // حدث تغيير المعلم
+            teacherSelect.addEventListener('change', function() {
+                loadStudentsBtn.disabled = !this.value;
+            });
+
+            // حدث تحميل الطلاب
             loadStudentsBtn.addEventListener('click', loadStudents);
+
+            // حدث حفظ البيانات
             saveBtn.addEventListener('click', saveAttendanceData);
 
-            // دالة جلب المعلمين
-            async function fetchTeachers() {
+            // دالة جلب المعلمين حسب الجنس
+            async function fetchTeachers(gender) {
                 showLoading();
+                teacherSelect.innerHTML = '<option value="">-- جاري التحميل --</option>';
+                teacherSelect.disabled = true;
+                
                 try {
-                    const teachers = new Set();
+                    const sheetId = '1esP8qSmlkCt0R4Pu2P20XI2Pl2mL2WgPrZqmW__O7jE';
+                    const url = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:json&sheet=${gender}`;
                     
-                    // جلب المعلمين من ورقة الذكور
-                    const maleData = await fetchSheetData('MALE');
-                    maleData.forEach(row => {
-                        if (row.المعلم) teachers.add(row.المعلم);
-                    });
+                    const response = await fetch(url);
+                    if (!response.ok) {
+                        throw new Error('فشل في جلب البيانات من السيرفر');
+                    }
                     
-                    // جلب المعلمين من ورقة الإناث
-                    const femaleData = await fetchSheetData('FEMALE');
-                    femaleData.forEach(row => {
-                        if (row.المعلم) teachers.add(row.المعلم);
-                    });
+                    const text = await response.text();
+                    const jsonMatch = text.match(/google\.visualization\.Query\.setResponse\(([\s\S]+)\);/);
                     
-                    // تعبئة القائمة المنسدلة
-                    teacherSelect.innerHTML = '<option value="">-- اختر المعلم --</option>';
-                    Array.from(teachers).sort().forEach(teacher => {
-                        const option = document.createElement('option');
-                        option.value = teacher;
-                        option.textContent = teacher;
-                        teacherSelect.appendChild(option);
-                    });
+                    if (!jsonMatch || !jsonMatch[1]) {
+                        throw new Error('صيغة البيانات غير صحيحة');
+                    }
+                    
+                    const data = JSON.parse(jsonMatch[1]);
+                    const teachers = extractTeachers(data);
+                    
+                    if (teachers.length === 0) {
+                        throw new Error('لا يوجد معلمون في هذه الفئة');
+                    }
+                    
+                    populateTeacherSelect(teachers);
+                    showMessage(`تم تحميل ${teachers.length} معلم(ين)`, 'success');
                     
                 } catch (error) {
+                    console.error('Error:', error);
+                    teacherSelect.innerHTML = '<option value="">-- خطأ في التحميل --</option>';
                     showMessage(`حدث خطأ: ${error.message}`, 'error');
-                    console.error('Error fetching teachers:', error);
                 } finally {
+                    teacherSelect.disabled = false;
                     hideLoading();
                 }
+            }
+
+            // دالة استخراج المعلمين من البيانات
+            function extractTeachers(data) {
+                const teachers = new Set();
+                try {
+                    // البحث عن عمود المعلم بعدة أسماء محتملة
+                    const teacherColIndex = findColumnIndex(data, ['المعلم', 'اسم المعلم', 'المعلم/المعلمة', 'Name', 'Teacher']);
+                    
+                    if (teacherColIndex === -1) {
+                        console.error('أعمدة البيانات المتاحة:', data.table.cols.map(c => c.label));
+                        throw new Error('تعذر العثور على عمود المعلم');
+                    }
+                    
+                    data.table.rows.forEach(row => {
+                        const teacherName = row.c[teacherColIndex]?.v;
+                        if (teacherName && typeof teacherName === 'string' && teacherName.trim() !== '') {
+                            teachers.add(teacherName.trim());
+                        }
+                    });
+                    
+                    return Array.from(teachers).sort((a, b) => a.localeCompare(b));
+                } catch (e) {
+                    console.error('Error extracting teachers:', e);
+                    return [];
+                }
+            }
+
+            // دالة مساعدة للعثور على العمود
+            function findColumnIndex(data, possibleNames) {
+                for (let name of possibleNames) {
+                    const index = data.table.cols.findIndex(col => col.label === name);
+                    if (index !== -1) return index;
+                }
+                return -1;
+            }
+
+            // دالة تعبئة قائمة المعلمين
+            function populateTeacherSelect(teachers) {
+                teacherSelect.innerHTML = '<option value="">-- اختر المعلم --</option>';
+                teachers.forEach(teacher => {
+                    const option = document.createElement('option');
+                    option.value = teacher;
+                    option.textContent = teacher;
+                    teacherSelect.appendChild(option);
+                });
             }
 
             // دالة جلب بيانات الطلاب
@@ -261,28 +340,40 @@
                 const gender = genderSelect.value;
                 const date = attendanceDate.value;
                 
-                if (!teacher) {
-                    showMessage('الرجاء اختيار المعلم', 'error');
-                    return;
-                }
-                
-                if (!date) {
-                    showMessage('الرجاء اختيار تاريخ', 'error');
+                if (!teacher || !gender || !date) {
+                    showMessage('الرجاء اختيار جميع الحقول المطلوبة', 'error');
                     return;
                 }
                 
                 showLoading();
                 try {
-                    const sheetData = await fetchSheetData(gender);
-                    const students = sheetData.filter(row => row.المعلم === teacher);
+                    const sheetId = '1esP8qSmlkCt0R4Pu2P20XI2Pl2mL2WgPrZqmW__O7jE';
+                    const url = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:json&sheet=${gender}`;
+                    
+                    const response = await fetch(url);
+                    if (!response.ok) {
+                        throw new Error('فشل في جلب بيانات الطلاب');
+                    }
+                    
+                    const text = await response.text();
+                    const jsonMatch = text.match(/google\.visualization\.Query\.setResponse\(([\s\S]+)\);/);
+                    
+                    if (!jsonMatch || !jsonMatch[1]) {
+                        throw new Error('صيغة بيانات الطلاب غير صحيحة');
+                    }
+                    
+                    const data = JSON.parse(jsonMatch[1]);
+                    const students = extractStudents(data, teacher);
                     
                     if (students.length > 0) {
                         displayStudents(students);
                         studentsSection.style.display = 'block';
+                        showMessage(`تم تحميل ${students.length} طالب(ة)`, 'success');
                     } else {
                         throw new Error('لا توجد بيانات طلاب للمعلم المحدد');
                     }
                 } catch (error) {
+                    studentsSection.style.display = 'none';
                     showMessage(`حدث خطأ: ${error.message}`, 'error');
                     console.error('Error loading students:', error);
                 } finally {
@@ -290,49 +381,31 @@
                 }
             }
 
-            // دالة جلب البيانات من الجدول
-            async function fetchSheetData(sheetName) {
-                const sheetId = '1esP8qSmlkCt0R4Pu2P20XI2Pl2mL2WgPrZqmW__O7jE';
-                const url = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(sheetName)}`;
-                
+            // دالة استخراج الطلاب
+            function extractStudents(data, teacher) {
+                const students = [];
                 try {
-                    const response = await fetch(url);
-                    if (!response.ok) {
-                        throw new Error(`HTTP error! status: ${response.status}`);
+                    const teacherColIndex = findColumnIndex(data, ['المعلم', 'اسم المعلم', 'المعلم/المعلمة', 'Name', 'Teacher']);
+                    const nameColIndex = findColumnIndex(data, ['الاسم', 'اسم الطالب', 'Student', 'Name']);
+                    
+                    if (teacherColIndex === -1 || nameColIndex === -1) {
+                        throw new Error('هيكل الجدول غير متطابق');
                     }
                     
-                    const text = await response.text();
-                    const jsonText = text.match(/google\.visualization\.Query\.setResponse\(([\s\S]+)\);/)[1];
-                    const data = JSON.parse(jsonText);
-                    
-                    return processSheetData(data);
-                } catch (error) {
-                    console.error('Error fetching sheet data:', error);
-                    throw error;
-                }
-            }
-
-            // دالة معالجة بيانات الجدول
-            function processSheetData(data) {
-                const results = [];
-                try {
-                    const cols = data.table.cols;
-                    const rows = data.table.rows;
-                    
-                    // تحويل الصفوف إلى كائنات
-                    rows.forEach(row => {
-                        const obj = {};
-                        row.c.forEach((cell, index) => {
-                            if (cols[index] && cols[index].label) {
-                                obj[cols[index].label] = cell ? cell.v : null;
-                            }
-                        });
-                        results.push(obj);
+                    data.table.rows.forEach((row, index) => {
+                        const rowTeacher = row.c[teacherColIndex]?.v;
+                        if (rowTeacher && rowTeacher.trim() === teacher.trim()) {
+                            const studentName = row.c[nameColIndex]?.v || 'بدون اسم';
+                            students.push({
+                                id: index,
+                                name: studentName.trim()
+                            });
+                        }
                     });
                     
-                    return results;
+                    return students;
                 } catch (e) {
-                    console.error('Error processing sheet data:', e);
+                    console.error('Error extracting students:', e);
                     return [];
                 }
             }
@@ -341,23 +414,23 @@
             function displayStudents(students) {
                 studentsList.innerHTML = '';
                 
-                students.forEach((student, index) => {
+                students.forEach(student => {
                     const row = document.createElement('tr');
                     
                     row.innerHTML = `
-                        <td>${student.الاسم || 'بدون اسم'}</td>
+                        <td>${student.name}</td>
                         <td>
                             <div class="status-option">
                                 <label>
-                                    <input type="radio" name="attendance_${index}" value="حاضر" checked class="status-radio">
+                                    <input type="radio" name="attendance_${student.id}" value="حاضر" checked class="status-radio">
                                     حاضر
                                 </label>
                                 <label>
-                                    <input type="radio" name="attendance_${index}" value="غائب" class="status-radio">
+                                    <input type="radio" name="attendance_${student.id}" value="غائب" class="status-radio">
                                     غائب
                                 </label>
                                 <label>
-                                    <input type="radio" name="attendance_${index}" value="معذور" class="status-radio">
+                                    <input type="radio" name="attendance_${student.id}" value="معذور" class="status-radio">
                                     معذور
                                 </label>
                             </div>
@@ -385,7 +458,7 @@
                 const attendanceRecords = [];
                 const rows = studentsList.querySelectorAll('tr');
                 
-                rows.forEach((row, index) => {
+                rows.forEach(row => {
                     const name = row.cells[0].textContent;
                     const status = row.querySelector('input[type="radio"]:checked').value;
                     const notes = row.querySelector('.notes-input').value;
@@ -402,11 +475,10 @@
                 
                 try {
                     // هنا يمكنك إرسال البيانات إلى Google Apps Script
-                    // هذا مثال للتوضيح فقط
-                    console.log('بيانات الحضور:', attendanceRecords);
-                    showMessage('تم حفظ بيانات الغياب بنجاح (وهمي)', 'success');
+                    console.log('بيانات الحضور الجاهزة للحفظ:', attendanceRecords);
+                    showMessage('تم تحضير بيانات الغياب للحفظ', 'success');
                     
-                    // لإرسال البيانات فعلياً، استخدم:
+                    // يمكنك تفعيل هذا الجزء بعد إنشاء سكربت Google Apps Script
                     /*
                     const scriptUrl = 'رابط_سكربت_جوجل_هنا';
                     const response = await fetch(scriptUrl, {
