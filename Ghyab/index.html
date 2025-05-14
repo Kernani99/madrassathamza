@@ -17,6 +17,8 @@
             --light-bg: #f9f9f7;
             --border-radius: 8px;
             --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --warning-color: #dc3545;
+            --warning-light: #f8d7da;
         }
 
         * {
@@ -194,6 +196,14 @@
             background-color: var(--accent-dark);
         }
 
+        .btn-warning {
+            background-color: var(--warning-color);
+        }
+
+        .btn-warning:hover {
+            background-color: #c82333;
+        }
+
         .button-group {
             display: flex;
             gap: 10px;
@@ -235,6 +245,14 @@
 
         .attendance-table tr:hover {
             background-color: #f0f0f0;
+        }
+
+        .warning-row {
+            background-color: var(--warning-light) !important;
+        }
+
+        .warning-row:hover {
+            background-color: #f5c6cb !important;
         }
 
         .status-option {
@@ -370,6 +388,38 @@
             border-top: 1px solid #eee;
         }
 
+        .warning-badge {
+            background-color: var(--warning-color);
+            color: white;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            margin-left: 5px;
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background-color: var(--warning-color);
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+        }
+
+        .btn-with-badge {
+            position: relative;
+        }
+
         @media (max-width: 768px) {
             .header h1 {
                 font-size: 1.5rem;
@@ -404,6 +454,16 @@
 
         .animated-section {
             animation: fadeIn 0.5s ease-out forwards;
+        }
+
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(220, 53, 69, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(220, 53, 69, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(220, 53, 69, 0); }
         }
     </style>
 </head>
@@ -455,6 +515,10 @@
                 </button>
                 <button id="viewPreviousBtn" class="btn btn-secondary" disabled>
                     <i class="fas fa-history"></i> عرض سجلات سابقة
+                </button>
+                <button id="viewWarningsBtn" class="btn btn-warning btn-with-badge" disabled>
+                    <i class="fas fa-exclamation-triangle"></i> عرض الإنذارات
+                    <span id="warningsCountBadge" class="notification-badge hidden">0</span>
                 </button>
             </div>
         </div>
@@ -528,6 +592,37 @@
             </div>
         </div>
 
+        <div id="warningsSection" class="card hidden animated-section">
+            <h2 class="card-title">سجل الإنذارات</h2>
+            <div class="attendance-table-container">
+                <table class="attendance-table">
+                    <thead>
+                        <tr>
+                            <th width="30%">اسم الطالب</th>
+                            <th width="20%">عدد الغيابات</th>
+                            <th width="30%">تواريخ الغياب</th>
+                            <th width="20%">الإجراءات</th>
+                        </tr>
+                    </thead>
+                    <tbody id="warningsList">
+                        <!-- سيتم ملؤها بالجافاسكريبت -->
+                    </tbody>
+                </table>
+                <div id="noWarnings" class="no-data hidden">
+                    <i class="fas fa-bell-slash" style="font-size: 2rem; margin-bottom: 10px;"></i>
+                    <p>لا توجد إنذارات لعرضها</p>
+                </div>
+            </div>
+            <div class="button-group">
+                <button id="backToFormFromWarningsBtn" class="btn">
+                    <i class="fas fa-arrow-right"></i> العودة للنموذج
+                </button>
+                <button id="exportWarningsBtn" class="btn btn-accent">
+                    <i class="fas fa-file-pdf"></i> تصدير إلى PDF
+                </button>
+            </div>
+        </div>
+
         <div id="message" class="message"></div>
         <div id="loading" class="loading">
             <div class="loading-spinner"></div>
@@ -542,6 +637,11 @@
     <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-database-compat.js"></script>
+    <!-- SheetJS لتصدير Excel -->
+    <script src="https://cdn.sheetjs.com/xlsx-0.19.3/package/dist/xlsx.full.min.js"></script>
+    <!-- jsPDF لتصدير PDF -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
@@ -565,39 +665,51 @@
             const attendanceDate = document.getElementById('attendanceDate');
             const loadStudentsBtn = document.getElementById('loadStudentsBtn');
             const viewPreviousBtn = document.getElementById('viewPreviousBtn');
+            const viewWarningsBtn = document.getElementById('viewWarningsBtn');
+            const warningsCountBadge = document.getElementById('warningsCountBadge');
             const studentsSection = document.getElementById('studentsSection');
             const previousRecordsSection = document.getElementById('previousRecordsSection');
+            const warningsSection = document.getElementById('warningsSection');
             const studentsList = document.getElementById('studentsList');
             const previousRecordsList = document.getElementById('previousRecordsList');
+            const warningsList = document.getElementById('warningsList');
             const saveBtn = document.getElementById('saveBtn');
             const exportBtn = document.getElementById('exportBtn');
+            const exportWarningsBtn = document.getElementById('exportWarningsBtn');
             const cancelBtn = document.getElementById('cancelBtn');
             const backToFormBtn = document.getElementById('backToFormBtn');
+            const backToFormFromWarningsBtn = document.getElementById('backToFormFromWarningsBtn');
             const studentSearch = document.getElementById('studentSearch');
             const messageDiv = document.getElementById('message');
             const loadingDiv = document.getElementById('loading');
             const noStudentsDiv = document.getElementById('noStudents');
             const noRecordsDiv = document.getElementById('noRecords');
+            const noWarningsDiv = document.getElementById('noWarnings');
 
-            // تعيين تاريخ اليوم كقيمة افتراضية
-            attendanceDate.valueAsDate = new Date();
-            
             // تخزين البيانات المحلية
             let currentTeacher = null;
             let currentGender = null;
             let currentDate = null;
             let studentsData = [];
             let previousRecordsData = [];
+            let warningsData = [];
+            let teachersCache = {};
 
+            // تعيين تاريخ اليوم كقيمة افتراضية
+            attendanceDate.valueAsDate = new Date();
+            
             // أحداث النموذج
             genderSelect.addEventListener('change', handleGenderChange);
             teacherSelect.addEventListener('change', handleTeacherChange);
             loadStudentsBtn.addEventListener('click', loadStudents);
             viewPreviousBtn.addEventListener('click', viewPreviousRecords);
+            viewWarningsBtn.addEventListener('click', showWarningsSection);
             saveBtn.addEventListener('click', saveAttendanceData);
             exportBtn.addEventListener('click', exportToExcel);
+            exportWarningsBtn.addEventListener('click', exportWarningsToPDF);
             cancelBtn.addEventListener('click', resetForm);
             backToFormBtn.addEventListener('click', showMainForm);
+            backToFormFromWarningsBtn.addEventListener('click', showMainForm);
             studentSearch.addEventListener('input', filterStudents);
 
             // دالة تغيير الجنس
@@ -608,11 +720,13 @@
                     await fetchTeachers(gender);
                     teacherSelect.disabled = false;
                     viewPreviousBtn.disabled = false;
+                    viewWarningsBtn.disabled = false;
                 } else {
                     teacherSelect.innerHTML = '<option value="">-- اختر المعلم --</option>';
                     teacherSelect.disabled = true;
                     loadStudentsBtn.disabled = true;
                     viewPreviousBtn.disabled = true;
+                    viewWarningsBtn.disabled = true;
                 }
             }
 
@@ -627,11 +741,18 @@
                 });
             }
 
-            // دالة جلب المعلمين من Google Sheets
+            // دالة جلب المعلمين من Google Sheets مع التخزين المؤقت
             async function fetchTeachers(gender) {
                 showLoading();
                 teacherSelect.innerHTML = '<option value="">-- جاري التحميل --</option>';
                 teacherSelect.disabled = true;
+                
+                // التحقق من وجود بيانات في الذاكرة المؤقتة
+                if (teachersCache[gender]) {
+                    populateTeacherSelect(teachersCache[gender]);
+                    hideLoading();
+                    return;
+                }
                 
                 try {
                     const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${gender}`;
@@ -645,6 +766,8 @@
                     
                     if (teachers.length === 0) throw new Error('لا يوجد معلمون في هذه الفئة');
                     
+                    // حفظ البيانات في الذاكرة المؤقتة
+                    teachersCache[gender] = teachers;
                     populateTeacherSelect(teachers);
                     showMessage(`تم تحميل ${teachers.length} معلم(ين)`, 'success');
                     
@@ -705,6 +828,31 @@
                 const teacher = this.value;
                 loadStudentsBtn.disabled = !teacher;
                 currentTeacher = teacher;
+                
+                // تحقق من وجود إنذارات عند تغيير المعلم
+                checkForWarnings();
+            }
+
+            // دالة التحقق من وجود إنذارات
+            async function checkForWarnings() {
+                if (!currentTeacher || !currentGender) return;
+                
+                try {
+                    const snapshot = await database.ref(`warnings/${currentGender}/${currentTeacher}`).once('value');
+                    const warnings = snapshot.val();
+                    const warningsCount = warnings ? Object.keys(warnings).length : 0;
+                    
+                    if (warningsCount > 0) {
+                        warningsCountBadge.textContent = warningsCount;
+                        warningsCountBadge.classList.remove('hidden');
+                        viewWarningsBtn.classList.add('pulse');
+                    } else {
+                        warningsCountBadge.classList.add('hidden');
+                        viewWarningsBtn.classList.remove('pulse');
+                    }
+                } catch (error) {
+                    console.error('Error checking warnings:', error);
+                }
             }
 
             // دالة جلب الطلاب من Google Sheets
@@ -730,6 +878,7 @@
                         displayStudents(studentsData);
                         studentsSection.classList.remove('hidden');
                         previousRecordsSection.classList.add('hidden');
+                        warningsSection.classList.add('hidden');
                         showMessage(`تم تحميل ${studentsData.length} طالب(ة)`, 'success');
                     } else {
                         throw new Error('لا توجد بيانات طلاب للمعلم المحدد');
@@ -880,6 +1029,7 @@
                         displayPreviousRecords(previousRecordsData);
                         previousRecordsSection.classList.remove('hidden');
                         studentsSection.classList.add('hidden');
+                        warningsSection.classList.add('hidden');
                         showMessage(`تم تحميل ${previousRecordsData.length} سجل سابق`, 'success');
                     } else {
                         throw new Error('لا توجد سجلات سابقة للمعلم المحدد');
@@ -904,7 +1054,7 @@
                 
                 noRecordsDiv.classList.add('hidden');
                 
-                records.forEach(record => {
+                records.sort((a, b) => new Date(b.date) - new Date(a.date)).forEach(record => {
                     const row = document.createElement('tr');
                     
                     row.innerHTML = `
@@ -959,6 +1109,7 @@
                     displayStudentsWithAttendance(studentsData);
                     studentsSection.classList.remove('hidden');
                     previousRecordsSection.classList.add('hidden');
+                    warningsSection.classList.add('hidden');
                     
                     showMessage(`عرض سجل الحضور بتاريخ ${formatDate(date)}`, 'success');
                 } catch (error) {
@@ -1068,6 +1219,12 @@
                     // تنفيذ عملية الحفظ
                     await database.ref().update(updates);
                     
+                    // تحقق من وجود إنذارات بعد الحفظ
+                    await checkForWarnings();
+                    
+                    // تحليل الغياب للكشف عن الإنذارات
+                    await analyzeAttendanceForWarnings(false);
+                    
                     showMessage('تم حفظ بيانات الغياب بنجاح', 'success');
                     studentsSection.classList.add('hidden');
                     
@@ -1080,9 +1237,277 @@
                 }
             }
 
+            // دالة تحليل الغياب وتحديد الإنذارات
+            async function analyzeAttendanceForWarnings(showSection = true) {
+                showLoading();
+                try {
+                    if (!currentTeacher || !currentGender) {
+                        throw new Error('الرجاء اختيار الجنس والمعلم أولاً');
+                    }
+
+                    // جلب جميع سجلات الحضور لهذا المعلم
+                    const snapshot = await database.ref(`attendance/${currentGender}/${currentTeacher}`).once('value');
+                    const allRecords = snapshot.val();
+
+                    if (!allRecords) {
+                        throw new Error('لا توجد سجلات لتحليلها');
+                    }
+
+                    // تحضير كائن لتخزين بيانات الغياب
+                    const absenceData = {};
+                    const currentDate = new Date();
+                    const currentMonth = currentDate.getMonth();
+                    const currentYear = currentDate.getFullYear();
+
+                    // تحليل كل سجل
+                    Object.keys(allRecords).forEach(date => {
+                        const recordDate = new Date(date);
+                        // نفحص فقط سجلات الشهر الحالي
+                        if (recordDate.getMonth() === currentMonth && recordDate.getFullYear() === currentYear) {
+                            const students = allRecords[date].students;
+                            Object.values(students).forEach(student => {
+                                if (student.status === 'غائب') {
+                                    if (!absenceData[student.name]) {
+                                        absenceData[student.name] = {
+                                            count: 0,
+                                            dates: []
+                                        };
+                                    }
+                                    absenceData[student.name].count++;
+                                    absenceData[student.name].dates.push(date);
+                                }
+                            });
+                        }
+                    });
+
+                    // تصفية الطلاب الذين لديهم 3 غيابات أو أكثر
+                    warningsData = Object.keys(absenceData)
+                        .filter(name => absenceData[name].count >= 3)
+                        .map(name => ({
+                            name,
+                            count: absenceData[name].count,
+                            dates: absenceData[name].dates
+                        }));
+
+                    // حفظ الإنذارات في قاعدة البيانات
+                    const warningsUpdates = {};
+                    warningsData.forEach(warning => {
+                        warningsUpdates[`warnings/${currentGender}/${currentTeacher}/${warning.name}`] = {
+                            count: warning.count,
+                            dates: warning.dates,
+                            lastUpdated: new Date().toISOString()
+                        };
+                    });
+                    
+                    await database.ref().update(warningsUpdates);
+
+                    // تحديث عدد الإنذارات في واجهة المستخدم
+                    warningsCountBadge.textContent = warningsData.length;
+                    if (warningsData.length > 0) {
+                        warningsCountBadge.classList.remove('hidden');
+                        viewWarningsBtn.classList.add('pulse');
+                    } else {
+                        warningsCountBadge.classList.add('hidden');
+                        viewWarningsBtn.classList.remove('pulse');
+                    }
+
+                    if (showSection) {
+                        if (warningsData.length > 0) {
+                            displayWarnings(warningsData);
+                            warningsSection.classList.remove('hidden');
+                            studentsSection.classList.add('hidden');
+                            previousRecordsSection.classList.add('hidden');
+                            showMessage(`تم العثور على ${warningsData.length} طالب لديهم 3 غيابات أو أكثر`, 'warning');
+                        } else {
+                            warningsSection.classList.add('hidden');
+                            showMessage('لا توجد إنذارات للغياب المتكرر هذا الشهر', 'info');
+                        }
+                    }
+
+                } catch (error) {
+                    console.error('Error analyzing attendance:', error);
+                    showMessage(`حدث خطأ: ${error.message}`, 'error');
+                } finally {
+                    hideLoading();
+                }
+            }
+
+            // دالة عرض الإنذارات
+            function displayWarnings(warnings) {
+                warningsList.innerHTML = '';
+                
+                if (warnings.length === 0) {
+                    noWarningsDiv.classList.remove('hidden');
+                    return;
+                }
+                
+                noWarningsDiv.classList.add('hidden');
+                
+                warnings.sort((a, b) => b.count - a.count).forEach(warning => {
+                    const row = document.createElement('tr');
+                    row.className = 'warning-row';
+                    
+                    row.innerHTML = `
+                        <td>${warning.name} <span class="warning-badge">${warning.count}</span></td>
+                        <td>${warning.count} مرات</td>
+                        <td>${warning.dates.map(d => formatDate(d)).join('، ')}</td>
+                        <td>
+                            <button class="btn btn-accent btn-sm notify-parent" data-student="${warning.name}">
+                                <i class="fas fa-envelope"></i> إشعار ولي الأمر
+                            </button>
+                        </td>
+                    `;
+                    
+                    warningsList.appendChild(row);
+                });
+                
+                // إضافة حدث لإرسال إشعار لولي الأمر
+                document.querySelectorAll('.notify-parent').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const studentName = this.dataset.student;
+                        sendParentNotification(studentName);
+                    });
+                });
+            }
+
+            // دالة إرسال إشعار لولي الأمر
+            async function sendParentNotification(studentName) {
+                showLoading();
+                try {
+                    // البحث عن بيانات الطالب في الإنذارات
+                    const studentWarning = warningsData.find(w => w.name === studentName);
+                    if (!studentWarning) {
+                        throw new Error('لا توجد بيانات كافية للطالب');
+                    }
+                    
+                    // تخزين سجل الإشعار في Firebase
+                    const notificationRef = database.ref(`notifications/${currentGender}/${currentTeacher}/${studentName}`);
+                    await notificationRef.push({
+                        date: new Date().toISOString(),
+                        student: studentName,
+                        type: 'غياب متكرر',
+                        status: 'pending',
+                        message: `تم إرسال إشعار لولي أمر الطالب ${studentName} بسبب الغياب المتكرر`,
+                        absenceCount: studentWarning.count,
+                        absenceDates: studentWarning.dates,
+                        teacher: currentTeacher,
+                        timestamp: firebase.database.ServerValue.TIMESTAMP
+                    });
+                    
+                    showMessage(`تم إرسال إشعار لولي أمر الطالب ${studentName}`, 'success');
+                    
+                } catch (error) {
+                    console.error('Error sending notification:', error);
+                    showMessage(`حدث خطأ أثناء إرسال الإشعار: ${error.message}`, 'error');
+                } finally {
+                    hideLoading();
+                }
+            }
+
+            // دالة عرض قسم الإنذارات
+            async function showWarningsSection() {
+                await analyzeAttendanceForWarnings();
+            }
+
             // دالة تصدير إلى Excel
             function exportToExcel() {
-                showMessage('سيتم تنفيذ عملية التصدير في النسخة الكاملة من النظام', 'info');
+                try {
+                    // تحضير البيانات للتصدير
+                    const data = [];
+                    const rows = studentsList.querySelectorAll('tr');
+                    
+                    rows.forEach(row => {
+                        if (row.style.display === 'none') return;
+                        
+                        const name = row.cells[0].textContent;
+                        const status = row.querySelector('input[type="radio"]:checked').value;
+                        const notes = row.querySelector('.notes-input').value;
+                        
+                        data.push({
+                            'اسم الطالب': name,
+                            'حالة الحضور': status,
+                            'ملاحظات': notes || ''
+                        });
+                    });
+                    
+                    if (data.length === 0) {
+                        showMessage('لا توجد بيانات للتصدير', 'warning');
+                        return;
+                    }
+                    
+                    // إنشاء مصنف Excel
+                    const ws = XLSX.utils.json_to_sheet(data);
+                    const wb = XLSX.utils.book_new();
+                    XLSX.utils.book_append_sheet(wb, ws, 'سجل الحضور');
+                    
+                    // تصدير الملف
+                    XLSX.writeFile(wb, `سجل_الحضور_${currentTeacher}_${currentDate}.xlsx`);
+                    
+                    showMessage('تم تصدير البيانات إلى ملف Excel بنجاح', 'success');
+                } catch (error) {
+                    console.error('Error exporting to Excel:', error);
+                    showMessage('حدث خطأ أثناء تصدير البيانات إلى Excel', 'error');
+                }
+            }
+
+            // دالة تصدير الإنذارات إلى PDF
+            function exportWarningsToPDF() {
+                try {
+                    if (warningsData.length === 0) {
+                        showMessage('لا توجد إنذارات للتصدير', 'warning');
+                        return;
+                    }
+                    
+                    // إنشاء مستند PDF جديد
+                    const { jsPDF } = window.jspdf;
+                    const doc = new jsPDF();
+                    
+                    // عنوان التقرير
+                    doc.setFont('tajawal', 'normal');
+                    doc.setFontSize(18);
+                    doc.text('تقرير الإنذارات - الغياب المتكرر', 105, 15, null, null, 'center');
+                    
+                    // معلومات التقرير
+                    doc.setFontSize(12);
+                    doc.text(`المعلم: ${currentTeacher}`, 15, 25);
+                    doc.text(`التاريخ: ${new Date().toLocaleDateString('ar-EG')}`, 15, 35);
+                    
+                    // جدول الإنذارات
+                    const headers = [['اسم الطالب', 'عدد الغيابات', 'تواريخ الغياب']];
+                    const rows = warningsData.map(warning => [
+                        warning.name,
+                        warning.count.toString(),
+                        warning.dates.map(d => formatDate(d)).join('\n')
+                    ]);
+                    
+                    doc.autoTable({
+                        head: headers,
+                        body: rows,
+                        startY: 45,
+                        styles: {
+                            font: 'tajawal',
+                            fontStyle: 'normal',
+                            textColor: [0, 0, 0],
+                            halign: 'right'
+                        },
+                        headStyles: {
+                            fillColor: [26, 77, 46],
+                            textColor: [255, 255, 255],
+                            fontStyle: 'bold'
+                        },
+                        alternateRowStyles: {
+                            fillColor: [245, 245, 245]
+                        }
+                    });
+                    
+                    // حفظ الملف
+                    doc.save(`إنذارات_غياب_${currentTeacher}.pdf`);
+                    
+                    showMessage('تم تصدير الإنذارات إلى ملف PDF بنجاح', 'success');
+                } catch (error) {
+                    console.error('Error exporting to PDF:', error);
+                    showMessage('حدث خطأ أثناء تصدير الإنذارات إلى PDF', 'error');
+                }
             }
 
             // دالة إعادة تعيين النموذج
@@ -1095,6 +1520,7 @@
             // دالة العودة للنموذج الرئيسي
             function showMainForm() {
                 previousRecordsSection.classList.add('hidden');
+                warningsSection.classList.add('hidden');
             }
 
             // دالة عرض الرسائل
