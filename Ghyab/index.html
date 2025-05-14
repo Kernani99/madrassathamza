@@ -420,6 +420,58 @@
             position: relative;
         }
 
+        /* أنماط جديدة للبحث العام */
+        .global-search-container {
+            margin-bottom: 30px;
+            background-color: white;
+            padding: 20px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+        }
+        
+        .global-search-title {
+            color: var(--primary-color);
+            margin-top: 0;
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+        }
+        
+        .student-search-results {
+            margin-top: 20px;
+            display: none;
+        }
+        
+        .student-result-card {
+            background-color: var(--light-bg);
+            border-radius: var(--border-radius);
+            padding: 15px;
+            margin-bottom: 10px;
+            border-left: 4px solid var(--warning-color);
+        }
+        
+        .student-result-card h4 {
+            margin-top: 0;
+            margin-bottom: 10px;
+            color: var(--primary-color);
+        }
+        
+        .student-result-details {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        
+        .student-detail-item {
+            flex: 1;
+            min-width: 150px;
+        }
+        
+        .student-detail-item strong {
+            color: var(--primary-light);
+            display: block;
+            margin-bottom: 5px;
+        }
+
         @media (max-width: 768px) {
             .header h1 {
                 font-size: 1.5rem;
@@ -444,6 +496,15 @@
             
             .status-option label {
                 justify-content: center;
+            }
+
+            .student-result-details {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .student-detail-item {
+                min-width: 100%;
             }
         }
 
@@ -473,6 +534,18 @@
             <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj48cGF0aCBmaWxsPSJ3aGl0ZSIgZD0iTTQ5NiAyNDBIMjc2VjIwYzAtMTEuMDQ2LTguOTU0LTIwLTIwLTIwcy0yMCA4Ljk1NC0yMCAyMHYyMjBIMjBjLTExLjA0NiAwLTIwIDguOTU0LTIwIDIwczguOTU0IDIwIDIwIDBoMjE2djIyMGMwIDExLjA0NiA4Ljk1NCAyMCAyMCAyMHMxOS45OTktOC45NTQgMTkuOTk5LTIwVjI4MGgyMTZjMTEuMDQ2IDAgMjAtOC45NTQgMjAtMjBzLTguOTU0LTIwLTIwLTIweiIvPjwvc3ZnPg==" alt="Logo" class="logo">
             <h1>نظام تسجيل غياب الطلاب</h1>
             <p>نظام إلكتروني متكامل لتسجيل ومتابعة غياب الطلاب</p>
+        </div>
+
+        <!-- قسم البحث العام عن التلميذ -->
+        <div class="global-search-container animated-section">
+            <h3 class="global-search-title"><i class="fas fa-search"></i> بحث عام عن التلميذ</h3>
+            <div class="input-icon">
+                <i class="fas fa-user-graduate"></i>
+                <input type="text" id="globalStudentSearch" placeholder="ابحث عن تلميذ باسمه..." class="form-control">
+            </div>
+            <div id="studentSearchResults" class="student-search-results">
+                <!-- سيتم ملؤها بالنتائج -->
+            </div>
         </div>
 
         <div class="card animated-section">
@@ -685,6 +758,8 @@
             const noStudentsDiv = document.getElementById('noStudents');
             const noRecordsDiv = document.getElementById('noRecords');
             const noWarningsDiv = document.getElementById('noWarnings');
+            const globalStudentSearch = document.getElementById('globalStudentSearch');
+            const studentSearchResults = document.getElementById('studentSearchResults');
 
             // تخزين البيانات المحلية
             let currentTeacher = null;
@@ -711,6 +786,167 @@
             backToFormBtn.addEventListener('click', showMainForm);
             backToFormFromWarningsBtn.addEventListener('click', showMainForm);
             studentSearch.addEventListener('input', filterStudents);
+            globalStudentSearch.addEventListener('input', handleGlobalStudentSearch);
+
+            // دالة البحث العام عن التلميذ
+            async function handleGlobalStudentSearch() {
+                const searchTerm = this.value.trim();
+                if (searchTerm.length >= 3) {
+                    await searchStudentInFirebase(searchTerm);
+                } else {
+                    studentSearchResults.style.display = 'none';
+                }
+            }
+
+            // دالة البحث عن التلميذ في Firebase
+            async function searchStudentInFirebase(studentName) {
+                showLoading();
+                studentSearchResults.style.display = 'none';
+                
+                try {
+                    // جلب جميع بيانات الحضور من Firebase
+                    const snapshot = await database.ref('attendance').once('value');
+                    const allAttendanceData = snapshot.val();
+                    
+                    if (!allAttendanceData) {
+                        throw new Error('لا توجد بيانات حضور في النظام');
+                    }
+                    
+                    // تحضير كائن لتخزين نتائج البحث
+                    const searchResults = {};
+                    
+                    // البحث في جميع السجلات
+                    for (const gender in allAttendanceData) {
+                        for (const teacher in allAttendanceData[gender]) {
+                            for (const date in allAttendanceData[gender][teacher]) {
+                                const record = allAttendanceData[gender][teacher][date];
+                                
+                                // التحقق من وجود بيانات الطلاب في السجل
+                                if (record.students) {
+                                    for (const studentId in record.students) {
+                                        const student = record.students[studentId];
+                                        
+                                        // البحث عن التلميذ بالاسم
+                                        if (student.name.includes(studentName)) {
+                                            if (!searchResults[student.name]) {
+                                                searchResults[student.name] = {
+                                                    name: student.name,
+                                                    teachers: new Set(),
+                                                    absences: 0,
+                                                    dates: [],
+                                                    lastAbsenceDate: null
+                                                };
+                                            }
+                                            
+                                            // إضافة المعلم إذا كان الطالب حاضر
+                                            if (student.status === 'حاضر') {
+                                                searchResults[student.name].teachers.add(teacher);
+                                            }
+                                            
+                                            // حساب الغيابات
+                                            if (student.status === 'غائب') {
+                                                searchResults[student.name].absences++;
+                                                const absenceDate = new Date(date);
+                                                searchResults[student.name].dates.push({
+                                                    date: date,
+                                                    teacher: teacher,
+                                                    formattedDate: formatDate(date),
+                                                    timestamp: absenceDate.getTime()
+                                                });
+                                                
+                                                // تحديث آخر تاريخ غياب
+                                                if (!searchResults[student.name].lastAbsenceDate || 
+                                                    absenceDate > new Date(searchResults[student.name].lastAbsenceDate)) {
+                                                    searchResults[student.name].lastAbsenceDate = date;
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    
+                    // تحويل النتائج إلى مصفوفة وترتيبها حسب آخر غياب
+                    const resultsArray = Object.values(searchResults).map(student => {
+                        // ترتيب تواريخ الغياب من الأحدث إلى الأقدم
+                        student.dates.sort((a, b) => b.timestamp - a.timestamp);
+                        return student;
+                    }).sort((a, b) => {
+                        // ترتيب الطلاب حسب آخر تاريخ غياب
+                        const dateA = a.lastAbsenceDate ? new Date(a.lastAbsenceDate).getTime() : 0;
+                        const dateB = b.lastAbsenceDate ? new Date(b.lastAbsenceDate).getTime() : 0;
+                        return dateB - dateA;
+                    });
+                    
+                    // عرض النتائج
+                    displaySearchResults(resultsArray);
+                    
+                } catch (error) {
+                    console.error('Error searching student:', error);
+                    studentSearchResults.innerHTML = `
+                        <div class="message error">
+                            <i class="fas fa-exclamation-circle"></i> حدث خطأ أثناء البحث: ${error.message}
+                        </div>
+                    `;
+                    studentSearchResults.style.display = 'block';
+                } finally {
+                    hideLoading();
+                }
+            }
+
+            // دالة عرض نتائج البحث
+            function displaySearchResults(results) {
+                if (results.length === 0) {
+                    studentSearchResults.innerHTML = `
+                        <div class="message info">
+                            <i class="fas fa-info-circle"></i> لا توجد نتائج مطابقة للبحث
+                        </div>
+                    `;
+                    studentSearchResults.style.display = 'block';
+                    return;
+                }
+                
+                let html = '';
+                
+                results.forEach(student => {
+                    // تحضير قائمة المعلمين
+                    const teachersList = Array.from(student.teachers).join('، ') || 'لا يوجد بيانات';
+                    
+                    // تحضير قائمة تواريخ الغياب (الأحدث أولاً)
+                    const absencesList = student.dates.slice(0, 3).map(item => 
+                        `${item.formattedDate} (معلم: ${item.teacher})`
+                    ).join('<br>');
+                    
+                    // تحضير تاريخ آخر غياب
+                    const lastAbsence = student.lastAbsenceDate ? 
+                        `آخر غياب: ${formatDate(student.lastAbsenceDate)}` : 
+                        'لا يوجد غياب';
+                    
+                    html += `
+                        <div class="student-result-card">
+                            <h4>${student.name}</h4>
+                            <div class="student-result-details">
+                                <div class="student-detail-item">
+                                    <strong>المعلمون:</strong>
+                                    ${teachersList}
+                                </div>
+                                <div class="student-detail-item">
+                                    <strong>عدد الغيابات:</strong>
+                                    ${student.absences} مرات
+                                </div>
+                                <div class="student-detail-item">
+                                    <strong>${lastAbsence}</strong>
+                                    ${student.absences > 0 ? absencesList : ''}
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+                
+                studentSearchResults.innerHTML = html;
+                studentSearchResults.style.display = 'block';
+            }
 
             // دالة تغيير الجنس
             async function handleGenderChange() {
