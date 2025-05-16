@@ -10,7 +10,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
     <style>
-        /* أنماط CSS تبقى كما هي بدون تغيير */
         :root {
             --primary-color: #1a4d2e;
             --primary-dark: #0e3a23;
@@ -207,75 +206,6 @@
             font-size: 0.9rem;
         }
 
-        .download-btn {
-            background: var(--gold-color);
-            color: var(--primary-dark);
-            border: none;
-            padding: 0.8rem 1.5rem;
-            border-radius: 50px;
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-            display: inline-block;
-            margin-top: 1rem;
-            text-decoration: none;
-        }
-
-        .download-btn:hover {
-            background: #c9a227;
-            transform: translateY(-2px);
-            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
-        }
-
-        .print-btn {
-            background: var(--accent-color);
-            color: white;
-            border: none;
-            padding: 0.8rem 1.5rem;
-            border-radius: 50px;
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-            display: inline-block;
-            margin: 1rem 0.5rem 0;
-            text-decoration: none;
-        }
-
-        .print-btn:hover {
-            background: #3a6a4a;
-            transform: translateY(-2px);
-            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
-        }
-
-        .recovery-section {
-            text-align: center;
-            margin-top: 2rem;
-            padding: 1rem;
-            background-color: #f8f9fa;
-            border-radius: 8px;
-            display: none;
-        }
-
-        .recovery-btn {
-            background: var(--accent-color);
-            color: white;
-            border: none;
-            padding: 0.6rem 1.2rem;
-            border-radius: 50px;
-            font-size: 0.9rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-            display: inline-block;
-            margin-top: 0.5rem;
-        }
-
-        .recovery-btn:hover {
-            background: #3a6a4a;
-        }
-
         footer {
             background-color: var(--primary-dark);
             color: white;
@@ -386,6 +316,117 @@
             100% { transform: rotate(360deg); }
         }
 
+        /* أنماط نافذة الشروط */
+        .terms-modal {
+            display: flex;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.95);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+            padding: 1rem;
+        }
+        
+        .terms-content {
+            background-color: white;
+            border-radius: 10px;
+            padding: 2rem;
+            max-width: 800px;
+            width: 100%;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 5px 25px rgba(0,0,0,0.5);
+            position: relative;
+        }
+        
+        .terms-title {
+            color: var(--primary-color);
+            text-align: center;
+            margin-bottom: 1.5rem;
+            font-size: 1.8rem;
+            font-weight: 700;
+        }
+        
+        .terms-list {
+            margin-bottom: 2rem;
+        }
+        
+        .terms-list ol {
+            padding-right: 1.5rem;
+        }
+        
+        .terms-list li {
+            margin-bottom: 1rem;
+            line-height: 1.6;
+        }
+        
+        .terms-footer {
+            text-align: center;
+            margin-top: 2rem;
+            font-weight: 600;
+            color: var(--primary-dark);
+        }
+        
+        .terms-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+        
+        .terms-btn {
+            padding: 0.8rem 2rem;
+            border-radius: 50px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: none;
+            font-size: 1rem;
+        }
+        
+        .accept-btn {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        .accept-btn:hover {
+            background-color: var(--primary-dark);
+        }
+        
+        .reject-btn {
+            background-color: #f1f1f1;
+            color: var(--error-color);
+            border: 1px solid #ddd;
+        }
+        
+        .reject-btn:hover {
+            background-color: #e5e5e5;
+        }
+        
+        .registration-type {
+            margin-bottom: 2rem;
+            padding: 1rem;
+            background-color: #f9f9f7;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+        }
+        
+        .registration-type label {
+            display: block;
+            margin-bottom: 1rem;
+            font-weight: 600;
+            color: var(--primary-dark);
+        }
+        
+        .radio-options {
+            display: flex;
+            gap: 2rem;
+        }
+
         @media (max-width: 768px) {
             .container {
                 margin: 2rem auto;
@@ -403,17 +444,80 @@
             .form-title {
                 font-size: 1.5rem;
             }
+
+            .radio-options {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .terms-content {
+                padding: 1.5rem;
+            }
+
+            .terms-title {
+                font-size: 1.5rem;
+            }
         }
     </style>
 </head>
 <body>
-    <header>
+    <!-- نافذة الشروط والأحكام -->
+    <div class="terms-modal" id="termsModal">
+        <div class="terms-content">
+            <h2 class="terms-title">ألتزم باحترام الشروط التالية</h2>
+            
+            <div class="terms-list">
+                <ol>
+                    <li><strong>المادة 01:</strong> احترام أوقات الدخول والخروج</li>
+                    <li><strong>المادة 02:</strong> النظافة والهندام واللباس المحتشم ومنع القزع</li>
+                    <li><strong>المادة 03:</strong> الالتزام باللباس المدرسي (المئزر والخمار بالنسبة للإناث)</li>
+                    <li><strong>المادة 04:</strong> المسؤول عن التلميذ هو الولي أو الوصي المسجل في التعهد</li>
+                    <li><strong>المادة 05:</strong> إعلام الولي إدارة المدرسة القرءانية بكل تغيير يطرأ على العنوان أو رقم الهاتف</li>
+                    <li><strong>المادة 06:</strong> المشاركة في كل النشاطات والمسابقات والرحلات التي تنظمها المدرسة</li>
+                    <li><strong>المادة 07:</strong> إشعار المدرسة في حالة التوقف عن الدراسة</li>
+                    <li><strong>المادة 08:</strong> الاستجابة لدعوات المدرسة</li>
+                    <li><strong>المادة 09:</strong> أيام الدراسة (من السبت إلى الأربعاء)</li>
+                    <li><strong>المادة 10:</strong> ضرورة إعلام إدارة المدرسة بأي مشكل صحي أو نفسي للبرعم</li>
+                    <li><strong>المادة 11:</strong> ضرورة التزام الولي بأيام الاستقبال المحددة وعدم إحراج الإدارة والمعلمة</li>
+                    <li><strong>المادة 12:</strong> ضرورة متابعة الطالب في الحفظ والمراجعة وأداء الواجبات</li>
+                    <li><strong>المادة 13:</strong> تعفى المدرسة من أي مسؤولية ناتجة عن تأخر ولي الأمر في استلام ابنه أو ابنته بعد انتهاء الدوام الدراسي</li>
+                    <li><strong>المادة 14:</strong> الغيابات المتكررة غير المبررة غير مسموح بها</li>
+                </ol>
+            </div>
+            
+            <p class="terms-footer">
+                كل هذه الشروط والآداب هدفها الارتقاء بالتلميذ(ة) إلى مصاف الذرية الصالحة النّافعة
+            </p>
+            
+            <div class="terms-buttons">
+                <button class="terms-btn accept-btn" id="acceptTerms">أوافق على الشروط</button>
+                <button class="terms-btn reject-btn" id="rejectTerms">لا أوافق</button>
+            </div>
+        </div>
+    </div>
+
+    <header id="mainHeader" style="display:none;">
         <img src="https://i.ibb.co/jZrxhFsf/1-min.png" alt="شعار المدرسة" class="logo">
         <h1>تسجيل طالب جديد</h1>
     </header>
 
-    <main class="container">
+    <main class="container" id="mainContent" style="display:none;">
         <form class="registration-form" id="studentRegistration">
+            <!-- نوع التسجيل -->
+            <div class="registration-type">
+                <label>نوع التسجيل <span class="required">*</span></label>
+                <div class="radio-options">
+                    <div class="radio-option">
+                        <input type="radio" id="newRegistration" name="registrationType" value="new" checked required>
+                        <label for="newRegistration">تسجيل جديد</label>
+                    </div>
+                    <div class="radio-option">
+                        <input type="radio" id="secondLevel" name="registrationType" value="secondLevel" required>
+                        <label for="secondLevel">مسجل من قبل (تسجيل في المستوى الثاني)</label>
+                    </div>
+                </div>
+            </div>
+            
             <div class="spinner" id="formSpinner">
                 <div class="spinner-inner"></div>
             </div>
@@ -436,9 +540,9 @@
             </div>
             
             <div class="form-group">
-                <label for="birthDate">تاريخ الميلاد (يجب أن يكون سنة 2020) <span class="required">*</span></label>
+                <label for="birthDate">تاريخ الميلاد (يجب أن يكون سنة 2020 أو الأشهر الثلاثة الأولى من 2021) <span class="required">*</span></label>
                 <input type="date" id="birthDate" class="form-control" required>
-                <div class="error-message" id="birthDateError">يجب أن يكون تاريخ الميلاد في سنة 2020</div>
+                <div class="error-message" id="birthDateError">يجب أن يكون تاريخ الميلاد في سنة 2020 أو الأشهر الثلاثة الأولى من 2021</div>
             </div>
             
             <div class="form-group">
@@ -556,14 +660,6 @@
             <button type="submit" class="submit-btn" id="submitBtn">تسجيل المتمدرس</button>
             
             <p class="form-note">سيتم مراجعة طلب التسجيل وإعلامكم بالنتيجة خلال 3 أيام عمل</p>
-            
-            <!-- قسم استعادة الاستمارة -->
-            <div class="recovery-section" id="recoverySection">
-                <p>إذا نسيت تحميل الاستمارة، يمكنك استعادتها بإدخال رقم التسجيل:</p>
-                <input type="text" id="recoveryNumber" class="form-control" placeholder="أدخل رقم التسجيل">
-                <button class="recovery-btn" id="recoveryBtn">استعادة الاستمارة</button>
-                <p id="recoveryMessage" style="display:none; color:var(--primary-color); margin-top:10px;"></p>
-            </div>
         </form>
     </main>
 
@@ -574,12 +670,6 @@
             <h3 class="modal-title">تم التسجيل بنجاح</h3>
             <p class="modal-message" id="successMessage"></p>
             <button class="modal-btn" id="successBtn">حسناً</button>
-            <a href="#" class="download-btn" id="downloadBtn" style="display: none;">
-                <i class="fas fa-download"></i> تحميل استمارة التسجيل
-            </a>
-            <button class="print-btn" id="printBtn" style="display: none;">
-                <i class="fas fa-print"></i> طباعة الاستمارة
-            </button>
         </div>
     </div>
 
@@ -593,7 +683,7 @@
         </div>
     </div>
 
-    <footer>
+    <footer id="mainFooter" style="display:none;">
         <div class="copyright">
             <p>جميع الحقوق محفوظة &copy; المجمع القرآني حمزة بن عبدالمطلب <span id="year"></span></p>
         </div>
@@ -603,22 +693,43 @@
     <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-database-compat.js"></script>
 
     <script>
-        const firebaseConfig = {
-            apiKey: "AIzaSyAzx-JlJBJxtVZT2cXDtJiHbs6s9K-3hEY",
-            authDomain: "tahdiri-dc608.firebaseapp.com",
-            databaseURL: "https://tahdiri-dc608-default-rtdb.firebaseio.com",
-            projectId: "tahdiri-dc608",
-            storageBucket: "tahdiri-dc608.appspot.com",
-            messagingSenderId: "795586531700",
-            appId: "1:795586531700:web:d693fd56f4bed6aed4dc21",
-            measurementId: "G-H57ECZPTT7"
-        };
-
-        const app = firebase.initializeApp(firebaseConfig);
-        const database = firebase.database();
-        const { jsPDF } = window.jspdf;
-
+        // إظهار نافذة الشروط أولاً
         document.addEventListener('DOMContentLoaded', function() {
+            const termsModal = document.getElementById('termsModal');
+            const acceptBtn = document.getElementById('acceptTerms');
+            const rejectBtn = document.getElementById('rejectTerms');
+            const mainHeader = document.getElementById('mainHeader');
+            const mainContent = document.getElementById('mainContent');
+            const mainFooter = document.getElementById('mainFooter');
+            
+            // إخفاء المحتوى الرئيسي حتى يتم قبول الشروط
+            termsModal.style.display = 'flex';
+            
+            acceptBtn.addEventListener('click', function() {
+                termsModal.style.display = 'none';
+                mainHeader.style.display = 'block';
+                mainContent.style.display = 'block';
+                mainFooter.style.display = 'block';
+                document.body.style.overflow = 'auto';
+                
+                // حفظ موافقة المستخدم في localStorage
+                localStorage.setItem('termsAccepted', 'true');
+            });
+            
+            rejectBtn.addEventListener('click', function() {
+                alert('عذراً، لا يمكنك التسجيل دون الموافقة على شروط المدرسة');
+                // يمكنك توجيه المستخدم إلى صفحة أخرى
+                // window.location.href = 'https://example.com';
+            });
+            
+            // التحقق إذا كان المستخدم قد وافق مسبقاً على الشروط
+            if(localStorage.getItem('termsAccepted') === 'true') {
+                termsModal.style.display = 'none';
+                mainHeader.style.display = 'block';
+                mainContent.style.display = 'block';
+                mainFooter.style.display = 'block';
+            }
+            
             document.getElementById('year').textContent = new Date().getFullYear();
             
             const form = document.getElementById('studentRegistration');
@@ -630,16 +741,9 @@
             const errorBtn = document.getElementById('errorBtn');
             const successMessage = document.getElementById('successMessage');
             const errorMessage = document.getElementById('errorMessage');
-            const downloadBtn = document.getElementById('downloadBtn');
-            const printBtn = document.getElementById('printBtn');
-            const recoverySection = document.getElementById('recoverySection');
-            const recoveryBtn = document.getElementById('recoveryBtn');
-            const recoveryNumber = document.getElementById('recoveryNumber');
-            const recoveryMessage = document.getElementById('recoveryMessage');
             
             let studentData = null;
             let registrationNumber = null;
-            let registrationData = {};
 
             // إظهار/إخفاء الحقول الشرطية
             document.querySelectorAll('input[name="socialStatus"]').forEach(radio => {
@@ -665,10 +769,15 @@
                 const error = document.getElementById('birthDateError');
                 const selectedDate = new Date(input.value);
                 const selectedYear = selectedDate.getFullYear();
+                const selectedMonth = selectedDate.getMonth() + 1; // لأن الأشهر تبدأ من 0
                 
-                if (selectedYear !== 2020 || isNaN(selectedYear)) {
+                // السماح بعام 2020 كاملاً أو الأشهر الثلاثة الأولى من 2021
+                const isValid = (selectedYear === 2020) || 
+                              (selectedYear === 2021 && selectedMonth <= 3);
+                
+                if (!isValid || isNaN(selectedYear)) {
                     error.style.display = 'block';
-                    input.setCustomValidity('يجب أن يكون تاريخ الميلاد في سنة 2020');
+                    input.setCustomValidity('يجب أن يكون تاريخ الميلاد في سنة 2020 أو الأشهر الثلاثة الأولى من 2021');
                     return false;
                 } else {
                     error.style.display = 'none';
@@ -704,17 +813,26 @@
                 const requiredRadios = [
                     {name: 'socialStatus', errorId: 'socialStatusError'},
                     {name: 'isSick', errorId: 'isSickError'},
-                    {name: 'takesMedicine', errorId: 'takesMedicineError'}
+                    {name: 'takesMedicine', errorId: 'takesMedicineError'},
+                    {name: 'registrationType', errorId: 'registrationTypeError'}
                 ];
                 
                 requiredRadios.forEach(radio => {
                     const checked = document.querySelector(`input[name="${radio.name}"]:checked`);
                     const error = document.getElementById(radio.errorId);
                     if (!checked) {
-                        error.style.display = 'block';
+                        if (!error) {
+                            const errorElement = document.createElement('div');
+                            errorElement.className = 'error-message';
+                            errorElement.id = radio.errorId;
+                            errorElement.textContent = 'يجب اختيار نوع التسجيل';
+                            document.querySelector(`input[name="${radio.name}"]`).closest('.radio-options').after(errorElement);
+                        } else {
+                            error.style.display = 'block';
+                        }
                         isValid = false;
                     } else {
-                        error.style.display = 'none';
+                        if (error) error.style.display = 'none';
                     }
                 });
 
@@ -732,7 +850,6 @@
 
             successBtn.addEventListener('click', () => {
                 successModal.style.display = 'none';
-                recoverySection.style.display = 'block';
             });
 
             errorBtn.addEventListener('click', () => errorModal.style.display = 'none');
@@ -741,128 +858,6 @@
                 if (event.target === successModal) successModal.style.display = 'none';
                 if (event.target === errorModal) errorModal.style.display = 'none';
             });
-
-            // إنشاء ملف PDF
-            function generateRegistrationPDF(data = studentData, regNumber = registrationNumber) {
-                return new Promise((resolve) => {
-                    const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
-                    
-                    // إضافة الخط العربي
-                    doc.addFont('https://cdn.jsdelivr.net/gh/arabic-fonts/amiri-font@1.0.0/Amiri-Regular.ttf', 'Amiri', 'normal');
-                    doc.addFont('https://cdn.jsdelivr.net/gh/arabic-fonts/amiri-font@1.0.0/Amiri-Bold.ttf', 'Amiri', 'bold');
-                    doc.setFont('Amiri');
-
-                    // رأس الصفحة
-                    const logoUrl = 'https://i.ibb.co/jZrxhFsf/1-min.png';
-                    doc.addImage(logoUrl, 'PNG', 15, 15, 40, 40);
-                    
-                    doc.setFontSize(18);
-                    doc.setTextColor(26, 77, 46);
-                    doc.setFont('Amiri', 'bold');
-                    doc.text('المجمع القرآني حمزة بن عبدالمطلب', 105, 25, { align: 'center' });
-                    doc.setFontSize(16);
-                    doc.text('استمارة التسجيل الأولية', 105, 35, { align: 'center' });
-                    
-                    doc.setFontSize(10);
-                    doc.setTextColor(100);
-                    doc.text(`رقم التسجيل: ${regNumber}`, 190, 20, { align: 'right' });
-                    doc.text(`تاريخ التسجيل: ${new Date(data.registrationDate).toLocaleDateString('ar-EG')}`, 190, 30, { align: 'right' });
-                    
-                    doc.setDrawColor(214, 175, 55);
-                    doc.setLineWidth(0.5);
-                    doc.line(15, 45, 195, 45);
-                    
-                    // معلومات الطالب
-                    doc.setFontSize(12);
-                    doc.setTextColor(0);
-                    doc.setFont('Amiri', 'bold');
-                    doc.text('معلومات المتمدرس:', 15, 55);
-                    doc.setFont('Amiri', 'normal');
-                    
-                    const studentInfo = [
-                        ['الاسم الكامل:', `${data.firstName} ${data.lastName}`],
-                        ['تاريخ الميلاد:', formatArabicDate(data.birthDate)],
-                        ['مكان الميلاد:', data.birthPlace],
-                        ['اسم الأب:', data.fatherName],
-                        ['اسم الأم:', data.motherName],
-                        ['العنوان:', data.address],
-                        ['الحالة الاجتماعية:', data.socialStatus],
-                        ['رقم هاتف ولي الأمر:', data.parentPhone],
-                        ['الوصي (إن وجد):', data.guardianName || 'لا يوجد']
-                    ];
-                    
-                    doc.autoTable({
-                        startY: 60,
-                        body: studentInfo,
-                        theme: 'grid',
-                        headStyles: { fillColor: [26, 77, 46], textColor: 255, font: 'Amiri', fontStyle: 'bold', halign: 'right' },
-                        columnStyles: { 0: { fontStyle: 'bold', cellWidth: 50, font: 'Amiri' }, 1: { font: 'Amiri' } },
-                        margin: { right: 15 },
-                        styles: { font: 'Amiri', fontStyle: 'normal', halign: 'right', cellPadding: 3 }
-                    });
-                    
-                    // المعلومات الطبية
-                    doc.setFont('Amiri', 'bold');
-                    doc.text('المعلومات الطبية:', 15, doc.autoTable.previous.finalY + 10);
-                    doc.setFont('Amiri', 'normal');
-                    
-                    const medicalInfo = [
-                        ['الحالة الصحية:', data.isSick === 'نعم' ? `مريض (${data.sicknessType || 'غير محدد'})` : 'سليم'],
-                        ['يتناول أدوية:', data.takesMedicine],
-                        ['الزمرة الدموية:', data.bloodType || 'غير محدد'],
-                        ['ملاحظات إضافية:', data.notes || 'لا يوجد']
-                    ];
-                    
-                    doc.autoTable({
-                        startY: doc.autoTable.previous.finalY + 15,
-                        body: medicalInfo,
-                        theme: 'grid',
-                        columnStyles: { 0: { fontStyle: 'bold', cellWidth: 50, font: 'Amiri' }, 1: { font: 'Amiri' } },
-                        margin: { right: 15 },
-                        styles: { font: 'Amiri', fontStyle: 'normal', halign: 'right', cellPadding: 3 }
-                    });
-                    
-                    // قسم الإدارة
-                    const footerY = doc.autoTable.previous.finalY + 20;
-                    doc.setDrawColor(214, 175, 55);
-                    doc.setLineWidth(0.5);
-                    doc.line(15, footerY, 195, footerY);
-                    
-                    doc.setFont('Amiri', 'bold');
-                    doc.text('قسم الإدارة:', 15, footerY + 10);
-                    doc.setFont('Amiri', 'normal');
-                    
-                    const adminInfo = [
-                        ['حقوق اشتراك الولي السنوية:', '________________________'],
-                        ['مصادقة الإدارة:', '________________________'],
-                        ['إمضاء الولي على صحة المعلومات:', '________________________'],
-                        ['تاريخ:', '________________________']
-                    ];
-                    
-                    doc.autoTable({
-                        startY: footerY + 15,
-                        body: adminInfo,
-                        theme: 'grid',
-                        columnStyles: { 0: { fontStyle: 'bold', cellWidth: 70, font: 'Amiri' }, 1: { font: 'Amiri', cellWidth: 70 } },
-                        margin: { right: 15 },
-                        styles: { font: 'Amiri', fontStyle: 'normal', halign: 'right', cellPadding: 5 }
-                    });
-                    
-                    // تذييل الصفحة
-                    doc.setFontSize(10);
-                    doc.setTextColor(100);
-                    doc.text('شكراً لتسجيلكم في المجمع القرآني حمزة بن عبدالمطلب', 105, 285, { align: 'center' });
-                    doc.text('سيتم التواصل معكم خلال 3 أيام عمل', 105, 290, { align: 'center' });
-                    
-                    resolve(doc);
-                });
-            }
-
-            function formatArabicDate(dateString) {
-                if (!dateString) return '';
-                const date = new Date(dateString);
-                return date.toLocaleDateString('ar-EG');
-            }
 
             // إرسال النموذج
             form.addEventListener('submit', function(e) {
@@ -877,6 +872,7 @@
                     submitBtn.disabled = true;
                     
                     studentData = {
+                        registrationType: document.querySelector('input[name="registrationType"]:checked').value,
                         firstName: document.getElementById('firstName').value.trim(),
                         lastName: document.getElementById('lastName').value.trim(),
                         birthDate: document.getElementById('birthDate').value,
@@ -901,14 +897,20 @@
                     
                     const studentId = studentData.firstName + '_' + studentData.lastName + '_' + new Date().getTime();
                     
-                    // حفظ بيانات التسجيل محلياً للاسترجاع
-                    registrationData[registrationNumber] = studentData;
-                    
-                    // حفظ في localStorage للاسترجاع
-                    localStorage.setItem('lastRegistration', JSON.stringify({
-                        number: registrationNumber,
-                        data: studentData
-                    }));
+                    const firebaseConfig = {
+                        apiKey: "AIzaSyAzx-JlJBJxtVZT2cXDtJiHbs6s9K-3hEY",
+                        authDomain: "tahdiri-dc608.firebaseapp.com",
+                        databaseURL: "https://tahdiri-dc608-default-rtdb.firebaseio.com",
+                        projectId: "tahdiri-dc608",
+                        storageBucket: "tahdiri-dc608.appspot.com",
+                        messagingSenderId: "795586531700",
+                        appId: "1:795586531700:web:d693fd56f4bed6aed4dc21",
+                        measurementId: "G-H57ECZPTT7"
+                    };
+
+                    // Initialize Firebase
+                    const app = firebase.initializeApp(firebaseConfig);
+                    const database = firebase.database();
                     
                     database.ref('students/' + studentId).set(studentData)
                         .then(() => {
@@ -917,54 +919,8 @@
                             successMessage.innerHTML = `
                                 تم تسجيل الطالب <strong>${studentName}</strong> بنجاح<br>
                                 رقم التسجيل: <strong>${registrationNumber}</strong>
-                                <br><small>الرجاء الاحتفاظ برقم التسجيل لاستعادة الاستمارة لاحقاً</small>
+                                <br><small>يمكنك الآن التقدم إلى إدارة المدرسة مصحوباً بصورتين شمسيتين، والاشتراك السنوي</small>
                             `;
-                            
-                            // تفعيل أزرار التحميل والطباعة
-                            downloadBtn.style.display = 'inline-block';
-                            printBtn.style.display = 'inline-block';
-                            
-                            // إعادة تعيين معالجات الأحداث لتجنب التراكم
-                            downloadBtn.onclick = null;
-                            printBtn.onclick = null;
-                            
-                            downloadBtn.addEventListener('click', function(e) {
-                                e.preventDefault();
-                                downloadBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري التحميل...';
-                                generateRegistrationPDF(studentData, registrationNumber)
-                                    .then(doc => {
-                                        doc.save(`استمارة_تسجيل_${studentData.firstName}_${studentData.lastName}.pdf`);
-                                        downloadBtn.innerHTML = '<i class="fas fa-download"></i> تحميل استمارة التسجيل';
-                                    })
-                                    .catch(error => {
-                                        console.error('خطأ في التحميل:', error);
-                                        alert('حدث خطأ أثناء إنشاء ملف PDF');
-                                        downloadBtn.innerHTML = '<i class="fas fa-download"></i> تحميل استمارة التسجيل';
-                                    });
-                            });
-                            
-                            printBtn.addEventListener('click', function(e) {
-                                e.preventDefault();
-                                printBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري التحضير للطباعة...';
-                                generateRegistrationPDF(studentData, registrationNumber)
-                                    .then(doc => {
-                                        const blob = doc.output('blob');
-                                        const url = URL.createObjectURL(blob);
-                                        const iframe = document.createElement('iframe');
-                                        iframe.style.display = 'none';
-                                        iframe.src = url;
-                                        document.body.appendChild(iframe);
-                                        iframe.onload = () => {
-                                            iframe.contentWindow.print();
-                                            printBtn.innerHTML = '<i class="fas fa-print"></i> طباعة الاستمارة';
-                                        };
-                                    })
-                                    .catch(error => {
-                                        console.error('خطأ في الطباعة:', error);
-                                        alert('حدث خطأ أثناء التحضير للطباعة');
-                                        printBtn.innerHTML = '<i class="fas fa-print"></i> طباعة الاستمارة';
-                                    });
-                            });
                             
                             showSuccessModal();
                             form.reset();
@@ -989,96 +945,9 @@
                 }
             });
 
-            // استعادة الاستمارة
-            recoveryBtn.addEventListener('click', function() {
-                const regNumber = recoveryNumber.value.trim();
-                if (!regNumber) {
-                    recoveryMessage.textContent = 'الرجاء إدخال رقم التسجيل';
-                    recoveryMessage.style.display = 'block';
-                    recoveryMessage.style.color = 'var(--error-color)';
-                    return;
-                }
-                
-                recoveryBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري البحث...';
-                
-                // البحث في البيانات المحفوظة محلياً
-                if (registrationData[regNumber]) {
-                    generateRegistrationPDF(registrationData[regNumber], regNumber)
-                        .then(doc => {
-                            doc.save(`استمارة_تسجيل_${registrationData[regNumber].firstName}_${registrationData[regNumber].lastName}.pdf`);
-                            recoveryMessage.textContent = 'تم تحميل الاستمارة بنجاح';
-                            recoveryMessage.style.display = 'block';
-                            recoveryMessage.style.color = 'var(--success-color)';
-                            recoveryBtn.innerHTML = 'استعادة الاستمارة';
-                        })
-                        .catch(error => {
-                            recoveryMessage.textContent = 'حدث خطأ أثناء إنشاء الملف';
-                            recoveryMessage.style.display = 'block';
-                            recoveryMessage.style.color = 'var(--error-color)';
-                            recoveryBtn.innerHTML = 'استعادة الاستمارة';
-                        });
-                    return;
-                }
-                
-                // البحث في localStorage
-                const lastRegistration = JSON.parse(localStorage.getItem('lastRegistration'));
-                if (lastRegistration && lastRegistration.number === regNumber) {
-                    generateRegistrationPDF(lastRegistration.data, regNumber)
-                        .then(doc => {
-                            doc.save(`استمارة_تسجيل_${lastRegistration.data.firstName}_${lastRegistration.data.lastName}.pdf`);
-                            recoveryMessage.textContent = 'تم تحميل الاستمارة بنجاح';
-                            recoveryMessage.style.display = 'block';
-                            recoveryMessage.style.color = 'var(--success-color)';
-                            recoveryBtn.innerHTML = 'استعادة الاستمارة';
-                        })
-                        .catch(error => {
-                            recoveryMessage.textContent = 'حدث خطأ أثناء إنشاء الملف';
-                            recoveryMessage.style.display = 'block';
-                            recoveryMessage.style.color = 'var(--error-color)';
-                            recoveryBtn.innerHTML = 'استعادة الاستمارة';
-                        });
-                    return;
-                }
-                
-                // البحث في قاعدة البيانات إذا لم تكن محفوظة محلياً
-                database.ref('students').orderByChild('registrationNumber').equalTo(regNumber).once('value')
-                    .then(snapshot => {
-                        if (snapshot.exists()) {
-                            snapshot.forEach(childSnapshot => {
-                                const data = childSnapshot.val();
-                                generateRegistrationPDF(data, regNumber)
-                                    .then(doc => {
-                                        doc.save(`استمارة_تسجيل_${data.firstName}_${data.lastName}.pdf`);
-                                        recoveryMessage.textContent = 'تم تحميل الاستمارة بنجاح';
-                                        recoveryMessage.style.display = 'block';
-                                        recoveryMessage.style.color = 'var(--success-color)';
-                                        recoveryBtn.innerHTML = 'استعادة الاستمارة';
-                                    })
-                                    .catch(error => {
-                                        recoveryMessage.textContent = 'حدث خطأ أثناء إنشاء الملف';
-                                        recoveryMessage.style.display = 'block';
-                                        recoveryMessage.style.color = 'var(--error-color)';
-                                        recoveryBtn.innerHTML = 'استعادة الاستمارة';
-                                    });
-                            });
-                        } else {
-                            recoveryMessage.textContent = 'لم يتم العثور على رقم التسجيل';
-                            recoveryMessage.style.display = 'block';
-                            recoveryMessage.style.color = 'var(--error-color)';
-                            recoveryBtn.innerHTML = 'استعادة الاستمارة';
-                        }
-                    })
-                    .catch(error => {
-                        recoveryMessage.textContent = 'حدث خطأ أثناء البحث عن الاستمارة';
-                        recoveryMessage.style.display = 'block';
-                        recoveryMessage.style.color = 'var(--error-color)';
-                        recoveryBtn.innerHTML = 'استعادة الاستمارة';
-                    });
-            });
-
             // تحديد نطاق تاريخ الميلاد
-            const maxDate = new Date('2020-12-31');
-            const minDate = new Date('2020-01-01');
+            const maxDate = new Date('2021-03-31'); // آخر يوم مسموح به 31 مارس 2021
+            const minDate = new Date('2020-01-01'); // أول يوم مسموح به 1 يناير 2020
             document.getElementById('birthDate').max = maxDate.toISOString().split('T')[0];
             document.getElementById('birthDate').min = minDate.toISOString().split('T')[0];
         });
