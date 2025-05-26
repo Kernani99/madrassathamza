@@ -37,7 +37,7 @@
 
         header {
             background: linear-gradient(rgba(26, 77, 46, 0.95), rgba(26, 77, 46, 0.95)),
-                        url('https://img.freepik.com/free-vector/abstract-islamic-golden-pattern-backdrop-ethnic-style_1017-54265.jpg') center/cover;
+                        url('https://img.freepik.com/free-vector/abstract-islamic-golden-pattern-backdrop-ethnic-style_1017-54276.jpg') center/cover;
             color: white;
             padding: 2rem 1rem;
             text-align: center;
@@ -84,7 +84,7 @@
             background: white;
             border-radius: 15px;
             padding: 2.5rem;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
             margin-bottom: 2rem;
             display: none;
         }
@@ -391,7 +391,7 @@
 <body>
     <header>
         <img src="https://i.ibb.co/jZrxhFsf/1-min.png" alt="شعار المجمع" class="logo">
-        <h1>نتائج براعم ماقبل التمدرس الدفعة 18</h1>
+        <h1>نتائج ماقبل التمدرس الفئة 18</h1>
     </header>
 
     <!-- Modal for data fetch error -->
@@ -415,9 +415,9 @@
                 </div>
                 
                 <div class="form-group">
-                    <label for="student">اختر اسم التلميذ:</label>
+                    <label for="student">اختر اسم البرعم:</label>
                     <select id="student" disabled required>
-                        <option value="">-- اختر التلميذ بعد اختيار المعلمة --</option>
+                        <option value="">-- اختر البرعم بعد اختيار المعلمة --</option>
                     </select>
                 </div>
                 
@@ -429,7 +429,7 @@
             <div class="print-header">
                 <img src="https://i.ibb.co/jZrxhFsf/1-min.png" alt="شعار المجمع">
             </div>
-            <h2 class="section-title">نتائج التلميذ</h2>
+            <h2 class="section-title">نتائج البرعم فئة ما قبل التمدرس</h2>
             <div id="studentInfo"></div>
             <table class="student-results">
                 <thead>
@@ -490,7 +490,7 @@
             const sheetUrl = 'https://sheetdb.io/api/v1/8xv5so9fbcdu8';
             let sheetData = [];
             const controller = new AbortController();
-            const timeoutId = setTimeout(() => controller.abort(), 10000); // 10s timeout
+            const timeoutId = setTimeout(() => controller.abort(), 10000);
 
             try {
                 const response = await fetch(sheetUrl, {
@@ -551,7 +551,7 @@
 
             // Teacher select change event
             teacherSelect.addEventListener('change', function() {
-                studentSelect.innerHTML = '<option value="">-- اختر التلميذ --</option>';
+                studentSelect.innerHTML = '<option value="">-- اختر البرعم --</option>';
                 studentSelect.disabled = !teacherSelect.value;
 
                 if (teacherSelect.value) {
@@ -568,7 +568,7 @@
                     });
                     if (students.length === 0) {
                         console.warn('No students found for teacher:', teacherSelect.value);
-                        alert('لم يتم العثور على تلاميذ لهذه المعلمة.');
+                        alert('لم يتم العثور على براعم لهذه المعلمة.');
                     }
                 }
             });
@@ -599,8 +599,8 @@
                         // Display student info
                         studentInfo.innerHTML = `
                             <div style="background-color: #f8f8f8; padding: 1rem; border-radius: 8px; margin-bottom: 1.5rem; border-right: 4px solid var(--primary-color);">
-                                <h3 style="color: var(--primary-dark); margin-bottom: 0.5rem;">معلومات التلميذ</h3>
-                                <p style="font-size: 1.1rem;"><strong>اسم التلميذ:</strong> ${studentData[studentKey]}</p>
+                                <h3 style="color: var(--primary-dark); margin-bottom: 0.5rem;">معلومات البرعم</h3>
+                                <p style="font-size: 1.1rem;"><strong>اسم البرعم:</strong> ${studentData[studentKey]}</p>
                                 <p style="font-size: 1.1rem;"><strong>المعلمة:</strong> ${studentData[teacherKey]}</p>
                             </div>
                         `;
@@ -649,10 +649,10 @@
                         resultsSection.scrollIntoView({ behavior: 'smooth' });
                     } else {
                         console.error('No matching student data found for:', teacherSelect.value, studentSelect.value);
-                        alert('لم يتم العثور على بيانات التلميذ. تأكد من اختيار المعلمة والتلميذ بشكل صحيح.');
+                        alert('لم يتم العثور على بيانات البرعم. تأكد من اختيار المعلمة والبرعم بشكل صحيح.');
                     }
                 } else {
-                    alert('يرجى اختيار المعلمة والتلميذ.');
+                    alert('يرجى اختيار المعلمة والبرعم.');
                 }
             });
 
@@ -664,7 +664,7 @@
                     unit: 'mm'
                 });
 
-                // Add header (logo only)
+                // Add header (logo)
                 const logo = new Image();
                 logo.src = 'https://i.ibb.co/jZrxhFsf/1-min.png';
                 logo.crossOrigin = 'anonymous';
@@ -682,6 +682,23 @@
                 const logoX = (210 - logoWidth) / 2;
                 doc.addImage(logo, 'PNG', logoX, 10, logoWidth, logoHeight);
 
+                // Add QR code below logo
+                const websiteUrl = 'https://mojam3.com/';
+                const qrCanvas = document.createElement('canvas');
+                QRCode.toCanvas(qrCanvas, websiteUrl, { width: 75 }, (error) => {
+                    if (error) console.error('Error generating QR code:', error);
+                });
+                const qrData = qrCanvas.toDataURL('image/png');
+                const qrSize = 25;
+                const qrX = (210 - qrSize) / 2;
+                const qrY = 15 + logoHeight;
+                doc.addImage(qrData, 'PNG', qrX, qrY, qrSize, qrSize);
+
+                // Add website URL below QR code
+                doc.setFontSize(10);
+                doc.setTextColor(0, 0, 0);
+                doc.text(websiteUrl, 105, qrY + qrSize + 5, { align: 'center' });
+
                 // Capture results section
                 const resultsSection = document.getElementById('resultsSection');
                 const canvas = await html2canvas(resultsSection, {
@@ -697,23 +714,7 @@
                 const pdfWidth = 190;
                 const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
                 const margin = 10;
-                doc.addImage(imgData, 'PNG', margin, 30 + logoHeight, pdfWidth, pdfHeight);
-
-                // Add website URL and QR code
-                const websiteUrl = 'https://mojam3.com/';
-                const qrCanvas = document.createElement('canvas');
-                QRCode.toCanvas(qrCanvas, websiteUrl, { width: 60 }, (error) => {
-                    if (error) console.error('Error generating QR code:', error);
-                });
-                const qrData = qrCanvas.toDataURL('image/png');
-                const qrSize = 20;
-                const qrX = (210 - qrSize) / 2;
-                const qrY = 297 - 25;
-                doc.addImage(qrData, 'PNG', qrX, qrY, qrSize, qrSize);
-
-                doc.setFontSize(10);
-                doc.setTextColor(0, 0, 0);
-                doc.text(websiteUrl, 105, qrY + qrSize + 5, { align: 'center' });
+                doc.addImage(imgData, 'PNG', margin, qrY + qrSize + 10, pdfWidth, pdfHeight);
 
                 // Save PDF
                 const studentName = document.getElementById('student').value || 'student';
