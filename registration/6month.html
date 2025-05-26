@@ -540,9 +540,8 @@
             </div>
             
             <div class="form-group">
-                <label for="birthDate">تاريخ الميلاد (يجب أن يكون سنة 2020 أو الأشهر الثلاثة الأولى من 2021) <span class="required">*</span></label>
-                <input type="date" id="birthDate" class="form-control" required>
-                <div class="error-message" id="birthDateError">يجب أن يكون تاريخ الميلاد في سنة 2020 أو الأشهر الثلاثة الأولى من 2021</div>
+<label for="birthDate">تاريخ الميلاد (يجب أن يكون سنة 2020 أو الأشهر الستة الأولى من 2021) <span class="required">*</span></label>                <input type="date" id="birthDate" class="form-control" required>
+                <div class="error-message" id="birthDateError">يجب أن يكون تاريخ الميلاد في سنة 2020 أو الأشهر الستة الأولى من 2021</div>
             </div>
             
             <div class="form-group">
@@ -765,26 +764,27 @@
             document.getElementById('parentPhone').addEventListener('input', validatePhone);
 
             function validateBirthDate() {
-                const input = document.getElementById('birthDate');
-                const error = document.getElementById('birthDateError');
-                const selectedDate = new Date(input.value);
-                const selectedYear = selectedDate.getFullYear();
-                const selectedMonth = selectedDate.getMonth() + 1; // لأن الأشهر تبدأ من 0
-                
-                // السماح بعام 2020 كاملاً أو الأشهر الثلاثة الأولى من 2021
-                const isValid = (selectedYear === 2020) || 
-                              (selectedYear === 2021 && selectedMonth <= 3);
-                
-                if (!isValid || isNaN(selectedYear)) {
-                    error.style.display = 'block';
-                    input.setCustomValidity('يجب أن يكون تاريخ الميلاد في سنة 2020 أو الأشهر الثلاثة الأولى من 2021');
-                    return false;
-                } else {
-                    error.style.display = 'none';
-                    input.setCustomValidity('');
-                    return true;
-                }
-            }
+    const input = document.getElementById('birthDate');
+    const error = document.getElementById('birthDateError');
+    const selectedDate = new Date(input.value);
+    const selectedYear = selectedDate.getFullYear();
+    const selectedMonth = selectedDate.getMonth() + 1; // لأن الأشهر تبدأ من 0
+    
+    // السماح بعام 2020 كاملاً أو الأشهر الستة الأولى من 2021
+    const isValid = (selectedYear === 2020) || 
+                  (selectedYear === 2021 && selectedMonth <= 6);
+    
+    if (!isValid || isNaN(selectedYear)) {
+        error.style.display = 'block';
+        input.setCustomValidity('يجب أن يكون تاريخ الميلاد في سنة 2020 أو الأشهر الستة الأولى من 2021');
+        return false;
+    } else {
+        error.style.display = 'none';
+        input.setCustomValidity('');
+        return true;
+    }
+}
+
 
             function validatePhone() {
                 const input = document.getElementById('parentPhone');
@@ -946,10 +946,10 @@
             });
 
             // تحديد نطاق تاريخ الميلاد
-            const maxDate = new Date('2021-03-31'); // آخر يوم مسموح به 31 مارس 2021
-            const minDate = new Date('2020-01-01'); // أول يوم مسموح به 1 يناير 2020
-            document.getElementById('birthDate').max = maxDate.toISOString().split('T')[0];
-            document.getElementById('birthDate').min = minDate.toISOString().split('T')[0];
+const maxDate = new Date('2021-06-30'); // آخر يوم مسموح به 30 يونيو 2021
+const minDate = new Date('2020-01-01'); // أول يوم مسموح به 1 يناير 2020
+document.getElementById('birthDate').max = maxDate.toISOString().split('T')[0];
+document.getElementById('birthDate').min = minDate.toISOString().split('T')[0];
         });
     </script>
 </body>
