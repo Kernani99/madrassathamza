@@ -37,7 +37,7 @@
 
         header {
             background: linear-gradient(rgba(26, 77, 46, 0.95), rgba(26, 77, 46, 0.95)),
-                        url('https://img.freepik.com/free-vector/abstract-islamic-golden-pattern-backdrop-ethnic-style_1017-54276.jpg') center/cover;
+                        url('https://img.freepik.com/free-vector/abstract-islamic-golden-pattern-backdrop-ethnic-style_1017-54265.jpg') center/cover;
             color: white;
             padding: 2rem 1rem;
             text-align: center;
@@ -84,7 +84,7 @@
             background: white;
             border-radius: 15px;
             padding: 2.5rem;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
             margin-bottom: 2rem;
             display: none;
         }
@@ -93,7 +93,7 @@
             color: var(--primary-color);
             text-align: center;
             margin-bottom: 2rem;
-            font-size: 1.8rem;
+            font-size: 2.2rem;
             font-weight: 800;
             position: relative;
         }
@@ -161,6 +161,36 @@
             box-shadow: 0 5px 15px rgba(0,0,0,0.2);
         }
 
+        .print-btn, .pdf-btn {
+            background: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin: 0.5rem;
+            display: inline-block;
+        }
+
+        .no-pdf {
+            display: block;
+        }
+
+        @media print {
+            .no-pdf {
+                display: none !important;
+            }
+        }
+
+        .print-btn:hover, .pdf-btn:hover {
+            background: var(--primary-dark);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
         .student-results {
             width: 100%;
             border-collapse: collapse;
@@ -193,15 +223,23 @@
             color: var(--primary-dark);
         }
 
-        .btn-group {
-            display: flex;
-            justify-content: center;
-            gap: 1rem;
-            margin-top: 2rem;
-            flex-wrap: wrap;
+        .teacher-note {
+            background-color: #f8f8f8;
+            border-right: 4px solid var(--accent-color);
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-top: 1.5rem;
+            font-size: 1.1rem;
+            color: var(--primary-dark);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
         }
 
-        .btn {
+        .teacher-note h3 {
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .back-btn {
             background: var(--primary-color);
             color: white;
             border: none;
@@ -211,23 +249,17 @@
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s;
+            display: block;
+            margin: 2rem auto;
             text-decoration: none;
             text-align: center;
-            min-width: 200px;
+            width: 200px;
         }
 
-        .btn:hover {
+        .back-btn:hover {
             background: var(--primary-dark);
             transform: translateY(-3px);
             box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-        }
-
-        .btn-print {
-            background: var(--gold-color);
-        }
-
-        .btn-print:hover {
-            background: #c99b1a;
         }
 
         footer {
@@ -243,56 +275,83 @@
             color: #ccc;
         }
 
-        .loading {
+        /* Modal styles */
+        .modal {
             display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background-color: white;
+            padding: 2rem;
+            border-radius: 10px;
             text-align: center;
-            margin: 1rem 0;
+            max-width: 400px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
         }
 
-        .loading-spinner {
-            border: 4px solid rgba(0, 0, 0, 0.1);
-            border-radius: 50%;
-            border-top: 4px solid var(--primary-color);
-            width: 30px;
-            height: 30px;
-            animation: spin 1s linear infinite;
-            margin: 0 auto;
+        .modal-content h3 {
+            color: var(--error-color);
+            margin-bottom: 1rem;
         }
 
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+        .modal-content p {
+            color: var(--text-color);
+            margin-bottom: 1.5rem;
         }
 
+        .modal-content button {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .modal-content button:hover {
+            background: var(--primary-dark);
+            transform: translateY(-3px);
+        }
+
+        /* Print styles */
         @media print {
-            header, .search-section, .btn-group, footer {
+            header, footer, .search-section, .back-btn, .print-btn, .pdf-btn, .modal {
                 display: none;
             }
-            
             .results-section {
                 display: block !important;
-                padding: 0;
                 box-shadow: none;
-                border-radius: 0;
+                margin: 0;
+                padding: 1rem;
             }
-            
-            .section-title {
-                color: black;
-                font-size: 1.5rem;
+            .print-header {
+                display: block;
+                text-align: center;
+                margin-bottom: 2rem;
+            }
+            .print-header img {
+                width: 100px;
                 margin-bottom: 1rem;
             }
-            
-            .student-results {
-                width: 100%;
-                border: 1px solid #ddd;
+            .print-header p {
+                display: none;
             }
-            
-            .student-results th {
-                background-color: #f0f0f0 !important;
-                color: black !important;
-                -webkit-print-color-adjust: exact;
-                print-color-adjust: exact;
-            }
+        }
+
+        .print-header {
+            display: none;
         }
 
         /* Responsive styles */
@@ -311,7 +370,7 @@
             }
             
             .section-title {
-                font-size: 1.5rem;
+                font-size: 1.8rem;
             }
             
             .student-results {
@@ -322,14 +381,9 @@
             .student-results td {
                 padding: 8px;
             }
-            
-            .btn-group {
-                flex-direction: column;
-                align-items: center;
-            }
-            
-            .btn {
-                width: 100%;
+
+            .modal-content {
+                max-width: 90%;
             }
         }
     </style>
@@ -340,6 +394,15 @@
         <h1>نتائج المتمدرسين</h1>
     </header>
 
+    <!-- Modal for data fetch error -->
+    <div id="errorModal" class="modal">
+        <div class="modal-content">
+            <h3>خطأ في تحميل البيانات</h3>
+            <p>حدث خطأ أثناء تحميل البيانات. يرجى تحديث الصفحة.</p>
+            <button onclick="location.reload()">تحديث الصفحة</button>
+        </div>
+    </div>
+
     <main class="container">
         <div class="search-section">
             <h2 class="section-title">البحث عن نتائج البراعم</h2>
@@ -348,7 +411,6 @@
                     <label for="teacher">اختر المعلمة:</label>
                     <select id="teacher" required>
                         <option value="">-- اختر المعلمة --</option>
-                        <!-- سيتم ملء الخيارات من جوجل شيت -->
                     </select>
                 </div>
                 
@@ -361,224 +423,302 @@
                 
                 <button type="submit" class="search-btn">عرض النتائج</button>
             </form>
-            
-            <div class="loading" id="loadingData">
-                <div class="loading-spinner"></div>
-                <p>جاري تحميل البيانات...</p>
-            </div>
         </div>
 
         <div class="results-section" id="resultsSection">
+            <div class="print-header">
+                <img src="https://i.ibb.co/jZrxhFsf/1-min.png" alt="شعار المجمع">
+            </div>
             <h2 class="section-title">نتائج التلميذ</h2>
             <div id="studentInfo"></div>
             <table class="student-results">
                 <thead>
                     <tr>
                         <th>المادة</th>
-                        <th>التقييم</th>
+                        <th>الدرجة</th>
+                        <th>الملاحظات</th>
                     </tr>
                 </thead>
                 <tbody id="resultsTable">
-                    <!-- سيتم ملء النتائج من جوجل شيت -->
+                    <!-- Results will be inserted here by JavaScript -->
                 </tbody>
             </table>
-            
-            <div class="btn-group">
-                <a href="https://mojam3.com/" class="btn">العودة إلى الصفحة الرئيسية</a>
-                <button class="btn btn-print" onclick="window.print()">طباعة النتائج</button>
+            <div id="teacherNote" class="teacher-note" style="display: none;">
+                <h3>ملاحظة المعلمة</h3>
+                <p id="teacherNoteText"></p>
+            </div>
+            <div style="text-align: center;" class="no-pdf">
+                <button class="print-btn" onclick="window.print()">طباعة النتائج</button>
+                <button class="pdf-btn" onclick="downloadPDF()">تحميل كشف النقاط (PDF)</button>
             </div>
         </div>
+
+        <a href="https://mojam3.com/" class="back-btn">العودة إلى الصفحة الرئيسية</a>
     </main>
 
     <footer>
         <div class="copyright">
-            <p>جميع الحقوق محفوظة &copy; المجمع القرآني حمزة بن عبدالمطلب <span id="year"></span></p>
+            <p>جميع الحقوق محفوظة © المجمع القرآني حمزة بن عبدالمطلب <span id="year"></span></p>
         </div>
     </footer>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', async function() {
             // Set current year in footer
             document.getElementById('year').textContent = new Date().getFullYear();
-            
-            // Google Sheets URL and settings
-            const sheetId = '2PACX-1vRXFFhF7TcvKo30Kq7Qwr93SptrxPZVXjWxMWbXAHR7v-9hUzQkGsAfjmF-BvgtEqIUrdgguQERl3Cb';
-            const sheetUrl = `https://docs.google.com/spreadsheets/d/e/${sheetId}/pub?output=csv`;
-            
-            // Global variables to store data
-            let allData = [];
-            let teachers = [];
-            let studentsByTeacher = {};
-            
-            // DOM elements
+
+            // Modal control
+            const errorModal = document.getElementById('errorModal');
+            function showErrorModal() {
+                errorModal.style.display = 'flex';
+            }
+            function hideErrorModal() {
+                errorModal.style.display = 'none';
+            }
+
+            // Close modal when clicking outside
+            errorModal.addEventListener('click', function(e) {
+                if (e.target === errorModal) {
+                    hideErrorModal();
+                }
+            });
+
+            // Fetch data from SheetDB with timeout
+            const sheetUrl = 'https://sheetdb.io/api/v1/8xv5so9fbcdu8';
+            let sheetData = [];
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 10000); // 10s timeout
+
+            try {
+                const response = await fetch(sheetUrl, {
+                    headers: {
+                        'Accept': 'application/json'
+                    },
+                    signal: controller.signal
+                });
+                clearTimeout(timeoutId);
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}, message: ${response.statusText}`);
+                }
+
+                const contentType = response.headers.get('content-type');
+                if (!contentType || !contentType.includes('application/json')) {
+                    throw new Error('Invalid response format: Expected JSON');
+                }
+
+                sheetData = await response.json();
+                console.log('SheetDB Data:', sheetData);
+            } catch (error) {
+                console.error('Error fetching SheetDB data:', error.message);
+                console.error('Error details:', error);
+                showErrorModal();
+                return;
+            }
+
+            // Check if data is empty
+            if (!sheetData || sheetData.length === 0) {
+                console.error('No data returned from SheetDB');
+                showErrorModal();
+                return;
+            }
+
+            // Extract unique teachers with flexible key handling
+            const teacherKey = Object.keys(sheetData[0]).find(key => key.includes('معلمة') || key.includes('teacher')) || 'اسم المعلمة';
+            const studentKey = Object.keys(sheetData[0]).find(key => key.includes('تلميذ') || key.includes('student')) || 'اسم التلميذ';
+            const teachers = [...new Set(sheetData.map(row => row[teacherKey]?.trim()))].filter(Boolean);
+            console.log('Teachers:', teachers);
+
+            if (teachers.length === 0) {
+                console.error('No teachers found in data');
+                showErrorModal();
+                return;
+            }
+
             const teacherSelect = document.getElementById('teacher');
             const studentSelect = document.getElementById('student');
-            const searchForm = document.getElementById('searchForm');
-            const resultsSection = document.getElementById('resultsSection');
-            const studentInfo = document.getElementById('studentInfo');
-            const resultsTable = document.getElementById('resultsTable');
-            const loadingElement = document.getElementById('loadingData');
-            
-            // Fetch data from Google Sheets
-            async function fetchData() {
-                try {
-                    loadingElement.style.display = 'block';
-                    
-                    const response = await fetch(sheetUrl);
-                    const csvData = await response.text();
-                    
-                    // Parse CSV to JSON
-                    allData = csvToJson(csvData);
-                    
-                    // Process data
-                    processData(allData);
-                    
-                    // Populate teacher dropdown
-                    populateTeachers();
-                    
-                    loadingElement.style.display = 'none';
-                } catch (error) {
-                    console.error('Error fetching data:', error);
-                    loadingElement.innerHTML = '<p style="color: var(--error-color);">حدث خطأ أثناء جلب البيانات. يرجى المحاولة لاحقاً.</p>';
-                }
-            }
-            
-            // Convert CSV to JSON
-            function csvToJson(csv) {
-                const lines = csv.split('\n');
-                const headers = lines[0].split(',');
-                
-                return lines.slice(1).map(line => {
-                    const values = line.split(',');
-                    return headers.reduce((object, header, index) => {
-                        object[header.trim()] = values[index] ? values[index].trim() : '';
-                        return object;
-                    }, {});
-                });
-            }
-            
-            // Process data to extract teachers and students
-            function processData(data) {
-                teachers = [...new Set(data.map(row => row['اسم المعلمة']))].filter(Boolean);
-                
-                studentsByTeacher = {};
-                teachers.forEach(teacher => {
-                    studentsByTeacher[teacher] = [...new Set(
-                        data.filter(row => row['اسم المعلمة'] === teacher)
-                            .map(row => row['اسم التلميذ'])
-                    )].filter(Boolean);
-                });
-            }
-            
-            // Populate teacher dropdown
-            function populateTeachers() {
-                teacherSelect.innerHTML = '<option value="">-- اختر المعلمة --</option>';
-                
-                teachers.forEach(teacher => {
-                    const option = document.createElement('option');
-                    option.value = teacher;
-                    option.textContent = teacher;
-                    teacherSelect.appendChild(option);
-                });
-            }
-            
+
+            // Populate teachers dropdown
+            teachers.forEach(teacher => {
+                const option = document.createElement('option');
+                option.value = teacher;
+                option.textContent = teacher;
+                teacherSelect.appendChild(option);
+            });
+
             // Teacher select change event
             teacherSelect.addEventListener('change', function() {
                 studentSelect.innerHTML = '<option value="">-- اختر التلميذ --</option>';
-                studentSelect.disabled = !this.value;
-                
-                if (this.value) {
-                    const students = studentsByTeacher[this.value];
+                studentSelect.disabled = !teacherSelect.value;
+
+                if (teacherSelect.value) {
+                    const students = sheetData
+                        .filter(row => row[teacherKey]?.trim() === teacherSelect.value)
+                        .map(row => row[studentKey]?.trim())
+                        .filter(Boolean);
+                    console.log('Students for teacher', teacherSelect.value, ':', students);
                     students.forEach(student => {
                         const option = document.createElement('option');
                         option.value = student;
                         option.textContent = student;
                         studentSelect.appendChild(option);
                     });
-                }
-            });
-            
-            // Form submission
-            searchForm.addEventListener('submit', function(e) {
-                e.preventDefault();
-                
-                const teacher = teacherSelect.value;
-                const student = studentSelect.value;
-                
-                if (teacher && student) {
-                    showStudentResults(teacher, student);
-                }
-            });
-            
-            // Display student results
-            function showStudentResults(teacher, studentName) {
-                const studentData = allData.find(row => 
-                    row['اسم المعلمة'] === teacher && 
-                    row['اسم التلميذ'] === studentName
-                );
-                
-                if (!studentData) {
-                    alert('لا توجد بيانات لهذا التلميذ');
-                    return;
-                }
-                
-                // Display student info
-                studentInfo.innerHTML = `
-                    <div style="background-color: #f8f8f8; padding: 1rem; border-radius: 8px; margin-bottom: 1.5rem; border-right: 4px solid var(--primary-color);">
-                        <h3 style="color: var(--primary-dark); margin-bottom: 0.5rem;">معلومات التلميذ</h3>
-                        <p style="font-size: 1.1rem;"><strong>اسم التلميذ:</strong> ${studentName}</p>
-                        <p style="font-size: 1.1rem;"><strong>المعلمة:</strong> ${teacher}</p>
-                    </div>
-                `;
-                
-                // Display results
-                resultsTable.innerHTML = '';
-                
-                // List of subjects to display
-                const subjects = [
-                    { key: 'قرءان كريم', name: 'القرآن الكريم' },
-                    { key: 'حديث شريف', name: 'الحديث الشريف' },
-                    { key: 'أدعية واذكار', name: 'الأدعية والأذكار' },
-                    { key: 'سيرة نبوية', name: 'السيرة النبوية' },
-                    { key: 'أنشطة لغوية', name: 'الأنشطة اللغوية' },
-                    { key: 'أنشطة رياضية منطقية', name: 'الأنشطة الرياضية والمنطقية' },
-                    { key: 'أنشطة علمية وتكنولوجية', name: 'الأنشطة العلمية والتكنولوجية' },
-                    { key: 'انشطة ترفيه(تلوين)', name: 'الأنشطة الترفيهية (تلوين)' },
-                    { key: 'الانضباط والحضور', name: 'الانضباط والحضور' },
-                    { key: 'انجاز الواجبات المنزلية', name: 'إنجاز الواجبات المنزلية' }
-                ];
-                
-                subjects.forEach(subject => {
-                    if (studentData[subject.key]) {
-                        const row = document.createElement('tr');
-                        row.innerHTML = `
-                            <td>${subject.name}</td>
-                            <td>${studentData[subject.key]}</td>
-                        `;
-                        resultsTable.appendChild(row);
+                    if (students.length === 0) {
+                        console.warn('No students found for teacher:', teacherSelect.value);
+                        alert('لم يتم العثور على تلاميذ لهذه المعلمة.');
                     }
-                });
-                
-                // Add teacher notes if available
-                if (studentData['ملاحظة المعلمة']) {
-                    const notesRow = document.createElement('tr');
-                    notesRow.innerHTML = `
-                        <td colspan="2" style="text-align: right; padding: 20px 10px; background-color: #f5f5f5;">
-                            <strong>ملاحظة المعلمة:</strong> ${studentData['ملاحظة المعلمة']}
-                        </td>
-                    `;
-                    resultsTable.appendChild(notesRow);
                 }
-                
-                // Show results section
-                resultsSection.style.display = 'block';
-                
-                // Scroll to results
-                resultsSection.scrollIntoView({ behavior: 'smooth' });
-            }
-            
-            // Initialize the page
-            fetchData();
+            });
+
+            // Form submission
+            document.getElementById('searchForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+
+                const teacherSelect = document.getElementById('teacher');
+                const studentSelect = document.getElementById('student');
+                const resultsSection = document.getElementById('resultsSection');
+                const studentInfo = document.getElementById('studentInfo');
+                const resultsTable = document.getElementById('resultsTable');
+                const teacherNote = document.getElementById('teacherNote');
+                const teacherNoteText = document.getElementById('teacherNoteText');
+
+                console.log('Selected Teacher:', teacherSelect.value);
+                console.log('Selected Student:', studentSelect.value);
+
+                if (teacherSelect.value && studentSelect.value) {
+                    const studentData = sheetData.find(
+                        row => row[teacherKey]?.trim() === teacherSelect.value && row[studentKey]?.trim() === studentSelect.value
+                    );
+
+                    console.log('Student Data:', studentData);
+
+                    if (studentData) {
+                        // Display student info
+                        studentInfo.innerHTML = `
+                            <div style="background-color: #f8f8f8; padding: 1rem; border-radius: 8px; margin-bottom: 1.5rem; border-right: 4px solid var(--primary-color);">
+                                <h3 style="color: var(--primary-dark); margin-bottom: 0.5rem;">معلومات التلميذ</h3>
+                                <p style="font-size: 1.1rem;"><strong>اسم التلميذ:</strong> ${studentData[studentKey]}</p>
+                                <p style="font-size: 1.1rem;"><strong>المعلمة:</strong> ${studentData[teacherKey]}</p>
+                            </div>
+                        `;
+
+                        // Define subjects with flexible key matching
+                        const subjects = [
+                            { key: Object.keys(studentData).find(k => k.includes('قرءان') || k.includes('قرآن')) || 'قرءان كريم', name: 'القرآن الكريم' },
+                            { key: Object.keys(studentData).find(k => k.includes('حديث')) || 'حديث شريف', name: 'الحديث الشريف' },
+                            { key: Object.keys(studentData).find(k => k.includes('أدعية') || k.includes('اذكار')) || 'أدعية واذكار', name: 'الأدعية والأذكار' },
+                            { key: Object.keys(studentData).find(k => k.includes('سيرة')) || 'سيرة نبوية', name: 'السيرة النبوية' },
+                            { key: Object.keys(studentData).find(k => k.includes('لغوية')) || 'أنشطة لغوية', name: 'الأنشطة اللغوية' },
+                            { key: Object.keys(studentData).find(k => k.includes('رياضية') && k.includes('منطقية')) || 'أنشطة رياضية منطقية', name: 'الأنشطة الرياضية والمنطقية' },
+                            { key: Object.keys(studentData).find(k => k.includes('علمية') && k.includes('تكنولوجية')) || 'أنشطة علمية وتكنولوجية', name: 'الأنشطة العلمية والتكنولوجية' },
+                            { key: Object.keys(studentData).find(k => k.includes('ترفيه') || k.includes('تلوين')) || 'انشطة ترفيه(تلوين)', name: 'الأنشطة الترفيهية (تلوين)' },
+                            { key: Object.keys(studentData).find(k => k.includes('انضباط') || k.includes('حضور')) || 'الانضباط والحضور', name: 'الانضباط والحضور' },
+                            { key: Object.keys(studentData).find(k => k.includes('واجبات') || k.includes('منزلية')) || 'انجاز الواجبات المنزلية', name: 'إنجاز الواجبات المنزلية' }
+                        ];
+
+                        // Display results
+                        resultsTable.innerHTML = '';
+                        subjects.forEach(subject => {
+                            const row = document.createElement('tr');
+                            const score = studentData[subject.key] || 'غير متوفر';
+                            const note = '-';
+                            row.innerHTML = `
+                                <td>${subject.name}</td>
+                                <td>${score}</td>
+                                <td>${note}</td>
+                            `;
+                            resultsTable.appendChild(row);
+                        });
+
+                        // Display teacher's note
+                        const noteKey = Object.keys(studentData).find(k => k.includes('ملاحظة') || k.includes('note')) || 'ملاحظة المعلمة';
+                        if (studentData[noteKey] && studentData[noteKey].trim()) {
+                            teacherNoteText.textContent = studentData[noteKey];
+                            teacherNote.style.display = 'block';
+                        } else {
+                            teacherNote.style.display = 'none';
+                        }
+
+                        // Show results section
+                        resultsSection.style.display = 'block';
+
+                        // Scroll to results
+                        resultsSection.scrollIntoView({ behavior: 'smooth' });
+                    } else {
+                        console.error('No matching student data found for:', teacherSelect.value, studentSelect.value);
+                        alert('لم يتم العثور على بيانات التلميذ. تأكد من اختيار المعلمة والتلميذ بشكل صحيح.');
+                    }
+                } else {
+                    alert('يرجى اختيار المعلمة والتلميذ.');
+                }
+            });
+
+            // PDF download function
+            window.downloadPDF = async function() {
+                const { jsPDF } = window.jspdf;
+                const doc = new jsPDF({
+                    format: 'a4',
+                    unit: 'mm'
+                });
+
+                // Add header (logo only)
+                const logo = new Image();
+                logo.src = 'https://i.ibb.co/jZrxhFsf/1-min.png';
+                logo.crossOrigin = 'anonymous';
+                await new Promise(resolve => {
+                    logo.onload = resolve;
+                    logo.onerror = () => {
+                        console.error('Failed to load logo');
+                        alert('حدث خطأ أثناء تحميل الشعار.');
+                        resolve();
+                    };
+                });
+
+                const logoWidth = 40;
+                const logoHeight = (logo.height / logo.width) * logoWidth;
+                const logoX = (210 - logoWidth) / 2;
+                doc.addImage(logo, 'PNG', logoX, 10, logoWidth, logoHeight);
+
+                // Capture results section
+                const resultsSection = document.getElementById('resultsSection');
+                const canvas = await html2canvas(resultsSection, {
+                    scale: 2,
+                    useCORS: true,
+                    windowWidth: 1000,
+                    ignoreElements: (element) => element.classList.contains('no-pdf')
+                });
+                const imgData = canvas.toDataURL('image/png');
+
+                // Add results to PDF
+                const imgProps = doc.getImageProperties(imgData);
+                const pdfWidth = 190;
+                const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+                const margin = 10;
+                doc.addImage(imgData, 'PNG', margin, 30 + logoHeight, pdfWidth, pdfHeight);
+
+                // Add website URL and QR code
+                const websiteUrl = 'https://mojam3.com/';
+                const qrCanvas = document.createElement('canvas');
+                QRCode.toCanvas(qrCanvas, websiteUrl, { width: 60 }, (error) => {
+                    if (error) console.error('Error generating QR code:', error);
+                });
+                const qrData = qrCanvas.toDataURL('image/png');
+                const qrSize = 20;
+                const qrX = (210 - qrSize) / 2;
+                const qrY = 297 - 25;
+                doc.addImage(qrData, 'PNG', qrX, qrY, qrSize, qrSize);
+
+                doc.setFontSize(10);
+                doc.setTextColor(0, 0, 0);
+                doc.text(websiteUrl, 105, qrY + qrSize + 5, { align: 'center' });
+
+                // Save PDF
+                const studentName = document.getElementById('student').value || 'student';
+                doc.save(`كشف_نقاط_${studentName}.pdf`);
+            };
         });
     </script>
 </body>
