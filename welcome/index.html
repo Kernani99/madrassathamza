@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>الرئيسية | المجمع القرآني حمزة بن عبدالمطلب</title>
+    <title>لوحة التحكم - المجمع القرآني حمزة بن عبدالمطلب</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="icon" href="https://i.ibb.co/jZrxhFsf/1-min.png" type="image/png">
@@ -41,119 +41,53 @@
             text-align: center;
             position: relative;
             overflow: hidden;
-            min-height: 100vh;
+            min-height: 200px;
             display: flex;
             flex-direction: column;
             justify-content: center;
             width: 100%;
+            border-radius: 0 0 15px 15px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
         }
 
         .logo {
-            width: 180px;
+            width: 150px;
             margin: 0.5rem auto;
             filter: drop-shadow(0 2px 5px rgba(0,0,0,0.3));
-            animation: float 3s ease-in-out infinite;
-        }
-
-        @keyframes float {
-            0% { transform: translateY(0px); }
-            50% { transform: translateY(-15px); }
-            100% { transform: translateY(0px); }
         }
 
         header h1 {
-            margin: 1rem 0;
+            margin: 0.5rem 0;
             text-shadow: 0 2px 4px rgba(0,0,0,0.3);
-            font-size: 2.5rem;
+            font-size: 1.8rem;
             line-height: 1.3;
             font-weight: 700;
         }
 
-        header p {
-            font-size: 1.2rem;
-            max-width: 800px;
-            margin: 0 auto 2rem;
-            text-shadow: 0 1px 3px rgba(0,0,0,0.2);
-        }
-
-        .domain-badge {
-            background-color: rgba(255,255,255,0.9);
-            color: var(--primary-dark);
-            padding: 0.8rem 1.5rem;
-            border-radius: 50px;
-            font-size: 1.5rem;
-            font-weight: 700;
-            display: inline-block;
-            margin: 1rem 0;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-            animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-            100% { transform: scale(1); }
-        }
-
-        .cta-buttons {
-            display: flex;
-            justify-content: center;
-            gap: 1.5rem;
-            margin-top: 2rem;
-            flex-wrap: wrap;
-        }
-
-        .btn {
-            display: inline-block;
-            padding: 1rem 2rem;
-            border-radius: 50px;
-            font-size: 1.1rem;
-            font-weight: 700;
-            text-decoration: none;
-            transition: all 0.3s;
-            min-width: 200px;
-            text-align: center;
-        }
-
-        .btn-primary {
-            background: var(--gold-color);
-            color: var(--primary-dark);
-        }
-
-        .btn-primary:hover {
-            background: white;
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
-        }
-
-        .btn-secondary {
-            background: transparent;
-            color: white;
-            border: 2px solid white;
-        }
-
-        .btn-secondary:hover {
-            background: rgba(255,255,255,0.2);
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
-        }
-
-        .features {
-            padding: 5rem 1rem;
+        .container {
             max-width: 1200px;
-            margin: 0 auto;
+            margin: 3rem auto;
+            padding: 0 1.5rem;
         }
 
-        .section-title {
+        .dashboard {
+            background: white;
+            border-radius: 15px;
+            padding: 2.5rem;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            position: relative;
+        }
+
+        .page-title {
             color: var(--primary-color);
             text-align: center;
-            margin-bottom: 3rem;
-            font-size: 2rem;
+            margin-bottom: 2rem;
+            font-size: 1.8rem;
             font-weight: 800;
             position: relative;
         }
 
-        .section-title::after {
+        .page-title::after {
             content: '';
             position: absolute;
             bottom: -10px;
@@ -165,260 +99,280 @@
             border-radius: 3px;
         }
 
-        .features-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-            margin-top: 3rem;
+        .section-title {
+            color: var(--primary-dark);
+            margin: 2rem 0 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--gold-color);
+            font-size: 1.3rem;
         }
 
-        .feature-card {
-            background: white;
-            border-radius: 15px;
-            padding: 2rem;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .dashboard-card {
+            background: var(--light-bg);
+            border-radius: 10px;
+            padding: 1.5rem;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            border: 1px solid #ddd;
             text-align: center;
             transition: all 0.3s;
-            border-top: 5px solid var(--gold-color);
+            cursor: pointer;
         }
 
-        .feature-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+        .dashboard-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            border-color: var(--primary-color);
         }
 
-        .feature-icon {
-            font-size: 3rem;
-            color: var(--gold-color);
-            margin-bottom: 1.5rem;
-        }
-
-        .feature-title {
-            font-size: 1.5rem;
-            color: var(--primary-dark);
+        .card-icon {
+            font-size: 2.5rem;
+            color: var(--primary-color);
             margin-bottom: 1rem;
         }
 
-        .feature-desc {
+        .card-title {
+            font-weight: 700;
+            color: var(--primary-dark);
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .card-description {
             color: #666;
-            line-height: 1.7;
+            font-size: 0.9rem;
+        }
+
+        .user-info {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--primary-color);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        .user-name {
+            font-weight: 600;
+        }
+
+        .logout-btn {
+            background: none;
+            border: none;
+            color: var(--primary-color);
+            cursor: pointer;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
         }
 
         footer {
             background-color: var(--primary-dark);
             color: white;
-            padding: 3rem 0;
+            padding: 2rem 0;
             text-align: center;
-        }
-
-        .footer-links {
-            display: flex;
-            justify-content: center;
-            gap: 2rem;
-            margin: 2rem 0;
-            flex-wrap: wrap;
-        }
-
-        .footer-links a {
-            color: white;
-            text-decoration: none;
-            transition: all 0.3s;
-        }
-
-        .footer-links a:hover {
-            color: var(--gold-color);
-        }
-
-        .social-links {
-            display: flex;
-            justify-content: center;
-            gap: 1.5rem;
-            margin: 2rem 0;
-        }
-
-        .social-links a {
-            width: 45px;
-            height: 45px;
-            background: rgba(255,255,255,0.1);
-            color: white;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.2rem;
-            transition: all 0.3s;
-        }
-
-        .social-links a:hover {
-            background: var(--gold-color);
-            color: var(--primary-dark);
-            transform: translateY(-3px);
+            margin-top: 3rem;
         }
 
         .copyright {
             font-size: 0.9rem;
             color: #ccc;
-            margin-top: 2rem;
         }
 
-        /* Responsive styles */
         @media (max-width: 768px) {
-            header h1 {
-                font-size: 1.8rem;
-            }
-            
-            header p {
-                font-size: 1rem;
+            .container {
+                margin: 2rem auto;
                 padding: 0 1rem;
             }
             
-            .domain-badge {
-                font-size: 1.2rem;
-                padding: 0.6rem 1.2rem;
-            }
-            
-            .btn {
-                padding: 0.8rem 1.5rem;
-                font-size: 1rem;
-                min-width: 160px;
-            }
-            
-            .section-title {
-                font-size: 1.5rem;
-            }
-            
-            .feature-card {
+            .dashboard {
                 padding: 1.5rem;
             }
             
-            .feature-icon {
-                font-size: 2.5rem;
+            header h1 {
+                font-size: 1.5rem;
             }
             
-            .feature-title {
-                font-size: 1.3rem;
+            .page-title {
+                font-size: 1.5rem;
+            }
+
+            .dashboard-grid {
+                grid-template-columns: 1fr;
             }
         }
     </style>
 </head>
 <body>
     <header>
-        <img src="https://i.ibb.co/jZrxhFsf/1-min.png" alt="شعار المجمع القرآني" class="logo">
-        <h1>المجمع القرآني حمزة بن عبدالمطلب</h1>
-        <p>منارة للعلم ومركز للإشعاع القرآني، نعمل على تعليم القرآن الكريم وعلومه وفق منهجية متكاملة</p>
-        
-        <div class="domain-badge">www.mojam3.com</div>
-        
-        <div class="cta-buttons">
-            <a href="#" class="btn btn-primary">بدء التسجيل</a>
-            <a href="#" class="btn btn-secondary">تعرف علينا</a>
-        </div>
+        <img src="https://i.ibb.co/jZrxhFsf/1-min.png" alt="شعار المدرسة" class="logo">
+        <h1>لوحة التحكم الإدارية</h1>
     </header>
 
-    <section class="features">
-        <h2 class="section-title">من خدمات المجمع</h2>
-        
-        <div class="features-grid">
-            <div class="feature-card">
-                <div class="feature-icon">
-                    <i class="fas fa-book-quran"></i>
-                </div>
-                <h3 class="feature-title">تحفيظ القرآن الكريم</h3>
-                <p class="feature-desc">
-                    برامج متكاملة لحفظ القرآن الكريم وفق أحكام التلاوة والتجويد، بمتابعة معلمين متخصصين
-                </p>
+    <main class="container">
+        <div class="dashboard">
+            <div class="user-info">
+                <div class="user-name">مرحباً، مدير النظام</div>
+                <div class="user-avatar">م</div>
+                <button class="logout-btn">
+                    <i class="fas fa-sign-out-alt"></i> تسجيل خروج
+                </button>
             </div>
             
-            <div class="feature-card">
-                <div class="feature-icon">
-                    <i class="fas fa-user-graduate"></i>
+            <h2 class="page-title">إدارة المجمع القرآني</h2>
+            
+            <h3 class="section-title">إدارة التحضيري</h3>
+            <div class="dashboard-grid">
+                <div class="dashboard-card" onclick="window.location.href='prep-registration.html'">
+                    <div class="card-icon">
+                        <i class="fas fa-user-graduate"></i>
+                    </div>
+                    <h3 class="card-title">تسجيلات التحضيري</h3>
+                    <p class="card-description">إدارة تسجيلات براعم التحضيري الجدد</p>
                 </div>
-                <h3 class="feature-title">التعليم ما قبل التمدرس</h3>
-                <p class="feature-desc">
-                    برامج تربوية وتعليمية متخصصة للأطفال تهيئتهم للتعليم النظامي مع تأسيس قرآني متين
-                </p>
+                
+                <div class="dashboard-card" onclick="window.location.href='prep-edit.html'">
+                    <div class="card-icon">
+                        <i class="fas fa-edit"></i>
+                    </div>
+                    <h3 class="card-title">حذف/تعديل تسجيلات</h3>
+                    <p class="card-description">حذف أو تعديل تسجيلات التحضيري</p>
+                </div>
+                
+                <div class="dashboard-card" onclick="window.location.href='prep-distribution.html'">
+                    <div class="card-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <h3 class="card-title">توزيع البراعم</h3>
+                    <p class="card-description">توزيع براعم التحضيري على الأقسام</p>
+                </div>
+                
+                <div class="dashboard-card" onclick="window.location.href='prep-results.html'">
+                    <div class="card-icon">
+                        <i class="fas fa-chart-bar"></i>
+                    </div>
+                    <h3 class="card-title">نتائج البراعم</h3>
+                    <p class="card-description">عرض نتائج براعم التحضيري</p>
+                </div>
             </div>
             
-            <div class="feature-card">
-                <div class="feature-icon">
-                    <i class="fas fa-hands-helping"></i>
+            <h3 class="section-title">إدارة التعليم القرآني</h3>
+            <div class="dashboard-grid">
+                <div class="dashboard-card" onclick="window.location.href='quran-registration.html'">
+                    <div class="card-icon">
+                        <i class="fas fa-book-quran"></i>
+                    </div>
+                    <h3 class="card-title">تسجيلات التعليم</h3>
+                    <p class="card-description">إدارة تسجيلات طلاب التعليم القرآني</p>
                 </div>
-                <h3 class="feature-title">محو الأمية</h3>
-                <p class="feature-desc">
-                    دورات تعليمية لمحو الأمية القرائية والقرآنية لكافة الفئات العمرية
-                </p>
+                
+                <div class="dashboard-card" onclick="window.location.href='quran-edit.html'">
+                    <div class="card-icon">
+                        <i class="fas fa-user-edit"></i>
+                    </div>
+                    <h3 class="card-title">حذف/تعديل تسجيلات</h3>
+                    <p class="card-description">حذف أو تعديل تسجيلات التعليم القرآني</p>
+                </div>
+                
+                <div class="dashboard-card" onclick="window.location.href='quran-attendance.html'">
+                    <div class="card-icon">
+                        <i class="fas fa-calendar-times"></i>
+                    </div>
+                    <h3 class="card-title">تسجيل الغيابات</h3>
+                    <p class="card-description">تسجيل غيابات طلاب التعليم القرآني</p>
+                </div>
+                
+                <div class="dashboard-card" onclick="window.location.href='quran-subscriptions.html'">
+                    <div class="card-icon">
+                        <i class="fas fa-money-bill-wave"></i>
+                    </div>
+                    <h3 class="card-title">اشتراكات الأولياء</h3>
+                    <p class="card-description">إدارة اشتراكات أولياء التعليم القرآني</p>
+                </div>
             </div>
             
-            <div class="feature-card">
-                <div class="feature-icon">
-                    <i class="fas fa-book-reader"></i>
+            <h3 class="section-title">الإدارات الأخرى</h3>
+            <div class="dashboard-grid">
+                <div class="dashboard-card" onclick="window.location.href='library.html'">
+                    <div class="card-icon">
+                        <i class="fas fa-book-open"></i>
+                    </div>
+                    <h3 class="card-title">المكتبة</h3>
+                    <p class="card-description">إدارة كتب ومصادر المكتبة</p>
                 </div>
-                <h3 class="feature-title">مكتبة قرآنية متخصصة</h3>
-                <p class="feature-desc">
-                    تضم أكثر من 15,000 كتاب و23,000 عنوان في مختلف علوم القرآن والحديث
-                </p>
-            </div>
-            
-            <div class="feature-card">
-                <div class="feature-icon">
-                    <i class="fas fa-microphone-alt"></i>
+                
+                <div class="dashboard-card" onclick="window.location.href='competitions.html'">
+                    <div class="card-icon">
+                        <i class="fas fa-trophy"></i>
+                    </div>
+                    <h3 class="card-title">المسابقات</h3>
+                    <p class="card-description">إدارة مسابقات المجمع القرآني</p>
                 </div>
-                <h3 class="feature-title">دورات التجويد والإقراء</h3>
-                <p class="feature-desc">
-                    برامج متقدمة في أحكام التجويد وعلوم القراءات بإشراف مشايخ متخصصين
-                </p>
-            </div>
-            
-            <div class="feature-card">
-                <div class="feature-icon">
-                    <i class="fas fa-trophy"></i>
+                
+                <div class="dashboard-card" onclick="window.location.href='salaries.html'">
+                    <div class="card-icon">
+                        <i class="fas fa-money-check-alt"></i>
+                    </div>
+                    <h3 class="card-title">رواتب المعلمين</h3>
+                    <p class="card-description">إدارة رواتب معلمي المجمع</p>
                 </div>
-                <h3 class="feature-title">مسابقات قرآنية</h3>
-                <p class="feature-desc">
-                    مسابقات سنوية في الحفظ والتلاوة لتشجيع الطلاب وتحفيز المتميزين
-                </p>
+                
+                <div class="dashboard-card" onclick="window.location.href='reports.html'">
+                    <div class="card-icon">
+                        <i class="fas fa-chart-pie"></i>
+                    </div>
+                    <h3 class="card-title">التقارير والإحصائيات</h3>
+                    <p class="card-description">عرض التقارير والإحصائيات العامة</p>
+                </div>
             </div>
         </div>
-    </section>
+    </main>
 
     <footer>
-        <div class="footer-links">
-            <a href="#">الرئيسية</a>
-            <a href="#">عن المجمع</a>
-            <a href="#">البرامج التعليمية</a>
-            <a href="#">المكتبة</a>
-            <a href="#">اتصل بنا</a>
-        </div>
-        
-        <div class="social-links">
-            <a href="#"><i class="fab fa-twitter"></i></a>
-            <a href="#"><i class="fab fa-facebook-f"></i></a>
-            <a href="#"><i class="fab fa-instagram"></i></a>
-            <a href="#"><i class="fab fa-youtube"></i></a>
-            <a href="#"><i class="fab fa-whatsapp"></i></a>
-        </div>
-        
         <div class="copyright">
             <p>جميع الحقوق محفوظة &copy; المجمع القرآني حمزة بن عبدالمطلب <span id="year"></span></p>
-            <p>النطاق الرسمي: www.mojam3.com</p>
         </div>
     </footer>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Set current year in footer
+            // عرض السنة في التذييل
             document.getElementById('year').textContent = new Date().getFullYear();
             
-            // Animation for feature cards
-            const featureCards = document.querySelectorAll('.feature-card');
-            featureCards.forEach((card, index) => {
-                setTimeout(() => {
-                    card.style.opacity = '1';
-                    card.style.transform = 'translateY(0)';
-                }, index * 200);
-                card.style.opacity = '0';
-                card.style.transform = 'translateY(20px)';
-                card.style.transition = 'all 0.5s ease';
+            // إضافة تأثيرات عند النقر على البطاقات
+            const cards = document.querySelectorAll('.dashboard-card');
+            cards.forEach(card => {
+                card.addEventListener('click', function() {
+                    this.style.transform = 'translateY(-2px)';
+                    setTimeout(() => {
+                        this.style.transform = 'translateY(-5px)';
+                    }, 50);
+                });
+            });
+            
+            // زر تسجيل الخروج
+            document.querySelector('.logout-btn').addEventListener('click', function() {
+                if(confirm('هل أنت متأكد من تسجيل الخروج؟')) {
+                    window.location.href = 'login.html';
+                }
             });
         });
     </script>
