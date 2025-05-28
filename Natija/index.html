@@ -486,8 +486,8 @@
                 }
             });
 
-            // Fetch data from SheetDB with timeout
-            const sheetUrl = 'https://sheetdb.io/api/v1/8xv5so9fbcdu8';
+            // Fetch data from SheetBest with timeout
+            const sheetUrl = 'https://api.sheetbest.com/sheets/c50ae49a-d74e-4c0a-aaa1-502460cb207f';
             let sheetData = [];
             const controller = new AbortController();
             const timeoutId = setTimeout(() => controller.abort(), 10000);
@@ -510,10 +510,11 @@
                     throw new Error('Invalid response format: Expected JSON');
                 }
 
-                sheetData = await response.json();
-                console.log('SheetDB Data:', sheetData);
+                const data = await response.json();
+                sheetData = data; // Assuming the API returns the data directly
+                console.log('SheetBest Data:', sheetData);
             } catch (error) {
-                console.error('Error fetching SheetDB data:', error.message);
+                console.error('Error fetching SheetBest data:', error.message);
                 console.error('Error details:', error);
                 showErrorModal();
                 return;
@@ -521,7 +522,7 @@
 
             // Check if data is empty
             if (!sheetData || sheetData.length === 0) {
-                console.error('No data returned from SheetDB');
+                console.error('No data returned from SheetBest');
                 showErrorModal();
                 return;
             }
