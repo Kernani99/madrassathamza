@@ -1,900 +1,883 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
-<html>
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-  <meta http-equiv="Content-Style-Type" content="text/css">
-  <title></title>
-  <meta name="Generator" content="Cocoa HTML Writer">
-  <meta name="CocoaVersion" content="2487.7">
-  <style type="text/css">
-    body {background-color: #f2f4ef}
-    p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; text-align: center; font: 12.0px 'Helvetica Neue'; color: #ffffff; -webkit-text-stroke: #ffffff}
-    p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; text-align: center; font: 12.0px 'Helvetica Neue'; color: #ffffff; -webkit-text-stroke: #ffffff; min-height: 14.0px}
-    span.s1 {font-kerning: none}
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تقييم حفظ الطلاب - المجمع القرآني حمزة بن عبدالمطلب</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="icon" href="https://i.ibb.co/jZrxhFsf/1-min.png" type="image/png">
+    <style>
+        :root {
+            --primary-color: #1a4d2e;
+            --primary-dark: #0e3a23;
+            --secondary-color: #f5f5dc;
+            --accent-color: #4a7856;
+            --text-color: #333;
+            --light-bg: #f9f9f7;
+            --gold-color: #d4af37;
+            --error-color: #e74c3c;
+            --success-color: #2ecc71;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Cairo', sans-serif;
+        }
+
+        body {
+            background-color: var(--light-bg);
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+
+        header {
+            background: linear-gradient(rgba(26, 77, 46, 0.95), rgba(26, 77, 46, 0.95)),
+                        url('https://img.freepik.com/free-vector/abstract-islamic-golden-pattern-backdrop-ethnic-style_1017-54276.jpg') center/cover;
+            color: white;
+            padding: 2rem 1rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            min-height: 200px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            width: 100%;
+            border-radius: 0 0 15px 15px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .logo {
+            width: 150px;
+            margin: 0.5rem auto;
+            filter: drop-shadow(0 2px 5px rgba(0,0,0,0.3));
+        }
+
+        header h1 {
+            margin: 0.5rem 0;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+            font-size: 1.8rem;
+            line-height: 1.3;
+            font-weight: 700;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 3rem auto;
+            padding: 0 1.5rem;
+        }
+
+        .evaluation-form {
+            background: white;
+            border-radius: 15px;
+            padding: 2.5rem;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            position: relative;
+        }
+
+        .form-title {
+            color: var(--primary-color);
+            text-align: center;
+            margin-bottom: 2rem;
+            font-size: 1.8rem;
+            font-weight: 800;
+            position: relative;
+        }
+
+        .form-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            right: 50%;
+            transform: translateX(50%);
+            width: 80px;
+            height: 4px;
+            background: var(--gold-color);
+            border-radius: 3px;
+        }
+
+        .section-title {
+            color: var(--primary-dark);
+            margin: 2rem 0 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--gold-color);
+            font-size: 1.3rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--primary-dark);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+        .form-control:focus {
+            border-color: var(--primary-color);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(26, 77, 46, 0.2);
+        }
+
+        .radio-group {
+            display: flex;
+            gap: 1rem;
+            margin-top: 0.5rem;
+        }
+
+        .radio-option {
+            display: flex;
+            align-items: center;
+        }
+
+        .radio-option input {
+            margin-left: 0.5rem;
+        }
+
+        .select-group {
+            position: relative;
+        }
+
+        .select-group select {
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 1rem center;
+            background-size: 1em;
+        }
+
+        .error-message {
+            color: var(--error-color);
+            font-size: 0.9rem;
+            margin-top: 0.3rem;
+            display: none;
+        }
+
+        .submit-btn {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: block;
+            width: 100%;
+            margin-top: 2rem;
+        }
+
+        .submit-btn:hover {
+            background: var(--primary-dark);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .submit-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .form-note {
+            text-align: center;
+            margin-top: 1.5rem;
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        footer {
+            background-color: var(--primary-dark);
+            color: white;
+            padding: 2rem 0;
+            text-align: center;
+            margin-top: 3rem;
+        }
+
+        .copyright {
+            font-size: 0.9rem;
+            color: #ccc;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.7);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background-color: white;
+            padding: 2rem;
+            border-radius: 10px;
+            max-width: 500px;
+            width: 90%;
+            text-align: center;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+            animation: modalFadeIn 0.3s ease-out;
+        }
+
+        @keyframes modalFadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .modal-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+        }
+
+        .success-icon {
+            color: var(--success-color);
+        }
+
+        .error-icon {
+            color: var(--error-color);
+        }
+
+        .modal-title {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--primary-dark);
+        }
+
+        .modal-message {
+            margin-bottom: 1.5rem;
+            font-size: 1.1rem;
+        }
+
+        .modal-btn {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .modal-btn:hover {
+            background: var(--primary-dark);
+        }
+
+        .spinner {
+            display: none;
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(255,255,255,0.8);
+            z-index: 100;
+            border-radius: 15px;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .spinner-inner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid var(--primary-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* أنماط الجدول */
+        .students-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+            font-size: 0.9rem;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .students-table thead tr {
+            background-color: var(--primary-dark);
+            color: white;
+            text-align: right;
+        }
+
+        .students-table th,
+        .students-table td {
+            padding: 12px 15px;
+            text-align: right;
+        }
+
+        .students-table tbody tr {
+            border-bottom: 1px solid #dddddd;
+        }
+
+        .students-table tbody tr:nth-of-type(even) {
+            background-color: #f3f3f3;
+        }
+
+        .students-table tbody tr:last-of-type {
+            border-bottom: 2px solid var(--primary-dark);
+        }
+
+        .students-table tbody tr:hover {
+            background-color: #e6f7e6;
+        }
+
+        .hizb-input {
+            width: 60px;
+            padding: 5px;
+            text-align: center;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        .semester-tabs {
+            display: flex;
+            margin-bottom: 1.5rem;
+            border-bottom: 2px solid #ddd;
+        }
+
+        .semester-tab {
+            padding: 0.8rem 1.5rem;
+            cursor: pointer;
+            font-weight: 600;
+            color: #666;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s;
+        }
+
+        .semester-tab.active {
+            color: var(--primary-dark);
+            border-bottom: 3px solid var(--gold-color);
+        }
+
+        .semester-tab:hover:not(.active) {
+            color: var(--primary-color);
+            background-color: #f5f5f5;
+        }
+
+        .semester-content {
+            display: none;
+        }
+
+        .semester-content.active {
+            display: block;
+        }
+
+        .report-card {
+            background: white;
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-top: 2rem;
+            box-shadow: 0 3px 15px rgba(0,0,0,0.1);
+        }
+
+        .report-title {
+            color: var(--primary-dark);
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--gold-color);
+        }
+
+        .report-stats {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .stat-box {
+            background: var(--light-bg);
+            padding: 1rem;
+            border-radius: 8px;
+            text-align: center;
+            flex: 1;
+            min-width: 150px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        .stat-value {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary-dark);
+            margin: 0.5rem 0;
+        }
+
+        .stat-label {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .positive {
+            color: var(--success-color);
+        }
+
+        .negative {
+            color: var(--error-color);
+        }
+
+        .teacher-select {
+            margin-bottom: 2rem;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                margin: 2rem auto;
+                padding: 0 1rem;
+            }
+            
+            .evaluation-form {
+                padding: 1.5rem;
+            }
+            
+            header h1 {
+                font-size: 1.5rem;
+            }
+            
+            .form-title {
+                font-size: 1.5rem;
+            }
+
+            .students-table {
+                font-size: 0.8rem;
+            }
+
+            .students-table th,
+            .students-table td {
+                padding: 8px 10px;
+            }
+
+            .hizb-input {
+                width: 50px;
+            }
+
+            .report-stats {
+                flex-direction: column;
+            }
+
+            .stat-box {
+                min-width: 100%;
+            }
+        }
+    </style>
 </head>
 <body>
-<p dir="rtl" class="p1"><span class="s1">&lt;!DOCTYPE html&gt;</span></p>
-<p dir="rtl" class="p1"><span class="s1">&lt;html lang="ar" dir="rtl"&gt;</span></p>
-<p dir="rtl" class="p1"><span class="s1">&lt;head&gt;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;meta charset="UTF-8"&gt;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;title&gt;تقسيم الطلبة إلى أفواج - المجمع القرآني حمزة بن عبدالمطلب&lt;/title&gt;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&amp;display=swap" rel="stylesheet"&gt;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"&gt;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;link rel="icon" href="https://i.ibb.co/jZrxhFsf/1-min.png" type="image/png"&gt;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;style&gt;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">        </span>:root {</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>--primary-color: #1a4d2e;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>--primary-dark: #0e3a23;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>--secondary-color: #f5f5dc;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>--accent-color: #4a7856;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>--text-color: #333;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>--light-bg: #f9f9f7;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>--gold-color: #d4af37;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>--error-color: #e74c3c;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>--success-color: #2ecc71;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
-<p dir="rtl" class="p2"><span class="s1"></span><br></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">        </span>* {</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>margin: 0;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>padding: 0;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>box-sizing: border-box;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>font-family: 'Cairo', sans-serif;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
-<p dir="rtl" class="p2"><span class="s1"></span><br></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">        </span>body {</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>background-color: var(--light-bg);</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>color: var(--text-color);</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>line-height: 1.6;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
-<p dir="rtl" class="p2"><span class="s1"></span><br></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">        </span>header {</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>background: linear-gradient(rgba(26, 77, 46, 0.95), rgba(26, 77, 46, 0.95)),</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                        </span>url('https://img.freepik.com/free-vector/abstract-islamic-golden-pattern-backdrop-ethnic-style_1017-54276.jpg') center/cover;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>color: white;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>padding: 2rem 1rem;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>text-align: center;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>position: relative;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>overflow: hidden;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>min-height: 200px;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>display: flex;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>flex-direction: column;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>justify-content: center;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>width: 100%;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>border-radius: 0 0 15px 15px;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>box-shadow: 0 4px 12px rgba(0,0,0,0.1);</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
-<p dir="rtl" class="p2"><span class="s1"></span><br></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">        </span>.logo {</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>width: 150px;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>margin: 0.5rem auto;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>filter: drop-shadow(0 2px 5px rgba(0,0,0,0.3));</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
-<p dir="rtl" class="p2"><span class="s1"></span><br></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">        </span>header h1 {</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>margin: 0.5rem 0;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>text-shadow: 0 2px 4px rgba(0,0,0,0.3);</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>font-size: 1.8rem;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>line-height: 1.3;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>font-weight: 700;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
-<p dir="rtl" class="p2"><span class="s1"></span><br></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">        </span>.container {</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>max-width: 1200px;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>margin: 3rem auto;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>padding: 0 1.5rem;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
-<p dir="rtl" class="p2"><span class="s1"></span><br></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">        </span>.dashboard {</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>background: white;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>border-radius: 15px;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>padding: 2.5rem;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>box-shadow: 0 5px 20px rgba(0,0,0,0.1);</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>position: relative;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
-<p dir="rtl" class="p2"><span class="s1"></span><br></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">        </span>.page-title {</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>color: var(--primary-color);</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>text-align: center;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>margin-bottom: 2rem;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>font-size: 1.8rem;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>font-weight: 800;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>position: relative;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
-<p dir="rtl" class="p2"><span class="s1"></span><br></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">        </span>.page-title::after {</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>content: '';</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>position: absolute;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>bottom: -10px;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>right: 50%;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>transform: translateX(50%);</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>width: 80px;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>height: 4px;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>background: var(--gold-color);</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>border-radius: 3px;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
-<p dir="rtl" class="p2"><span class="s1"></span><br></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">        </span>.section-title {</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>color: var(--primary-dark);</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>margin: 2rem 0 1rem;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>padding-bottom: 0.5rem;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>border-bottom: 2px solid var(--gold-color);</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>font-size: 1.3rem;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
-<p dir="rtl" class="p2"><span class="s1"></span><br></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">        </span>.groups-container {</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>display: grid;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>grid-template-columns: repeat(3, 1fr);</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>gap: 1.5rem;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>margin-top: 2rem;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
-<p dir="rtl" class="p2"><span class="s1"></span><br></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">        </span>.group-card {</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>background: var(--light-bg);</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>border-radius: 10px;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>padding: 1.5rem;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>box-shadow: 0 3px 10px rgba(0,0,0,0.1);</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>border: 1px solid #ddd;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
-<p dir="rtl" class="p2"><span class="s1"></span><br></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">        </span>.group-header {</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>display: flex;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>justify-content: space-between;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>align-items: center;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>margin-bottom: 1rem;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>padding-bottom: 0.5rem;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>border-bottom: 1px solid var(--gold-color);</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
-<p dir="rtl" class="p2"><span class="s1"></span><br></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">        </span>.group-title {</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>font-weight: 700;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>color: var(--primary-dark);</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>font-size: 1.2rem;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
-<p dir="rtl" class="p2"><span class="s1"></span><br></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">        </span>.group-time {</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>background: var(--primary-color);</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>color: white;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>padding: 0.3rem 0.8rem;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>border-radius: 20px;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>font-size: 0.9rem;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
-<p dir="rtl" class="p2"><span class="s1"></span><br></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">        </span>.group-count {</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>background: var(--accent-color);</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>color: white;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>padding: 0.2rem 0.6rem;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>border-radius: 50%;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>font-size: 0.9rem;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>margin-right: 0.5rem;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
-<p dir="rtl" class="p2"><span class="s1"></span><br></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">        </span>.student-list {</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>list-style: none;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>max-height: 400px;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>overflow-y: auto;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>padding: 0.5rem;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
-<p dir="rtl" class="p2"><span class="s1"></span><br></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">        </span>.student-item {</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>padding: 0.8rem;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>border-bottom: 1px dashed #ddd;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>display: flex;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>justify-content: space-between;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>align-items: center;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>transition: background 0.3s;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
-<p dir="rtl" class="p2"><span class="s1"></span><br></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">        </span>.student-item:hover {</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>background-color: rgba(26, 77, 46, 0.05);</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
-<p dir="rtl" class="p2"><span class="s1"></span><br></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">        </span>.student-item:last-child {</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>border-bottom: none;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
-<p dir="rtl" class="p2"><span class="s1"></span><br></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">        </span>.student-name {</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>font-weight: 600;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>flex: 1;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
-<p dir="rtl" class="p2"><span class="s1"></span><br></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">        </span>.student-id {</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>color: #666;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>font-size: 0.9rem;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>margin-left: 1rem;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
-<p dir="rtl" class="p2"><span class="s1"></span><br></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">        </span>.student-actions {</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>display: flex;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>gap: 0.5rem;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
-<p dir="rtl" class="p2"><span class="s1"></span><br></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">        </span>.btn-move {</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>background: var(--primary-color);</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>color: white;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>border: none;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>width: 30px;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>height: 30px;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>border-radius: 50%;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>display: flex;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>align-items: center;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>justify-content: center;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>cursor: pointer;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>transition: all 0.3s;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
-<p dir="rtl" class="p2"><span class="s1"></span><br></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">        </span>.btn-move:hover {</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>background: var(--primary-dark);</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>transform: scale(1.1);</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
-<p dir="rtl" class="p2"><span class="s1"></span><br></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">        </span>.controls {</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>display: flex;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>justify-content: space-between;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>margin-top: 2rem;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>flex-wrap: wrap;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>gap: 1rem;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
-<p dir="rtl" class="p2"><span class="s1"></span><br></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">        </span>.btn {</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>padding: 0.8rem 1.5rem;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>border-radius: 50px;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>font-weight: 600;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>cursor: pointer;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>transition: all 0.3s;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>border: none;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>font-size: 1rem;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>display: inline-flex;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>align-items: center;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>gap: 0.5rem;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
-<p dir="rtl" class="p2"><span class="s1"></span><br></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">        </span>.btn-primary {</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>background-color: var(--primary-color);</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>color: white;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
-<p dir="rtl" class="p2"><span class="s1"></span><br></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">        </span>.btn-primary:hover {</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>background-color: var(--primary-dark);</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
-<p dir="rtl" class="p2"><span class="s1"></span><br></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">        </span>.btn-secondary {</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>background-color: #f1f1f1;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>color: var(--text-color);</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>border: 1px solid #ddd;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
-<p dir="rtl" class="p2"><span class="s1"></span><br></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">        </span>.btn-secondary:hover {</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>background-color: #e5e5e5;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
-<p dir="rtl" class="p2"><span class="s1"></span><br></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">        </span>.search-filter {</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>display: flex;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>gap: 1rem;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>margin-bottom: 2rem;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>flex-wrap: wrap;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
-<p dir="rtl" class="p2"><span class="s1"></span><br></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">        </span>.form-control {</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>padding: 0.8rem 1rem;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>border: 1px solid #ddd;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>border-radius: 8px;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>font-size: 1rem;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>transition: all 0.3s;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>flex: 1;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>min-width: 200px;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
-<p dir="rtl" class="p2"><span class="s1"></span><br></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">        </span>.form-control:focus {</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>border-color: var(--primary-color);</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>outline: none;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>box-shadow: 0 0 0 3px rgba(26, 77, 46, 0.2);</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
-<p dir="rtl" class="p2"><span class="s1"></span><br></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">        </span>.stats {</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>display: grid;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>grid-template-columns: repeat(3, 1fr);</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>gap: 1rem;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>margin-bottom: 2rem;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
-<p dir="rtl" class="p2"><span class="s1"></span><br></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">        </span>.stat-card {</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>background: white;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>border-radius: 10px;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>padding: 1.5rem;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>box-shadow: 0 3px 10px rgba(0,0,0,0.1);</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>text-align: center;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>border-top: 4px solid var(--primary-color);</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
-<p dir="rtl" class="p2"><span class="s1"></span><br></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">        </span>.stat-value {</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>font-size: 2rem;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>font-weight: 700;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>color: var(--primary-dark);</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>margin: 0.5rem 0;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
-<p dir="rtl" class="p2"><span class="s1"></span><br></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">        </span>.stat-label {</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>color: #666;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>font-size: 0.9rem;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
-<p dir="rtl" class="p2"><span class="s1"></span><br></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">        </span>.spinner {</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>display: none;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>position: absolute;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>top: 0;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>left: 0;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>right: 0;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>bottom: 0;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>background-color: rgba(255,255,255,0.8);</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>z-index: 100;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>border-radius: 15px;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>justify-content: center;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>align-items: center;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
-<p dir="rtl" class="p2"><span class="s1"></span><br></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">        </span>.spinner-inner {</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>width: 50px;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>height: 50px;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>border: 5px solid #f3f3f3;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>border-top: 5px solid var(--primary-color);</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>border-radius: 50%;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>animation: spin 1s linear infinite;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
-<p dir="rtl" class="p2"><span class="s1"></span><br></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">        </span>@keyframes spin {</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>0% { transform: rotate(0deg); }</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>100% { transform: rotate(360deg); }</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
-<p dir="rtl" class="p2"><span class="s1"></span><br></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">        </span>.move-options {</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>position: fixed;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>top: 0;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>left: 0;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>width: 100%;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>height: 100%;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>background: rgba(0,0,0,0.5);</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>display: none;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>justify-content: center;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>align-items: center;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>z-index: 1000;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
-<p dir="rtl" class="p2"><span class="s1"></span><br></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">        </span>.move-options-content {</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>background: white;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>padding: 2rem;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>border-radius: 10px;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>width: 90%;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>max-width: 500px;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>max-height: 80vh;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>overflow-y: auto;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
-<p dir="rtl" class="p2"><span class="s1"></span><br></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">        </span>.move-options-title {</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>color: var(--primary-dark);</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>margin-bottom: 1.5rem;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>text-align: center;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
-<p dir="rtl" class="p2"><span class="s1"></span><br></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">        </span>.move-options-list {</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>display: grid;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>grid-template-columns: repeat(2, 1fr);</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>gap: 1rem;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
-<p dir="rtl" class="p2"><span class="s1"></span><br></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">        </span>.move-option {</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>padding: 1rem;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>border: 1px solid #ddd;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>border-radius: 8px;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>text-align: center;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>cursor: pointer;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>transition: all 0.3s;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
-<p dir="rtl" class="p2"><span class="s1"></span><br></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">        </span>.move-option:hover {</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>background: var(--light-bg);</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>border-color: var(--primary-color);</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
-<p dir="rtl" class="p2"><span class="s1"></span><br></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">        </span>footer {</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>background-color: var(--primary-dark);</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>color: white;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>padding: 2rem 0;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>text-align: center;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>margin-top: 3rem;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
-<p dir="rtl" class="p2"><span class="s1"></span><br></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">        </span>.copyright {</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>font-size: 0.9rem;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>color: #ccc;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
-<p dir="rtl" class="p2"><span class="s1"></span><br></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">        </span>@media (max-width: 992px) {</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>.groups-container {</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                </span>grid-template-columns: repeat(2, 1fr);</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>}</span></p>
-<p dir="rtl" class="p2"><span class="s1"><span class="Apple-converted-space">            </span></span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>.stats {</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                </span>grid-template-columns: repeat(2, 1fr);</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>}</span></p>
-<p dir="rtl" class="p2"><span class="s1"><span class="Apple-converted-space">            </span></span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>.move-options-list {</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                </span>grid-template-columns: 1fr;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>}</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
-<p dir="rtl" class="p2"><span class="s1"></span><br></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">        </span>@media (max-width: 768px) {</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>.container {</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                </span>margin: 2rem auto;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                </span>padding: 0 1rem;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>}</span></p>
-<p dir="rtl" class="p2"><span class="s1"><span class="Apple-converted-space">            </span></span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>.dashboard {</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                </span>padding: 1.5rem;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>}</span></p>
-<p dir="rtl" class="p2"><span class="s1"><span class="Apple-converted-space">            </span></span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>header h1 {</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                </span>font-size: 1.5rem;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>}</span></p>
-<p dir="rtl" class="p2"><span class="s1"><span class="Apple-converted-space">            </span></span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>.page-title {</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                </span>font-size: 1.5rem;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>}</span></p>
-<p dir="rtl" class="p2"><span class="s1"></span><br></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>.groups-container {</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                </span>grid-template-columns: 1fr;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>}</span></p>
-<p dir="rtl" class="p2"><span class="s1"><span class="Apple-converted-space">            </span></span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>.stats {</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                </span>grid-template-columns: 1fr;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>}</span></p>
-<p dir="rtl" class="p2"><span class="s1"><span class="Apple-converted-space">            </span></span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>.search-filter {</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                </span>flex-direction: column;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>}</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;/style&gt;</span></p>
-<p dir="rtl" class="p1"><span class="s1">&lt;/head&gt;</span></p>
-<p dir="rtl" class="p1"><span class="s1">&lt;body&gt;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;header&gt;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;img src="https://i.ibb.co/jZrxhFsf/1-min.png" alt="شعار المدرسة" class="logo"&gt;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;h1&gt;تقسيم الطلبة إلى أفواج&lt;/h1&gt;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;/header&gt;</span></p>
-<p dir="rtl" class="p2"><span class="s1"></span><br></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;main class="container"&gt;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;div class="dashboard"&gt;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>&lt;div class="spinner" id="loadingSpinner"&gt;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;div class="spinner-inner"&gt;&lt;/div&gt;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>&lt;/div&gt;</span></p>
-<p dir="rtl" class="p2"><span class="s1"><span class="Apple-converted-space">            </span></span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>&lt;h2 class="page-title"&gt;إدارة أفواج الطلبة&lt;/h2&gt;</span></p>
-<p dir="rtl" class="p2"><span class="s1"><span class="Apple-converted-space">            </span></span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>&lt;div class="stats"&gt;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;div class="stat-card"&gt;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;div class="stat-label"&gt;إجمالي الطلبة&lt;/div&gt;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;div class="stat-value" id="totalStudents"&gt;0&lt;/div&gt;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;div class="stat-card"&gt;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;div class="stat-label"&gt;الطلبة الموزعين&lt;/div&gt;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;div class="stat-value" id="assignedStudents"&gt;0&lt;/div&gt;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;div class="stat-card"&gt;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;div class="stat-label"&gt;الطلبة غير الموزعين&lt;/div&gt;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;div class="stat-value" id="unassignedStudents"&gt;0&lt;/div&gt;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>&lt;/div&gt;</span></p>
-<p dir="rtl" class="p2"><span class="s1"><span class="Apple-converted-space">            </span></span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>&lt;div class="search-filter"&gt;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;input type="text" id="searchInput" class="form-control" placeholder="ابحث باسم الطالب أو رقم التسجيل"&gt;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;select id="groupFilter" class="form-control"&gt;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;option value=""&gt;جميع الأفواج&lt;/option&gt;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;option value="group1"&gt;الفوج الأول (08:00-11:00)&lt;/option&gt;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;option value="group2"&gt;الفوج الثاني (08:00-11:00)&lt;/option&gt;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;option value="group3"&gt;الفوج الثالث (11:00-14:00)&lt;/option&gt;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;option value="group4"&gt;الفوج الرابع (11:00-14:00)&lt;/option&gt;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;option value="group5"&gt;الفوج الخامس (14:00-17:00)&lt;/option&gt;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;option value="group6"&gt;الفوج السادس (14:00-17:00)&lt;/option&gt;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;option value="unassigned"&gt;غير موزع&lt;/option&gt;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;/select&gt;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;button class="btn btn-primary" id="searchBtn"&gt;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;i class="fas fa-search"&gt;&lt;/i&gt; بحث</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;/button&gt;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>&lt;/div&gt;</span></p>
-<p dir="rtl" class="p2"><span class="s1"><span class="Apple-converted-space">            </span></span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>&lt;div class="controls"&gt;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;div&gt;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;button class="btn btn-primary" id="autoAssignBtn"&gt;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                        </span>&lt;i class="fas fa-magic"&gt;&lt;/i&gt; توزيع تلقائي</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;/button&gt;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;button class="btn btn-secondary" id="clearAssignmentsBtn"&gt;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                        </span>&lt;i class="fas fa-undo"&gt;&lt;/i&gt; إعادة تعيين</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;/button&gt;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;button class="btn btn-primary" id="saveBtn"&gt;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;i class="fas fa-save"&gt;&lt;/i&gt; حفظ التوزيع</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;/button&gt;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>&lt;/div&gt;</span></p>
-<p dir="rtl" class="p2"><span class="s1"><span class="Apple-converted-space">            </span></span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>&lt;h3 class="section-title"&gt;الأفواج الدراسية&lt;/h3&gt;</span></p>
-<p dir="rtl" class="p2"><span class="s1"><span class="Apple-converted-space">            </span></span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>&lt;div class="groups-container" id="groupsContainer"&gt;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;!-- سيتم ملء هذه الأقسام بواسطة JavaScript --&gt;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>&lt;/div&gt;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;/main&gt;</span></p>
-<p dir="rtl" class="p2"><span class="s1"></span><br></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;!-- نافذة اختيار الفوج الهدف --&gt;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;div class="move-options" id="moveOptions"&gt;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;div class="move-options-content"&gt;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>&lt;h3 class="move-options-title"&gt;اختر الفوج الهدف&lt;/h3&gt;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>&lt;div class="move-options-list" id="moveOptionsList"&gt;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;!-- سيتم ملء الخيارات بواسطة JavaScript --&gt;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>&lt;/div&gt;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</span></p>
-<p dir="rtl" class="p2"><span class="s1"></span><br></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;footer&gt;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;div class="copyright"&gt;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>&lt;p&gt;جميع الحقوق محفوظة &amp;copy; المجمع القرآني حمزة بن عبدالمطلب &lt;span id="year"&gt;&lt;/span&gt;&lt;/p&gt;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;/footer&gt;</span></p>
-<p dir="rtl" class="p2"><span class="s1"></span><br></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"&gt;&lt;/script&gt;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-database-compat.js"&gt;&lt;/script&gt;</span></p>
-<p dir="rtl" class="p2"><span class="s1"><span class="Apple-converted-space">    </span></span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;script&gt;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">        </span>document.addEventListener('DOMContentLoaded', function() {</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>// تهيئة Firebase</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>const firebaseConfig = {</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                </span>apiKey: "AIzaSyAzx-JlJBJxtVZT2cXDtJiHbs6s9K-3hEY",</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                </span>authDomain: "tahdiri-dc608.firebaseapp.com",</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                </span>databaseURL: "https://tahdiri-dc608-default-rtdb.firebaseio.com",</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                </span>projectId: "tahdiri-dc608",</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                </span>storageBucket: "tahdiri-dc608.appspot.com",</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                </span>messagingSenderId: "795586531700",</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                </span>appId: "1:795586531700:web:d693fd56f4bed6aed4dc21",</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                </span>measurementId: "G-H57ECZPTT7"</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>};</span></p>
-<p dir="rtl" class="p2"><span class="s1"></span><br></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>const app = firebase.initializeApp(firebaseConfig);</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>const database = firebase.database();</span></p>
-<p dir="rtl" class="p2"><span class="s1"><span class="Apple-converted-space">            </span></span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>// عناصر واجهة المستخدم</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>const loadingSpinner = document.getElementById('loadingSpinner');</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>const groupsContainer = document.getElementById('groupsContainer');</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>const totalStudentsEl = document.getElementById('totalStudents');</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>const assignedStudentsEl = document.getElementById('assignedStudents');</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>const unassignedStudentsEl = document.getElementById('unassignedStudents');</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>const searchInput = document.getElementById('searchInput');</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>const groupFilter = document.getElementById('groupFilter');</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>const searchBtn = document.getElementById('searchBtn');</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>const autoAssignBtn = document.getElementById('autoAssignBtn');</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>const clearAssignmentsBtn = document.getElementById('clearAssignmentsBtn');</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>const saveBtn = document.getElementById('saveBtn');</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>const moveOptions = document.getElementById('moveOptions');</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>const moveOptionsList = document.getElementById('moveOptionsList');</span></p>
-<p dir="rtl" class="p2"><span class="s1"><span class="Apple-converted-space">            </span></span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>// تعريف الأفواج</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>const groups = [</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                </span>{ id: 'group1', name: 'الفوج الأول', time: '08:00-11:00' },</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                </span>{ id: 'group2', name: 'الفوج الثاني', time: '08:00-11:00' },</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                </span>{ id: 'group3', name: 'الفوج الثالث', time: '11:00-14:00' },</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                </span>{ id: 'group4', name: 'الفوج الرابع', time: '11:00-14:00' },</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                </span>{ id: 'group5', name: 'الفوج الخامس', time: '14:00-17:00' },</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                </span>{ id: 'group6', name: 'الفوج السادس', time: '14:00-17:00' }</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>];</span></p>
-<p dir="rtl" class="p2"><span class="s1"><span class="Apple-converted-space">            </span></span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>let allStudents = [];</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>let filteredStudents = [];</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>let currentStudentToMove = null;</span></p>
-<p dir="rtl" class="p2"><span class="s1"><span class="Apple-converted-space">            </span></span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>// عرض السنة في التذييل</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>document.getElementById('year').textContent = new Date().getFullYear();</span></p>
-<p dir="rtl" class="p2"><span class="s1"><span class="Apple-converted-space">            </span></span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>// تحميل البيانات عند فتح الصفحة</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>loadStudents();</span></p>
-<p dir="rtl" class="p2"><span class="s1"><span class="Apple-converted-space">            </span></span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>// أحداث الأزرار</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>searchBtn.addEventListener('click', filterStudents);</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>autoAssignBtn.addEventListener('click', autoAssignStudents);</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>clearAssignmentsBtn.addEventListener('click', clearAssignments);</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>saveBtn.addEventListener('click', saveAssignments);</span></p>
-<p dir="rtl" class="p2"><span class="s1"><span class="Apple-converted-space">            </span></span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>// دالة لتحميل الطلبة من قاعدة البيانات</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>function loadStudents() {</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                </span>loadingSpinner.style.display = 'flex';</span></p>
-<p dir="rtl" class="p2"><span class="s1"><span class="Apple-converted-space">                </span></span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                </span>database.ref('students').on('value', (snapshot) =&gt; {</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>allStudents = [];</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>snapshot.forEach(childSnapshot =&gt; {</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                        </span>const student = childSnapshot.val();</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                        </span>student.id = childSnapshot.key;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                        </span>allStudents.push(student);</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>});</span></p>
-<p dir="rtl" class="p2"><span class="s1"><span class="Apple-converted-space">                    </span></span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>updateStatistics();</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>renderGroups();</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>loadingSpinner.style.display = 'none';</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                </span>}, (error) =&gt; {</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>console.error('Error loading students:', error);</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>loadingSpinner.style.display = 'none';</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>alert('حدث خطأ أثناء تحميل بيانات الطلبة');</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                </span>});</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>}</span></p>
-<p dir="rtl" class="p2"><span class="s1"><span class="Apple-converted-space">            </span></span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>// دالة لتحديث الإحصائيات</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>function updateStatistics() {</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                </span>const total = allStudents.length;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                </span>const assigned = allStudents.filter(s =&gt; s.group).length;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                </span>const unassigned = total - assigned;</span></p>
-<p dir="rtl" class="p2"><span class="s1"><span class="Apple-converted-space">                </span></span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                </span>totalStudentsEl.textContent = total;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                </span>assignedStudentsEl.textContent = assigned;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                </span>unassignedStudentsEl.textContent = unassigned;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>}</span></p>
-<p dir="rtl" class="p2"><span class="s1"><span class="Apple-converted-space">            </span></span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>// دالة لعرض الأفواج والطلبة</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>function renderGroups() {</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                </span>groupsContainer.innerHTML = '';</span></p>
-<p dir="rtl" class="p2"><span class="s1"><span class="Apple-converted-space">                </span></span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                </span>// عرض الأفواج الستة</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                </span>groups.forEach(group =&gt; {</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>const groupStudents = allStudents.filter(s =&gt; s.group === group.id);</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>createGroupCard(group, groupStudents);</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                </span>});</span></p>
-<p dir="rtl" class="p2"><span class="s1"><span class="Apple-converted-space">                </span></span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                </span>// عرض الطلبة غير الموزعين</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                </span>const unassignedStudents = allStudents.filter(s =&gt; !s.group);</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                </span>createGroupCard(</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>{ id: 'unassigned', name: 'طلبة غير موزعين', time: '' },</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>unassignedStudents</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                </span>);</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>}</span></p>
-<p dir="rtl" class="p2"><span class="s1"><span class="Apple-converted-space">            </span></span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>// دالة لإنشاء بطاقة الفوج</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>function createGroupCard(group, students) {</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                </span>const groupCard = document.createElement('div');</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                </span>groupCard.className = 'group-card';</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                </span>groupCard.dataset.groupId = group.id;</span></p>
-<p dir="rtl" class="p2"><span class="s1"><span class="Apple-converted-space">                </span></span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                </span>const groupHeader = document.createElement('div');</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                </span>groupHeader.className = 'group-header';</span></p>
-<p dir="rtl" class="p2"><span class="s1"><span class="Apple-converted-space">                </span></span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                </span>const groupTitle = document.createElement('div');</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                </span>groupTitle.className = 'group-title';</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                </span>groupTitle.textContent = group.name;</span></p>
-<p dir="rtl" class="p2"><span class="s1"><span class="Apple-converted-space">                </span></span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                </span>const groupInfo = document.createElement('div');</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                </span>groupInfo.className = 'group-info';</span></p>
-<p dir="rtl" class="p2"><span class="s1"><span class="Apple-converted-space">                </span></span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                </span>if (group.time) {</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>const groupTime = document.createElement('div');</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>groupTime.className = 'group-time';</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>groupTime.textContent = group.time;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>groupInfo.appendChild(groupTime);</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                </span>}</span></p>
-<p dir="rtl" class="p2"><span class="s1"><span class="Apple-converted-space">                </span></span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                </span>const groupCount = document.createElement('div');</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                </span>groupCount.className = 'group-count';</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                </span>groupCount.textContent = students.length;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                </span>groupInfo.appendChild(groupCount);</span></p>
-<p dir="rtl" class="p2"><span class="s1"><span class="Apple-converted-space">                </span></span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                </span>groupHeader.appendChild(groupTitle);</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                </span>groupHeader.appendChild(groupInfo);</span></p>
-<p dir="rtl" class="p2"><span class="s1"><span class="Apple-converted-space">                </span></span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                </span>const studentList = document.createElement('ul');</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                </span>studentList.className = 'student-list';</span></p>
-<p dir="rtl" class="p2"><span class="s1"><span class="Apple-converted-space">                </span></span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                </span>students.forEach(student =&gt; {</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>const studentItem = document.createElement('li');</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>studentItem.className = 'student-item';</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>studentItem.dataset.studentId = student.id;</span></p>
-<p dir="rtl" class="p2"><span class="s1"><span class="Apple-converted-space">                    </span></span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>const studentName = document.createElement('div');</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>studentName.className = 'student-name';</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>studentName.textContent = `${student.firstName} ${student.lastName}`;</span></p>
-<p dir="rtl" class="p2"><span class="s1"><span class="Apple-converted-space">                    </span></span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>const studentId = document.createElement('div');</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>studentId.className = 'student-id';</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>studentId.textContent = student.registrationNumber;</span></p>
-<p dir="rtl" class="p2"><span class="s1"><span class="Apple-converted-space">                    </span></span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>const studentActions = document.createElement('div');</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>studentActions.className = 'student-actions';</span></p>
-<p dir="rtl" class="p2"><span class="s1"><span class="Apple-converted-space">                    </span></span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>// إضافة أزرار التحريك بين الأفواج</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>if (group.id !== 'unassigned') {</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                        </span>const moveBtn = document.createElement('button');</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                        </span>moveBtn.className = 'btn-move';</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                        </span>moveBtn.innerHTML = '&lt;i class="fas fa-exchange-alt"&gt;&lt;/i&gt;';</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                        </span>moveBtn.title = 'نقل إلى فوج آخر';</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                        </span>moveBtn.addEventListener('click', (e) =&gt; {</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                            </span>e.stopPropagation();</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                            </span>showMoveOptions(student.id);</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                        </span>});</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                        </span>studentActions.appendChild(moveBtn);</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>}</span></p>
-<p dir="rtl" class="p2"><span class="s1"><span class="Apple-converted-space">                    </span></span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>studentItem.appendChild(studentName);</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>studentItem.appendChild(studentId);</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>studentItem.appendChild(studentActions);</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>studentList.appendChild(studentItem);</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                </span>});</span></p>
-<p dir="rtl" class="p2"><span class="s1"><span class="Apple-converted-space">                </span></span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                </span>groupCard.appendChild(groupHeader);</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                </span>groupCard.appendChild(studentList);</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                </span>groupsContainer.appendChild(groupCard);</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>}</span></p>
-<p dir="rtl" class="p2"><span class="s1"><span class="Apple-converted-space">            </span></span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>// دالة لعرض خيارات نقل الطالب</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>function showMoveOptions(studentId) {</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                </span>currentStudentToMove = studentId;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                </span>const student = allStudents.find(s =&gt; s.id === studentId);</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                </span>if (!student) return;</span></p>
-<p dir="rtl" class="p2"><span class="s1"><span class="Apple-converted-space">                </span></span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                </span>const currentGroupId = student.group || 'unassigned';</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                </span>moveOptionsList.innerHTML = '';</span></p>
-<p dir="rtl" class="p2"><span class="s1"><span class="Apple-converted-space">                </span></span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                </span>// إضافة خيار "غير موزع"</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                </span>if (currentGroupId !== 'unassigned') {</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>const unassignedOption = document.createElement('div');</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>unassignedOption.className = 'move-option';</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>unassignedOption.textContent = 'غير موزع';</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>unassignedOption.addEventListener('click', () =&gt; {</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                        </span>moveStudent(studentId, 'unassigned');</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                        </span>moveOptions.style.display = 'none';</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>});</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>moveOptionsList.appendChild(unassignedOption);</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                </span>}</span></p>
-<p dir="rtl" class="p2"><span class="s1"><span class="Apple-converted-space">                </span></span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                </span>// إضافة خيارات الأفواج</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                </span>groups.forEach(group =&gt; {</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>if (group.id !== currentGroupId) {</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                        </span>const groupOption = document.createElement('div');</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                        </span>groupOption.className = 'move-option';</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                        </span>groupOption.textContent = `${group.name} (${group.time})`;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                        </span>groupOption.addEventListener('click', () =&gt; {</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                            </span>moveStudent(studentId, group.id);</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                            </span>moveOptions.style.display = 'none';</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                        </span>});</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                        </span>moveOptionsList.appendChild(groupOption);</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>}</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                </span>});</span></p>
-<p dir="rtl" class="p2"><span class="s1"><span class="Apple-converted-space">                </span></span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                </span>moveOptions.style.display = 'flex';</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>}</span></p>
-<p dir="rtl" class="p2"><span class="s1"><span class="Apple-converted-space">            </span></span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>// إغلاق نافذة الخيارات عند النقر خارجها</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>moveOptions.addEventListener('click', (e) =&gt; {</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                </span>if (e.target === moveOptions) {</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>moveOptions.style.display = 'none';</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                </span>}</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>});</span></p>
-<p dir="rtl" class="p2"><span class="s1"><span class="Apple-converted-space">            </span></span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>// دالة لنقل الطالب بين الأفواج</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>function moveStudent(studentId, targetGroupId) {</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                </span>const studentIndex = allStudents.findIndex(s =&gt; s.id === studentId);</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                </span>if (studentIndex === -1) return;</span></p>
-<p dir="rtl" class="p2"><span class="s1"><span class="Apple-converted-space">                </span></span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                </span>allStudents[studentIndex].group = targetGroupId === 'unassigned' ? null : targetGroupId;</span></p>
-<p dir="rtl" class="p2"><span class="s1"><span class="Apple-converted-space">                </span></span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                </span>updateStatistics();</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                </span>renderGroups();</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>}</span></p>
-<p dir="rtl" class="p2"><span class="s1"><span class="Apple-converted-space">            </span></span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>// دالة للبحث والتصفية</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>function filterStudents() {</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                </span>const searchTerm = searchInput.value.toLowerCase();</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                </span>const selectedGroup = groupFilter.value;</span></p>
-<p dir="rtl" class="p2"><span class="s1"><span class="Apple-converted-space">                </span></span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                </span>filteredStudents = allStudents.filter(student =&gt; {</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>const matchesSearch = searchTerm === '' ||<span class="Apple-converted-space"> </span></span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                        </span>student.firstName.toLowerCase().includes(searchTerm) ||<span class="Apple-converted-space"> </span></span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                        </span>student.lastName.toLowerCase().includes(searchTerm) ||</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                        </span>student.registrationNumber.toLowerCase().includes(searchTerm);</span></p>
-<p dir="rtl" class="p2"><span class="s1"><span class="Apple-converted-space">                    </span></span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>const matchesGroup = selectedGroup === '' ||<span class="Apple-converted-space"> </span></span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                        </span>(selectedGroup === 'unassigned' &amp;&amp; !student.group) ||<span class="Apple-converted-space"> </span></span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                        </span>student.group === selectedGroup;</span></p>
-<p dir="rtl" class="p2"><span class="s1"><span class="Apple-converted-space">                    </span></span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>return matchesSearch &amp;&amp; matchesGroup;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                </span>});</span></p>
-<p dir="rtl" class="p2"><span class="s1"><span class="Apple-converted-space">                </span></span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                </span>// عرض نتائج البحث</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                </span>renderFilteredResults();</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>}</span></p>
-<p dir="rtl" class="p2"><span class="s1"><span class="Apple-converted-space">            </span></span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>// دالة لعرض نتائج البحث</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>function renderFilteredResults() {</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                </span>groupsContainer.innerHTML = '';</span></p>
-<p dir="rtl" class="p2"><span class="s1"><span class="Apple-converted-space">                </span></span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                </span>if (filteredStudents.length === 0) {</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>groupsContainer.innerHTML = '&lt;p style="grid-column: 1/-1; text-align: center;"&gt;لا توجد نتائج مطابقة للبحث&lt;/p&gt;';</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>return;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                </span>}</span></p>
-<p dir="rtl" class="p2"><span class="s1"><span class="Apple-converted-space">                </span></span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                </span>const searchResultsGroup = {</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>id: 'searchResults',</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>name: 'نتائج البحث',</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>time: ''</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                </span>};</span></p>
-<p dir="rtl" class="p2"><span class="s1"><span class="Apple-converted-space">                </span></span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                </span>createGroupCard(searchResultsGroup, filteredStudents);</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>}</span></p>
-<p dir="rtl" class="p2"><span class="s1"><span class="Apple-converted-space">            </span></span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>// دالة للتوزيع التلقائي</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>function autoAssignStudents() {</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                </span>if (!confirm('هل أنت متأكد من أنك تريد توزيع الطلبة تلقائياً؟ سيتم إعادة تعيين التوزيع الحالي.')) {</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>return;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                </span>}</span></p>
-<p dir="rtl" class="p2"><span class="s1"><span class="Apple-converted-space">                </span></span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                </span>// تصفية الطلبة غير الموزعين</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                </span>const unassignedStudents = allStudents.filter(s =&gt; !s.group);</span></p>
-<p dir="rtl" class="p2"><span class="s1"><span class="Apple-converted-space">                </span></span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                </span>if (unassignedStudents.length === 0) {</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>alert('لا يوجد طلبة غير موزعين');</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>return;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                </span>}</span></p>
-<p dir="rtl" class="p2"><span class="s1"><span class="Apple-converted-space">                </span></span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                </span>// توزيع الطلبة بالتساوي على الأفواج</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                </span>const studentsPerGroup = Math.ceil(unassignedStudents.length / groups.length);</span></p>
-<p dir="rtl" class="p2"><span class="s1"><span class="Apple-converted-space">                </span></span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                </span>groups.forEach((group, index) =&gt; {</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>const start = index * studentsPerGroup;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>const end = start + studentsPerGroup;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>const groupStudents = unassignedStudents.slice(start, end);</span></p>
-<p dir="rtl" class="p2"><span class="s1"><span class="Apple-converted-space">                    </span></span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>groupStudents.forEach(student =&gt; {</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                        </span>const studentIndex = allStudents.findIndex(s =&gt; s.id === student.id);</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                        </span>if (studentIndex !== -1) {</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                            </span>allStudents[studentIndex].group = group.id;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                        </span>}</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>});</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                </span>});</span></p>
-<p dir="rtl" class="p2"><span class="s1"><span class="Apple-converted-space">                </span></span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                </span>updateStatistics();</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                </span>renderGroups();</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                </span>alert('تم توزيع الطلبة تلقائياً على الأفواج');</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>}</span></p>
-<p dir="rtl" class="p2"><span class="s1"><span class="Apple-converted-space">            </span></span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>// دالة لإعادة تعيين التوزيع</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>function clearAssignments() {</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                </span>if (!confirm('هل أنت متأكد من أنك تريد إزالة توزيع جميع الطلبة؟')) {</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>return;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                </span>}</span></p>
-<p dir="rtl" class="p2"><span class="s1"><span class="Apple-converted-space">                </span></span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                </span>allStudents.forEach(student =&gt; {</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>student.group = null;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                </span>});</span></p>
-<p dir="rtl" class="p2"><span class="s1"><span class="Apple-converted-space">                </span></span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                </span>updateStatistics();</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                </span>renderGroups();</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                </span>alert('تم إعادة تعيين توزيع الطلبة');</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>}</span></p>
-<p dir="rtl" class="p2"><span class="s1"><span class="Apple-converted-space">            </span></span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>// دالة لحفظ التوزيع في قاعدة البيانات</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>function saveAssignments() {</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                </span>loadingSpinner.style.display = 'flex';</span></p>
-<p dir="rtl" class="p2"><span class="s1"><span class="Apple-converted-space">                </span></span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                </span>const updates = {};</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                </span>allStudents.forEach(student =&gt; {</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>updates[`students/${student.id}/group`] = student.group || null;</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                </span>});</span></p>
-<p dir="rtl" class="p2"><span class="s1"><span class="Apple-converted-space">                </span></span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                </span>database.ref().update(updates)</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>.then(() =&gt; {</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                        </span>loadingSpinner.style.display = 'none';</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                        </span>alert('تم حفظ توزيع الطلبة بنجاح');</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>})</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>.catch(error =&gt; {</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                        </span>loadingSpinner.style.display = 'none';</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                        </span>console.error('Error saving assignments:', error);</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                        </span>alert('حدث خطأ أثناء حفظ التوزيع');</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>});</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">            </span>}</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">        </span>});</span></p>
-<p dir="rtl" class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;/script&gt;</span></p>
-<p dir="rtl" class="p1"><span class="s1">&lt;/body&gt;</span></p>
-<p dir="rtl" class="p1"><span class="s1">&lt;/html&gt;</span></p>
+    <header>
+        <img src="https://i.ibb.co/jZrxhFsf/1-min.png" alt="شعار المدرسة" class="logo">
+        <h1>تقييم حفظ الطلاب للقرآن الكريم</h1>
+    </header>
+
+    <main class="container">
+        <div class="evaluation-form">
+            <h2 class="form-title">سجل استظهار الطلاب للقرآن الكريم</h2>
+            
+            <div class="teacher-select">
+                <div class="form-group">
+                    <label for="teacherName">اسم المعلم <span class="required">*</span></label>
+                    <select id="teacherName" class="form-control" required>
+                        <option value="">-- اختر اسم المعلم --</option>
+                        <option value="teacher1">الأستاذ محمد أحمد</option>
+                        <option value="teacher2">الأستاذ علي محمود</option>
+                        <option value="teacher3">الأستاذة فاطمة الزهراء</option>
+                        <option value="teacher4">الأستاذ عمر عبد الله</option>
+                    </select>
+                    <div class="error-message" id="teacherNameError">يجب اختيار اسم المعلم</div>
+                </div>
+            </div>
+            
+            <div class="semester-tabs">
+                <div class="semester-tab active" data-semester="first">السداسي الأول</div>
+                <div class="semester-tab" data-semester="second">السداسي الثاني</div>
+            </div>
+            
+            <div class="semester-content active" id="firstSemester">
+                <div class="form-group">
+                    <label>تاريخ التقييم للسداسي الأول <span class="required">*</span></label>
+                    <input type="date" id="firstSemesterDate" class="form-control" required>
+                    <div class="error-message" id="firstSemesterDateError">يجب إدخال تاريخ التقييم</div>
+                </div>
+                
+                <div class="table-responsive">
+                    <table class="students-table">
+                        <thead>
+                            <tr>
+                                <th>رقم التسجيل</th>
+                                <th>اسم الطالب</th>
+                                <th>لقب الطالب</th>
+                                <th>عدد الأحزاب المحفوظة</th>
+                                <th>ملاحظات</th>
+                            </tr>
+                        </thead>
+                        <tbody id="firstSemesterStudents">
+                            <!-- سيتم ملء هذا الجدول بالبيانات من Firebase -->
+                            <tr>
+                                <td>20230615-1234</td>
+                                <td>أحمد</td>
+                                <td>محمد</td>
+                                <td><input type="number" class="hizb-input" min="0" max="60" value="5"></td>
+                                <td><input type="text" class="form-control" placeholder="ملاحظات"></td>
+                            </tr>
+                            <tr>
+                                <td>20230615-1235</td>
+                                <td>فاطمة</td>
+                                <td>علي</td>
+                                <td><input type="number" class="hizb-input" min="0" max="60" value="8"></td>
+                                <td><input type="text" class="form-control" placeholder="ملاحظات"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <button type="button" class="submit-btn" id="saveFirstSemester">حفظ بيانات السداسي الأول</button>
+            </div>
+            
+            <div class="semester-content" id="secondSemester">
+                <div class="form-group">
+                    <label>تاريخ التقييم للسداسي الثاني <span class="required">*</span></label>
+                    <input type="date" id="secondSemesterDate" class="form-control" required>
+                    <div class="error-message" id="secondSemesterDateError">يجب إدخال تاريخ التقييم</div>
+                </div>
+                
+                <div class="table-responsive">
+                    <table class="students-table">
+                        <thead>
+                            <tr>
+                                <th>رقم التسجيل</th>
+                                <th>اسم الطالب</th>
+                                <th>لقب الطالب</th>
+                                <th>عدد الأحزاب المحفوظة</th>
+                                <th>ملاحظات</th>
+                            </tr>
+                        </thead>
+                        <tbody id="secondSemesterStudents">
+                            <!-- سيتم ملء هذا الجدول بالبيانات من Firebase -->
+                            <tr>
+                                <td>20230615-1234</td>
+                                <td>أحمد</td>
+                                <td>محمد</td>
+                                <td><input type="number" class="hizb-input" min="0" max="60" value="12"></td>
+                                <td><input type="text" class="form-control" placeholder="ملاحظات"></td>
+                            </tr>
+                            <tr>
+                                <td>20230615-1235</td>
+                                <td>فاطمة</td>
+                                <td>علي</td>
+                                <td><input type="number" class="hizb-input" min="0" max="60" value="15"></td>
+                                <td><input type="text" class="form-control" placeholder="ملاحظات"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <button type="button" class="submit-btn" id="saveSecondSemester">حفظ بيانات السداسي الثاني</button>
+            </div>
+            
+            <div class="report-card">
+                <h3 class="report-title">تقرير تقدم الطلاب</h3>
+                
+                <div class="form-group">
+                    <label for="studentSelect">اختر طالباً لعرض تقريره</label>
+                    <select id="studentSelect" class="form-control">
+                        <option value="">-- اختر طالبا --</option>
+                        <option value="20230615-1234">أحمد محمد</option>
+                        <option value="20230615-1235">فاطمة علي</option>
+                    </select>
+                </div>
+                
+                <div id="studentReport" style="display: none;">
+                    <div class="report-stats">
+                        <div class="stat-box">
+                            <div class="stat-label">عدد الأحزاب في السداسي الأول</div>
+                            <div class="stat-value" id="firstSemesterHizb">5</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="stat-label">عدد الأحزاب في السداسي الثاني</div>
+                            <div class="stat-value" id="secondSemesterHizb">12</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="stat-label">عدد الأحزاب الإضافية</div>
+                            <div class="stat-value positive" id="additionalHizb">+7</div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group" style="margin-top: 1.5rem;">
+                        <label>ملاحظات عامة</label>
+                        <textarea id="generalNotes" class="form-control" rows="3" readonly></textarea>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="spinner" id="formSpinner">
+                <div class="spinner-inner"></div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Success Modal -->
+    <div class="modal" id="successModal">
+        <div class="modal-content">
+            <i class="fas fa-check-circle modal-icon success-icon"></i>
+            <h3 class="modal-title">تم الحفظ بنجاح</h3>
+            <p class="modal-message" id="successMessage">تم حفظ بيانات التقييم بنجاح في قاعدة البيانات.</p>
+            <button class="modal-btn" id="successBtn">حسناً</button>
+        </div>
+    </div>
+
+    <!-- Error Modal -->
+    <div class="modal" id="errorModal">
+        <div class="modal-content">
+            <i class="fas fa-times-circle modal-icon error-icon"></i>
+            <h3 class="modal-title">حدث خطأ</h3>
+            <p class="modal-message" id="errorMessage">حدث خطأ أثناء محاولة حفظ البيانات. يرجى المحاولة مرة أخرى.</p>
+            <button class="modal-btn" id="errorBtn">حسناً</button>
+        </div>
+    </div>
+
+    <footer>
+        <div class="copyright">
+            <p>جميع الحقوق محفوظة &copy; المجمع القرآني حمزة بن عبدالمطلب <span id="year"></span></p>
+        </div>
+    </footer>
+
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-database-compat.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // تعيين سنة حقوق النشر
+            document.getElementById('year').textContent = new Date().getFullYear();
+            
+            // تبويبات السداسي
+            const semesterTabs = document.querySelectorAll('.semester-tab');
+            semesterTabs.forEach(tab => {
+                tab.addEventListener('click', function() {
+                    // إزالة النشط من جميع الألسنة
+                    semesterTabs.forEach(t => t.classList.remove('active'));
+                    // إضافة النشط للسان المحدد
+                    this.classList.add('active');
+                    
+                    // إخفاء جميع محتويات السداسيات
+                    document.querySelectorAll('.semester-content').forEach(content => {
+                        content.classList.remove('active');
+                    });
+                    
+                    // إظهار محتوى السداسي المحدد
+                    const semester = this.getAttribute('data-semester');
+                    document.getElementById(semester + 'Semester').classList.add('active');
+                });
+            });
+            
+            // عرض تقرير الطالب
+            document.getElementById('studentSelect').addEventListener('change', function() {
+                const studentId = this.value;
+                if (studentId) {
+                    // هنا يجب جلب بيانات الطالب من Firebase
+                    // هذه بيانات وهمية للتوضيح فقط
+                    const firstSemesterHizb = 5;
+                    const secondSemesterHizb = 12;
+                    const additionalHizb = secondSemesterHizb - firstSemesterHizb;
+                    
+                    document.getElementById('firstSemesterHizb').textContent = firstSemesterHizb;
+                    document.getElementById('secondSemesterHizb').textContent = secondSemesterHizb;
+                    document.getElementById('additionalHizb').textContent = 
+                        (additionalHizb >= 0 ? '+' : '') + additionalHizb;
+                    document.getElementById('additionalHizb').className = 
+                        'stat-value ' + (additionalHizb >= 0 ? 'positive' : 'negative');
+                    
+                    document.getElementById('studentReport').style.display = 'block';
+                } else {
+                    document.getElementById('studentReport').style.display = 'none';
+                }
+            });
+            
+            // حفظ بيانات السداسي الأول
+            document.getElementById('saveFirstSemester').addEventListener('click', function() {
+                saveSemesterData('first');
+            });
+            
+            // حفظ بيانات السداسي الثاني
+            document.getElementById('saveSecondSemester').addEventListener('click', function() {
+                saveSemesterData('second');
+            });
+            
+            function saveSemesterData(semester) {
+                const teacherName = document.getElementById('teacherName').value;
+                const semesterDate = document.getElementById(semester + 'SemesterDate').value;
+                
+                if (!teacherName) {
+                    document.getElementById('teacherNameError').style.display = 'block';
+                    return;
+                } else {
+                    document.getElementById('teacherNameError').style.display = 'none';
+                }
+                
+                if (!semesterDate) {
+                    document.getElementById(semester + 'SemesterDateError').style.display = 'block';
+                    return;
+                } else {
+                    document.getElementById(semester + 'SemesterDateError').style.display = 'none';
+                }
+                
+                // عرض مؤشر التحميل
+                document.getElementById('formSpinner').style.display = 'flex';
+                
+                // جمع بيانات الطلاب من الجدول
+                const studentsTable = document.getElementById(semester + 'SemesterStudents');
+                const rows = studentsTable.querySelectorAll('tr');
+                const studentsData = [];
+                
+                rows.forEach(row => {
+                    const cells = row.querySelectorAll('td');
+                    if (cells.length >= 5) {
+                        studentsData.push({
+                            registrationNumber: cells[0].textContent,
+                            firstName: cells[1].textContent,
+                            lastName: cells[2].textContent,
+                            hizbCount: cells[3].querySelector('input').value,
+                            notes: cells[4].querySelector('input').value
+                        });
+                    }
+                });
+                
+                // هنا يجب إرسال البيانات إلى Firebase
+                // هذه مجرد محاكاة للتوضيح
+                setTimeout(() => {
+                    document.getElementById('formSpinner').style.display = 'none';
+                    
+                    // عرض رسالة النجاح
+                    document.getElementById('successMessage').textContent = 
+                        `تم حفظ بيانات ${semester === 'first' ? 'السداسي الأول' : 'السداسي الثاني'} بنجاح لـ ${studentsData.length} طالب/ة`;
+                    document.getElementById('successModal').style.display = 'flex';
+                    
+                    // في الواقع الفعلي، يجب حفظ البيانات في Firebase هنا
+                    console.log('بيانات الطلاب:', studentsData);
+                }, 1500);
+            }
+            
+            // إغلاق النوافذ المنبثقة
+            document.getElementById('successBtn').addEventListener('click', function() {
+                document.getElementById('successModal').style.display = 'none';
+            });
+            
+            document.getElementById('errorBtn').addEventListener('click', function() {
+                document.getElementById('errorModal').style.display = 'none';
+            });
+            
+            window.addEventListener('click', function(event) {
+                if (event.target === document.getElementById('successModal')) {
+                    document.getElementById('successModal').style.display = 'none';
+                }
+                if (event.target === document.getElementById('errorModal')) {
+                    document.getElementById('errorModal').style.display = 'none';
+                }
+            });
+            
+            // تهيئة Firebase
+            const firebaseConfig = {
+                apiKey: "AIzaSyAzx-JlJBJxtVZT2cXDtJiHbs6s9K-3hEY",
+                authDomain: "tahdiri-dc608.firebaseapp.com",
+                databaseURL: "https://tahdiri-dc608-default-rtdb.firebaseio.com",
+                projectId: "tahdiri-dc608",
+                storageBucket: "tahdiri-dc608.appspot.com",
+                messagingSenderId: "795586531700",
+                appId: "1:795586531700:web:d693fd56f4bed6aed4dc21",
+                measurementId: "G-H57ECZPTT7"
+            };
+
+            // Initialize Firebase
+            const app = firebase.initializeApp(firebaseConfig);
+            const database = firebase.database();
+            
+            // هنا يمكنك إضافة كود لجلب بيانات الطلاب من Firebase عند اختيار المعلم
+            document.getElementById('teacherName').addEventListener('change', function() {
+                const teacherId = this.value;
+                if (teacherId) {
+                    // جلب قائمة الطلاب للمعلم المحدد من Firebase
+                    // هذا مثال فقط، يجب تعديله ليناسب هيكل قاعدة البيانات الخاصة بك
+                    database.ref('teachers/' + teacherId + '/students').once('value')
+                        .then((snapshot) => {
+                            const students = snapshot.val();
+                            // تحديث الجداول بقائمة الطلاب
+                            updateStudentsTables(students);
+                        })
+                        .catch((error) => {
+                            console.error('حدث خطأ أثناء جلب بيانات الطلاب:', error);
+                        });
+                }
+            });
+            
+            function updateStudentsTables(students) {
+                // مسح الجداول الحالية
+                document.getElementById('firstSemesterStudents').innerHTML = '';
+                document.getElementById('secondSemesterStudents').innerHTML = '';
+                
+                // تحديث قائمة الطلاب في واجهة المستخدم
+                if (students) {
+                    Object.keys(students).forEach(studentId => {
+                        const student = students[studentId];
+                        
+                        // إضافة الطالب إلى جدول السداسي الأول
+                        const firstSemesterRow = document.createElement('tr');
+                        firstSemesterRow.innerHTML = `
+                            <td>${student.registrationNumber}</td>
+                            <td>${student.firstName}</td>
+                            <td>${student.lastName}</td>
+                            <td><input type="number" class="hizb-input" min="0" max="60" value="${student.firstSemester?.hizbCount || 0}"></td>
+                            <td><input type="text" class="form-control" placeholder="ملاحظات" value="${student.firstSemester?.notes || ''}"></td>
+                        `;
+                        document.getElementById('firstSemesterStudents').appendChild(firstSemesterRow);
+                        
+                        // إضافة الطالب إلى جدول السداسي الثاني
+                        const secondSemesterRow = document.createElement('tr');
+                        secondSemesterRow.innerHTML = `
+                            <td>${student.registrationNumber}</td>
+                            <td>${student.firstName}</td>
+                            <td>${student.lastName}</td>
+                            <td><input type="number" class="hizb-input" min="0" max="60" value="${student.secondSemester?.hizbCount || 0}"></td>
+                            <td><input type="text" class="form-control" placeholder="ملاحظات" value="${student.secondSemester?.notes || ''}"></td>
+                        `;
+                        document.getElementById('secondSemesterStudents').appendChild(secondSemesterRow);
+                        
+                        // إضافة الطالب إلى قائمة الاختيار للتقرير
+                        const option = document.createElement('option');
+                        option.value = student.registrationNumber;
+                        option.textContent = `${student.firstName} ${student.lastName}`;
+                        document.getElementById('studentSelect').appendChild(option);
+                    });
+                }
+            }
+        });
+    </script>
 </body>
 </html>
