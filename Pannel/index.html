@@ -18,6 +18,10 @@
             --success-color: #2ecc71;
             --overlay-color: rgba(0, 0, 0, 0.7);
             --duplicate-color: #ffebee;
+            --complete-color: #2ecc71;
+            --incomplete-color: #e74c3c;
+            --paid-color: #27ae60;
+            --unpaid-color: #e74c3c;
         }
 
         body {
@@ -27,89 +31,6 @@
             margin: 0;
             padding: 0;
             line-height: 1.6;
-        }
-
-        /* صفحة تسجيل الدخول */
-        .login-container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            background: linear-gradient(rgba(26, 77, 46, 0.8), rgba(26, 77, 46, 0.8)),
-                        url('https://img.freepik.com/free-vector/arabic-pattern-background_53876-91528.jpg');
-            background-size: cover;
-        }
-
-        .login-box {
-            background: white;
-            width: 90%;
-            max-width: 450px;
-            padding: 2.5rem;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-            text-align: center;
-            animation: fadeIn 0.5s ease-in-out;
-        }
-
-        .login-logo {
-            height: 100px;
-            margin-bottom: 1.5rem;
-        }
-
-        .login-title {
-            color: var(--primary-color);
-            margin-bottom: 1.5rem;
-            font-size: 1.8rem;
-        }
-
-        .login-input {
-            width: 100%;
-            padding: 12px 15px;
-            margin-bottom: 1.2rem;
-            border: 2px solid #ddd;
-            border-radius: 50px;
-            font-family: 'Cairo', sans-serif;
-            font-size: 1rem;
-            transition: all 0.3s;
-            text-align: right;
-        }
-
-        .login-input:focus {
-            border-color: var(--primary-color);
-            outline: none;
-            box-shadow: 0 0 0 3px rgba(26, 77, 46, 0.2);
-        }
-
-        .login-btn {
-            background-color: var(--primary-color);
-            color: white;
-            border: none;
-            padding: 12px 30px;
-            border-radius: 50px;
-            cursor: pointer;
-            font-size: 1.1rem;
-            font-weight: 600;
-            transition: all 0.3s;
-            width: 100%;
-            margin-top: 0.5rem;
-        }
-
-        .login-btn:hover {
-            background-color: var(--primary-light);
-            transform: translateY(-2px);
-            box-shadow: 0Sampling 5px 15px rgba(0,0,0,0.1);
-        }
-
-        .login-error {
-            color: var(--error-color);
-            margin-top: 1rem;
-            font-weight: 500;
-            display: none;
-        }
-
-        /* المحتوى الرئيسي */
-        .main-content {
-            display: none;
         }
 
         .header {
@@ -153,7 +74,6 @@
             margin-top: 0;
         }
 
-        /* لوحة الإحصائيات */
         .stats-container {
             background: var(--secondary-color);
             padding: 15px;
@@ -181,7 +101,6 @@
             box-shadow: 0 4px 8px rgba(0,0,0,0.2);
         }
 
-        /* الأزرار */
         .btn {
             background-color: var(--primary-color);
             color: white;
@@ -236,23 +155,22 @@
             background-color: #3498db;
         }
 
-        .btn-delete {
-            background-color: #e74c3c;
-        }
-
         .btn-delete-duplicate {
             background-color: #ff5722;
         }
 
-        .btn-logout {
-            background-color: var(--error-color);
-            position: fixed;
-            bottom: 20px;
-            left: 20px;
-            z-index: 100;
+        .btn-complete-file {
+            background-color: var(--complete-color);
+            padding: 0.5rem;
+            font-size: 0.8rem;
         }
 
-        /* عناصر التحكم */
+        .btn-confirm-subscription {
+            background-color: var(--paid-color);
+            padding: 0.5rem;
+            font-size: 0.8rem;
+        }
+
         .controls {
             display: flex;
             flex-wrap: wrap;
@@ -292,7 +210,6 @@
             color: #777;
         }
 
-        /* الجدول */
         .table-container {
             width: 100%;
             overflow-x: auto;
@@ -305,7 +222,7 @@
             width: 100%;
             border-collapse: collapse;
             font-size: 0.9rem;
-            min-width: 1000px;
+            min-width: 1200px;
         }
 
         th, td {
@@ -336,6 +253,26 @@
             animation: pulseDuplicate 1.5s infinite;
         }
 
+        .file-status-complete {
+            color: var(--complete-color);
+            font-weight: bold;
+        }
+
+        .file-status-incomplete {
+            color: var(--incomplete-color);
+            font-weight: bold;
+        }
+
+        .subscription-paid {
+            color: var(--paid-color);
+            font-weight: bold;
+        }
+
+        .subscription-unpaid {
+            color: var(--unpaid-color);
+            font-weight: bold;
+        }
+
         @keyframes pulseDuplicate {
             0% { background-color: var(--duplicate-color); }
             50% { background-color: #ffcdd2; }
@@ -351,7 +288,6 @@
             background-color: var(--primary-light);
         }
 
-        /* الرسائل والحالة */
         .status {
             margin: 1rem 0;
             padding: 1rem;
@@ -393,7 +329,6 @@
             font-family: Arial, sans-serif;
         }
 
-        /* استمارة الطالب */
         .student-form {
             display: none;
             width: 210mm;
@@ -492,7 +427,6 @@
             margin-bottom: 1mm;
         }
 
-        /* نموذج التعديل */
         .edit-form-overlay {
             position: fixed;
             top: 0;
@@ -550,7 +484,6 @@
             margin-top: 1.5rem;
         }
 
-        /* تأثيرات الحركة */
         @keyframes spin {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
@@ -561,19 +494,12 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
-            20%, 40%, 60%, 80% { transform: translateX(5px); }
-        }
-
         @keyframes pulseDuplicate {
             0% { background-color: var(--duplicate-color); }
             50% { background-color: #ffcdd2; }
             100% { background-color: var(--duplicate-color); }
         }
 
-        /* الطباعة */
         @media print {
             body * {
                 visibility: hidden;
@@ -639,18 +565,18 @@
 
             .financial-box {
                 border: 1px solid #000;
-                padding: 5mm; /* Increased for print */
+                padding: 5mm;
                 border-radius: 2mm;
                 margin-top: 3mm;
             }
 
             .financial-title {
-                font-size: 10pt; /* Increased for print */
+                font-size: 10pt;
                 margin-bottom: 2mm;
             }
 
             .financial-content {
-                font-size: 9pt; /* Increased for print */
+                font-size: 9pt;
                 line-height: 1.5;
             }
 
@@ -670,7 +596,6 @@
             }
         }
 
-        /* التجاوب مع أحجام الشاشات */
         @media (max-width: 1200px) {
             .container {
                 padding: 0;
@@ -687,12 +612,10 @@
                 max-width: 100%;
                 margin-bottom: 10px;
             }
-            
             .stats-container {
                 flex-direction: column;
                 align-items: center;
             }
-            
             .stat-box {
                 width: 100%;
                 max-width: 250px;
@@ -702,20 +625,6 @@
     </style>
 </head>
 <body>
-    <!-- صفحة تسجيل الدخول -->
-    <div class="login-container" id="loginPage">
-        <div class="login-box">
-            <img src="https://i.ibb.co/jZrxhFsf/1-min.png" alt="شعار المجمع القرآني" class="login-logo">
-            <h1 class="login-title">تسجيل الدخول للنظام</h1>
-            <input type="password" id="passwordInput" class="login-input" placeholder="كلمة المرور" autocomplete="off">
-            <button id="loginBtn" class="login-btn">دخول <i class="fas fa-sign-in-alt"></i></button>
-            <div id="loginError" class="login-error">
-                <i class="fas fa-exclamation-circle"></i> كلمة المرور غير صحيحة
-            </div>
-        </div>
-    </div>
-
-    <!-- المحتوى الرئيسي -->
     <div class="main-content" id="mainContent">
         <header class="header no-print">
             <img src="https://i.ibb.co/jZrxhFsf/1-min.png" alt="شعار المجمع القرآني" class="logo">
@@ -731,7 +640,6 @@
                         <i class="fas fa-search search-icon"></i>
                         <input type="text" id="searchInput" class="search-input" placeholder="ابحث عن طالب...">
                     </div>
-                    
                     <button id="refreshBtn" class="btn btn-refresh">
                         <i class="fas fa-sync-alt"></i> تحديث البيانات
                     </button>
@@ -758,13 +666,8 @@
                 </div>
             </div>
         </main>
-
-        <button id="logoutBtn" class="btn btn-logout no-print">
-            <i class="fas fa-sign-out-alt"></i> تسجيل الخروج
-        </button>
     </div>
 
-    <!-- استمارة الطالب -->
     <div id="studentFormTemplate" class="student-form no-print">
         <div class="form-header">
             <img src="https://i.ibb.co/jZrxhFsf/1-min.png" alt="شعار المجمع القرآني" class="form-logo">
@@ -775,17 +678,16 @@
         
         <div class="form-section">
             <div class="section-title">المعلومات الشخصية</div>
-            <div class="student-info" id="studentPersonalInfo">
-                <!-- سيتم ملؤها بالجافاسكريبت -->
-            </div>
+            <div class="student-info" id="studentPersonalInfo"></div>
         </div>
         
         <div class="form-section">
             <div class="section-title">الملف المالي</div>
             <div class="financial-box">
                 <div class="financial-title">الاشتراك السنوي</div>
-                <div class="financial-content">
+                <div class="financial-content" id="financialContent">
                     الاشتراك السنوي للولي: 7000 دج<br>
+                    حالة الاشتراك: <span id="subscriptionStatus"></span><br>
                     تم الدفع يوم: ________________<br>
                     الوصل رقم: ________________
                 </div>
@@ -808,7 +710,6 @@
     <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-database-compat.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <script>
-        // تهيئة Firebase
         const firebaseConfig = {
             apiKey: "AIzaSyAzx-JlJBJxtVZT2cXDtJiHbs6s9K-3hEY",
             authDomain: "tahdiri-dc608.firebaseapp.com",
@@ -820,20 +721,13 @@
             measurementId: "G-H57ECZPTT7"
         };
 
-        // Initialize Firebase
         const app = firebase.initializeApp(firebaseConfig);
         const database = firebase.database();
 
-        // كلمة المرور للنظام (يمكن تغييرها)
-        const SYSTEM_PASSWORD = "admin123";
+        const SUBSCRIPTION_AMOUNT = 7000;
 
         document.addEventListener('DOMContentLoaded', function() {
-            const loginPage = document.getElementById('loginPage');
             const mainContent = document.getElementById('mainContent');
-            const passwordInput = document.getElementById('passwordInput');
-            const loginBtn = document.getElementById('loginBtn');
-            const loginError = document.getElementById('loginError');
-            const logoutBtn = document.getElementById('logoutBtn');
             const refreshBtn = document.getElementById('refreshBtn');
             const printBtn = document.getElementById('printBtn');
             const excelBtn = document.getElementById('excelBtn');
@@ -845,82 +739,17 @@
             
             let studentsData = null;
             let filteredData = null;
-            let sortOrder = 'desc'; // 'asc' أو 'desc'
+            let sortOrder = 'desc';
             
-            // التحقق من حالة تسجيل الدخول
-            checkLoginStatus();
+            mainContent.style.display = 'block';
+            loadStudentsData();
             
-            // أحداث تسجيل الدخول والخروج
-            loginBtn.addEventListener('click', login);
-            passwordInput.addEventListener('keypress', function(e) {
-                if (e.key === 'Enter') login();
-            });
-            logoutBtn.addEventListener('click', logout);
-            
-            // أحداث النظام الرئيسي
             refreshBtn.addEventListener('click', loadStudentsData);
             printBtn.addEventListener('click', printTable);
             excelBtn.addEventListener('click', exportToExcel);
             showDuplicatesBtn.addEventListener('click', showOnlyDuplicates);
             searchInput.addEventListener('input', searchStudents);
             
-            // دالة التحقق من تسجيل الدخول
-            function checkLoginStatus() {
-                const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
-                
-                if (isLoggedIn) {
-                    loginPage.style.display = 'none';
-                    mainContent.style.display = 'block';
-                    loadStudentsData();
-                } else {
-                    loginPage.style.display = 'flex';
-                    mainContent.style.display = 'none';
-                }
-            }
-            
-            // دالة تسجيل الدخول
-            function login() {
-                const password = passwordInput.value.trim();
-                
-                if (password === SYSTEM_PASSWORD) {
-                    localStorage.setItem('isLoggedIn', 'true');
-                    loginError.style.display = 'none';
-                    passwordInput.value = '';
-                    checkLoginStatus();
-                } else {
-                    loginError.style.display = 'block';
-                    passwordInput.focus();
-                    shakeLoginBox();
-                }
-            }
-            
-            // دالة تسجيل الخروج
-            function logout() {
-                localStorage.removeItem('isLoggedIn');
-                checkLoginStatus();
-            }
-            
-            // تأثير اهتزاز عند خطأ في كلمة المرور
-            function shakeLoginBox() {
-                const loginBox = document.querySelector('.login-box');
-                loginBox.style.animation = 'none';
-                void loginBox.offsetWidth; // Trigger reflow
-                loginBox.style.animation = 'shake 0.5s';
-                
-                const style = document.createElement('style');
-                style.innerHTML = `@keyframes shake {
-                    0%, 100% { transform: translateX(0); }
-                    10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
-                    20%, 40%, 60%, 80% { transform: translateX(5px); }
-                }`;
-                document.head.appendChild(style);
-                
-                setTimeout(() => {
-                    document.head.removeChild(style);
-                }, 500);
-            }
-            
-            // دالة جلب بيانات الطلاب
             function loadStudentsData() {
                 showLoading();
                 hideStatus();
@@ -947,7 +776,6 @@
                     });
             }
             
-            // دالة البحث عن الطلاب
             function searchStudents() {
                 const searchTerm = searchInput.value.trim().toLowerCase();
                 
@@ -972,7 +800,6 @@
                 showStatus(`تم العثور على ${Object.keys(filteredData).length} نتيجة`, 'success');
             }
             
-            // دالة البحث عن تسجيلات مكررة
             function findDuplicateStudents(students) {
                 const duplicates = {};
                 const seen = {};
@@ -993,7 +820,6 @@
                 return duplicates;
             }
             
-            // دالة عرض المكررات فقط
             function showOnlyDuplicates() {
                 if (!studentsData) {
                     showStatus('لا توجد بيانات طلاب متاحة', 'error');
@@ -1016,7 +842,6 @@
                 }
             }
             
-            // دالة حذف تسجيل مكرر
             window.deleteDuplicateStudent = function(studentId) {
                 if (confirm('هل أنت متأكد من حذف هذا التسجيل المكرر؟')) {
                     showLoading();
@@ -1030,40 +855,88 @@
                             showStatus('حدث خطأ أثناء الحذف: ' + error.message, 'error');
                             console.error(error);
                         })
-                        .finally(hideLoading);
+                        .finally(() => hideLoading());
                 }
             }
             
-            // دالة مساعدة لعرض نوع التسجيل
+            window.markFileComplete = function(studentId) {
+                showLoading();
+                database.ref('students/' + studentId).update({
+                    fileStatus: 'مكتمل'
+                })
+                    .then(() => {
+                        showStatus('تم جعل الملف مكتملًا بنجاح', 'success');
+                        loadStudentsData();
+                    })
+                    .catch(error => {
+                        showStatus('حدث خطأ: ' + error.message, 'error');
+                        console.error(error);
+                    })
+                    .finally(() => hideLoading());
+            }
+            
+            window.confirmSubscription = function(studentId) {
+                showLoading();
+                database.ref('students/' + studentId).update({
+                    subscriptionStatus: 'مدفوع'
+                })
+                    .then(() => {
+                        showStatus('تم تأكيد الاشتراك (7000 دج) بنجاح', 'success');
+                        loadStudentsData();
+                    })
+                    .catch(error => {
+                        showStatus('حدث خطأ: ' + error.message, 'error');
+                        console.error(error);
+                    })
+                    .finally(() => hideLoading());
+            }
+            
             function getRegistrationTypeDisplay(registrationType) {
                 if (!registrationType) return '';
                 return registrationType === 'new' ? 'تسجيل جديد' : 'مسجل من قبل';
             }
             
-            // دالة عرض بيانات الطلاب في الجدول
+            function getFileStatusDisplay(fileStatus) {
+                if (!fileStatus) return '<span class="empty-data">غير محدد</span>';
+                return fileStatus === 'مكتمل' ? 
+                    `<span class="file-status-complete">${fileStatus}</span>` : 
+                    `<span class="file-status-incomplete">${fileStatus}</span>`;
+            }
+            
+            function getSubscriptionStatusDisplay(subscriptionStatus) {
+                if (!subscriptionStatus) return '<span class="empty-data">غير محدد</span>';
+                return subscriptionStatus === 'مدفوع' ? 
+                    `<span class="subscription-paid">${subscriptionStatus}</span>` : 
+                    `<span class="subscription-unpaid">${subscriptionStatus}</span>`;
+            }
+            
             function displayStudents(students) {
                 if (!students || Object.keys(students).length === 0) {
                     studentsTable.innerHTML = '<p style="text-align: center; color: var(--error-color);">لا توجد بيانات لعرضها</p>';
                     return;
                 }
 
-                // حساب الإحصائيات
                 const stats = {
                     total: 0,
                     new: 0,
                     existing: 0,
-                    duplicates: 0
+                    duplicates: 0,
+                    completeFiles: 0,
+                    incompleteFiles: 0,
+                    totalSubscription: 0
                 };
 
                 const duplicates = findDuplicateStudents(students);
                 const duplicatesList = Object.values(duplicates).flat();
                 stats.duplicates = duplicatesList.length;
 
-                // تحويل البيانات إلى مصفوفة وترتيبها
                 const studentsArray = Object.entries(students).map(([key, student]) => {
                     stats.total++;
                     if (student.registrationType === 'new') stats.new++;
                     else stats.existing++;
+                    if (student.fileStatus === 'مكتمل') stats.completeFiles++;
+                    else stats.incompleteFiles++;
+                    if (student.subscriptionStatus === 'مدفوع') stats.totalSubscription += SUBSCRIPTION_AMOUNT;
                     
                     return { 
                         key, 
@@ -1072,7 +945,6 @@
                     };
                 });
                 
-                // إضافة صف الإحصائيات أعلى الجدول
                 const statsHTML = `
                     <div class="stats-container">
                         <div class="stat-box">
@@ -1091,6 +963,18 @@
                             <div style="font-size: 1.2rem; font-weight: bold; color: ${stats.duplicates > 0 ? 'var(--error-color)' : 'var(--primary-color)'};">${stats.duplicates}</div>
                             <div>تسجيلات مكررة</div>
                         </div>
+                        <div class="stat-box">
+                            <div style="font-size: 1.2rem; font-weight: bold; color: var(--complete-color);">${stats.completeFiles}</div>
+                            <div>ملفات مكتملة</div>
+                        </div>
+                        <div class="stat-box">
+                            <div style="font-size: 1.2rem; font-weight: bold; color: var(--incomplete-color);">${stats.incompleteFiles}</div>
+                            <div>ملفات غير مكتملة</div>
+                        </div>
+                        <div class="stat-box">
+                            <div style="font-size: 1.2rem; font-weight: bold; color: var(--primary-color);">${stats.totalSubscription.toLocaleString('ar-DZ')} دج</div>
+                            <div>إجمالي الاشتراكات</div>
+                        </div>
                     </div>
                 `;
                 
@@ -1107,11 +991,13 @@
                                 <tr>
                                     <th>العمليات</th>
                                     <th>نوع التسجيل</th>
+                                    <th>حالة الملف</th>
+                                    <th>الاشتراك</th>
                                     <th>الاسم</th>
                                     <th>اللقب</th>
                                     <th>اسم الأب</th>
                                     <th>رقم الهاتف</th>
-                                    <th onclick="toggleSortOrder()" style="cursor:pointer;">
+                                    <th onclick="toggleSortOrder()" style="cursor: pointer;">
                                         تاريخ التسجيل 
                                         <i class="fas fa-sort${sortOrder === 'desc' ? '-down' : '-up'}"></i>
                                     </th>
@@ -1130,6 +1016,12 @@
                                 <button onclick="editStudent('${key}')" class="btn btn-form btn-edit no-print">
                                     <i class="fas fa-edit"></i> تعديل
                                 </button>
+                                <button onclick="markFileComplete('${key}')" class="btn btn-form btn-complete-file no-print" title="جعل الملف مكتمل">
+                                    <i class="fas fa-check-circle"></i>
+                                </button>
+                                <button onclick="confirmSubscription('${key}')" class="btn btn-form btn-confirm-subscription no-print" title="تأكيد الاشتراك (7000 دج)">
+                                    <i class="fas fa-money-check-alt"></i>
+                                </button>
                                 ${isDuplicate ? `
                                 <button onclick="deleteDuplicateStudent('${key}')" class="btn btn-form btn-delete-duplicate no-print">
                                     <i class="fas fa-trash-alt"></i> حذف مكرر
@@ -1140,11 +1032,13 @@
                                 ${getRegistrationTypeDisplay(student.registrationType)}
                                 ${isDuplicate ? '<span style="color:red;font-size:0.8em;">(مكرر)</span>' : ''}
                             </td>
+                            <td>${getFileStatusDisplay(student.fileStatus)}</td>
+                            <td>${getSubscriptionStatusDisplay(student.subscriptionStatus)}</td>
                             <td>${formatData(student.firstName)}</td>
                             <td>${formatData(student.lastName)}</td>
                             <td>${formatData(student.fatherName)}</td>
                             <td class="latin-numbers">${formatData(student.parentPhone)}</td>
-                            <td class="latin-numbers">${formatDate(student.registrationDate)}</td>
+                            <td class="latin-numbers">${formatDate(student.registrationDate, true)}</td>
                         </tr>
                     `;
                 });
@@ -1158,11 +1052,9 @@
                 studentsTable.innerHTML = tableHTML;
             }
             
-            // دالة تعديل الطالب
             window.editStudent = function(studentId) {
                 const student = studentsData[studentId];
                 
-                // إنشاء نموذج التعديل
                 const formHtml = `
                     <div class="edit-form-overlay">
                         <div class="edit-form-container">
@@ -1244,6 +1136,22 @@
                                 </div>
                                 
                                 <div class="form-group">
+                                    <label for="editFileStatus">حالة الملف:</label>
+                                    <select id="editFileStatus">
+                                        <option value="مكتمل" ${student.fileStatus === 'مكتمل' ? 'selected' : ''}>مكتمل</option>
+                                        <option value="غير مكتمل" ${student.fileStatus !== 'مكتمل' ? 'selected' : ''}>غير مكتمل</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="editSubscriptionStatus">حالة الاشتراك:</label>
+                                    <select id="editSubscriptionStatus">
+                                        <option value="مدفوع" ${student.subscriptionStatus === 'مدفوع' ? 'selected' : ''}>مدفوع</option>
+                                        <option value="غير مدفوع" ${student.subscriptionStatus !== 'مدفوع' ? 'selected' : ''}>غير مدفوع</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="form-group">
                                     <label for="editNotes">ملاحظات:</label>
                                     <textarea id="editNotes">${student.notes || ''}</textarea>
                                 </div>
@@ -1272,7 +1180,6 @@
                 document.body.insertAdjacentHTML('beforeend', formHtml);
             }
 
-            // دالة حفظ التغييرات
             window.saveStudentChanges = function() {
                 const studentId = document.getElementById('editStudentId').value;
                 const updatedData = {
@@ -1289,6 +1196,8 @@
                     sicknessType: document.getElementById('editSicknessType').value,
                     takesMedicine: document.getElementById('editTakesMedicine').value,
                     bloodType: document.getElementById('editBloodType').value,
+                    fileStatus: document.getElementById('editFileStatus').value,
+                    subscriptionStatus: document.getElementById('editSubscriptionStatus').value,
                     notes: document.getElementById('editNotes').value,
                     registrationType: document.getElementById('editRegistrationType').value,
                     registrationDate: studentsData[studentId].registrationDate
@@ -1306,16 +1215,14 @@
                         showStatus('حدث خطأ أثناء التحديث: ' + error.message, 'error');
                         console.error(error);
                     })
-                    .finally(hideLoading);
+                    .finally(() => hideLoading());
             }
 
-            // دالة إغلاق نموذج التعديل
             window.closeEditForm = function() {
                 const overlay = document.querySelector('.edit-form-overlay');
                 if (overlay) overlay.remove();
             }
 
-            // دالة حذف الطالب
             window.deleteStudent = function(studentId) {
                 if (confirm('هل أنت متأكد من حذف هذا الطالب؟ لا يمكن التراجع عن هذه العملية.')) {
                     showLoading();
@@ -1329,17 +1236,15 @@
                             showStatus('حدث خطأ أثناء الحذف: ' + error.message, 'error');
                             console.error(error);
                         })
-                        .finally(hideLoading);
+                        .finally(() => hideLoading());
                 }
             }
             
-            // دالة تبديل اتجاه الترتيب
             window.toggleSortOrder = function() {
                 sortOrder = sortOrder === 'desc' ? 'asc' : 'desc';
                 displayStudents(filteredData || studentsData);
             }
             
-            // دالة طباعة الجدول
             function printTable() {
                 if (!filteredData || Object.keys(filteredData).length === 0) {
                     showStatus('لا توجد بيانات متاحة للطباعة', 'error');
@@ -1400,6 +1305,22 @@
                             .duplicate-row {
                                 background-color: #ffebee !important;
                             }
+                            .file-status-complete {
+                                color: #2ecc71;
+                                font-weight: bold;
+                            }
+                            .file-status-incomplete {
+                                color: #e74c3c;
+                                font-weight: bold;
+                            }
+                            .subscription-paid {
+                                color: #27ae60;
+                                font-weight: bold;
+                            }
+                            .subscription-unpaid {
+                                color: #e74c3c;
+                                font-weight: bold;
+                            }
                             .footer {
                                 text-align: center;
                                 margin-top: 20px;
@@ -1412,7 +1333,7 @@
                         <div class="print-header">
                             <img src="https://i.ibb.co/jZrxhFsf/1-min.png" class="print-logo" alt="شعار المجمع القرآني">
                             <h1>قائمة الطلاب المسجلين</h1>
-                            <p>تاريخ الطباعة: ${new Date().toLocaleDateString('ar-EG')}</p>
+                            <p>تاريخ الطباعة: ${formatDate(new Date(), true)}</p>
                             ${searchInput.value ? `<p>نتائج البحث عن: "${searchInput.value}"</p>` : ''}
                         </div>
                         ${document.querySelector('.printable table').outerHTML}
@@ -1433,7 +1354,6 @@
                 }, 500);
             }
             
-            // دالة التصدير إلى Excel
             function exportToExcel() {
                 if (!filteredData || Object.keys(filteredData).length === 0) {
                     showStatus('لا توجد بيانات متاحة للتصدير', 'error');
@@ -1441,7 +1361,6 @@
                 }
 
                 try {
-                    // إضافة شريط تقدم
                     const progressBar = document.createElement('div');
                     progressBar.style.position = 'fixed';
                     progressBar.style.top = '0';
@@ -1457,8 +1376,7 @@
                     progress.style.width = '0%';
                     progressBar.appendChild(progress);
                     document.body.appendChild(progressBar);
-
-                    // تحضير البيانات
+                    
                     const totalStudents = Object.keys(filteredData).length;
                     let processed = 0;
                     
@@ -1468,6 +1386,8 @@
                         
                         return {
                             'نوع التسجيل': getRegistrationTypeDisplay(student.registrationType),
+                            'حالة الملف': student.fileStatus || '',
+                            'الاشتراك': student.subscriptionStatus || '',
                             'الاسم': student.firstName || '',
                             'اللقب': student.lastName || '',
                             'اسم الأب': student.fatherName || '',
@@ -1486,42 +1406,35 @@
                         };
                     });
 
-                    // إنشاء ورقة عمل
                     const ws = XLSX.utils.json_to_sheet(excelData);
                     
-                    // تحديد عرض الأعمدة
                     const wscols = [
-                        {wch: 15}, {wch: 15}, {wch: 15}, {wch: 15},
-                        {wch: 12}, {wch: 15}, {wch: 25}, {wch: 15},
-                        {wch: 20}, {wch: 15}, {wch: 20}, {wch: 15},
-                        {wch: 15}, {wch: 30}, {wch: 15}, {wch: 15}
+                        {wch: 15}, {wch: 15}, {wch: 15}, {wch: 15}, {wch: 15},
+                        {wch: 15}, {wch: 12}, {wch: 15}, {wch: 25}, {wch: 15},
+                        {wch: 20}, {wch: 15}, {wch: 20}, {wch: 15}, {wch: 15},
+                        {wch: 30}, {wch: 15}, {wch: 15}
                     ];
                     ws['!cols'] = wscols;
                     
-                    // إضافة عنوان للجدول
                     const title = [['قائمة الطلاب المسجلين - المجمع القرآني']];
                     XLSX.utils.sheet_add_aoa(ws, title, { origin: 'A1' });
                     
-                    // إضافة معلومات التصدير
                     const info = [
-                        [`تاريخ التصدير: ${new Date().toLocaleDateString('ar-EG')}`],
+                        [`تاريخ التصدير: ${formatDate(new Date(), true)}`],
                         [`عدد الطلاب: ${totalStudents}`],
                         searchInput.value ? [`نتائج البحث عن: "${searchInput.value}"`] : []
                     ];
                     XLSX.utils.sheet_add_aoa(ws, info, { origin: 'A3' });
                     
-                    // دمج الخلايا
                     ws['!merges'] = [
-                        { s: { r: 0, c: 0 }, e: { r: 0, c: 15 } },
-                        { s: { r: 2, c: 0 }, e: { r: 2, c: 15 } },
-                        searchInput.value ? { s: { r: 4, c: 0 }, e: { r: 4, c: 15 } } : null
+                        { s: { r: 0, c: 0 }, e: { r: 0, c: 17 } },
+                        { s: { r: 2, c: 0 }, e: { r: 2, c: 17 } },
+                        searchInput.value ? { s: { r: 4, c: 0 }, e: { r: 4, c: 17 } } : null
                     ].filter(Boolean);
                     
-                    // إنشاء ملف Excel
                     const wb = XLSX.utils.book_new();
                     XLSX.utils.book_append_sheet(wb, ws, "الطلاب");
                     
-                    // تصدير الملف
                     XLSX.writeFile(wb, `طلاب_المجمع_القرآني_${new Date().toISOString().slice(0,10)}.xlsx`, {
                         bookType: 'xlsx',
                         type: 'binary',
@@ -1533,7 +1446,7 @@
                     
                 } catch (error) {
                     showStatus('حدث خطأ أثناء التصدير: ' + error.message, 'error');
-                    console.error('تفاصيل الخطأ:', error);
+                    console.error(error);
                     
                     if (document.body.contains(progressBar)) {
                         document.body.removeChild(progressBar);
@@ -1541,7 +1454,6 @@
                 }
             }
             
-            // دالة طباعة استمارة الطالب
             window.printStudentForm = function(studentId) {
                 if (!studentsData || !studentsData[studentId]) {
                     showStatus('لا توجد بيانات الطالب المطلوبة', 'error');
@@ -1554,34 +1466,32 @@
                 formTemplate.classList.remove('no-print');
                 formTemplate.style.display = 'block';
                 
-                // ملء المعلومات الشخصية
-                const personalInfoHTML = `
+                const personalInfo = `
                     <div class="info-item"><span class="info-label">الاسم الكامل:</span> ${student.firstName || ''} ${student.lastName || ''}</div>
                     <div class="info-item"><span class="info-label">اسم الأب:</span> ${student.fatherName || 'غير محدد'}</div>
                     <div class="info-item"><span class="info-label">اسم الأم:</span> ${student.motherName || 'غير محدد'}</div>
                     <div class="info-item"><span class="info-label">نوع التسجيل:</span> ${student.registrationType ? getRegistrationTypeDisplay(student.registrationType) : 'غير محدد'}</div>
+                    <div class="info-item"><span class="info-label">حالة الملف:</span> ${student.fileStatus || 'غير محدد'}</div>
                     <div class="info-item"><span class="info-label">تاريخ الميلاد:</span> ${formatDate(student.birthDate, true) || 'غير محدد'}</div>
                     <div class="info-item"><span class="info-label">مكان الميلاد:</span> ${student.birthPlace || 'غير محدد'}</div>
                     <div class="info-item"><span class="info-label">العنوان:</span> ${student.address || 'غير محدد'}</div>
                     <div class="info-item"><span class="info-label">رقم الهاتف:</span> ${student.parentPhone || 'غير محدد'}</div>
                     <div class="info-item"><span class="info-label">الحالة الاجتماعية:</span> ${student.socialStatus || 'غير محدد'}</div>
-                    <div class="info-item"><span class="info-label">الزمرة الدموية:</span> ${student.bloodType || 'غير محدد'}</div>
+                    Капсовиков: ${student.bloodType || 'غير محدد'}</div>
                     <div class="info-item"><span class="info-label">الحالة الصحية:</span> ${student.isSick === 'نعم' ? 'مريض' : 'سليم'}</div>
                     ${student.sicknessType ? `<div class="info-item"><span class="info-label">نوع المرض:</span> ${student.sicknessType}</div>` : ''}
                     ${student.takesMedicine ? `<div class="info-item"><span class="info-label">الأدوية:</span> ${student.takesMedicine}</div>` : ''}
                     ${student.notes ? `<div class="info-item"><span class="info-label">ملاحظات:</span> ${student.notes}</div>` : ''}
                 `;
                 
-                formTemplate.querySelector('#studentPersonalInfo').innerHTML = personalInfoHTML;
+                formTemplate.querySelector('#studentPersonalInfo').innerHTML = personalInfo;
+                formTemplate.querySelector('#subscriptionStatus').textContent = student.subscriptionStatus || 'غير محدد';
                 
-                // إخفاء جميع العناصر الأخرى
                 document.body.style.visibility = 'hidden';
                 formTemplate.style.visibility = 'visible';
                 
-                // إضافة الاستمارة إلى الجسم
                 document.body.appendChild(formTemplate);
                 
-                // إضافة تأخير لضمان التحميل
                 setTimeout(() => {
                     window.print();
                     document.body.removeChild(formTemplate);
@@ -1589,7 +1499,6 @@
                 }, 100);
             }
             
-            // دوال مساعدة
             function formatData(data) {
                 return data ? data : '<span class="empty-data">غير محدد</span>';
             }
@@ -1600,16 +1509,16 @@
                     const date = new Date(dateString);
                     if (isNaN(date.getTime())) return dateString;
                     
-                    let formattedDate = date.toLocaleDateString('ar-EG');
                     if (useLatinNumerals) {
-                        const arabicToLatin = {
-                            '٠': '0', '١': '1', '٢': '2', '٣': '3', '٤': '4',
-                            '٥': '5', '٦': '6', '٧': '7', '٨': '8', '٩': '9'
-                        };
-                        formattedDate = formattedDate.replace(/[٠١٢٣٤٥٦٧٨٩]/g, char => arabicToLatin[char]);
+                        const day = date.getDate().toString().padStart(2, '0');
+                        const month = (date.getMonth() + 1).toString().padStart(2, '0');
+                        const year = date.getFullYear();
+                        return `${day}/${month}/${year}`;
+                    } else {
+                        return date.toLocaleDateString('ar-EG');
                     }
-                    return formattedDate;
-                } catch {
+                } catch (error) {
+                    console.error('Error formatting date:', error);
                     return dateString;
                 }
             }
@@ -1636,7 +1545,7 @@
                 
                 setTimeout(() => {
                     statusMessage.style.display = 'none';
-                }, 5000);
+                }, 3000);
             }
             
             function hideStatus() {
