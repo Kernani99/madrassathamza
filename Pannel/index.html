@@ -17,6 +17,7 @@
             --error-color: #e74c3c;
             --success-color: #2ecc71;
             --overlay-color: rgba(0, 0, 0, 0.7);
+            --duplicate-color: #ffebee;
         }
 
         body {
@@ -152,6 +153,34 @@
             margin-top: 0;
         }
 
+        /* لوحة الإحصائيات */
+        .stats-container {
+            background: var(--secondary-color);
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .stat-box {
+            text-align: center;
+            padding: 10px;
+            min-width: 150px;
+            background: white;
+            border-radius: 8px;
+            margin: 5px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            transition: all 0.3s;
+        }
+
+        .stat-box:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
         /* الأزرار */
         .btn {
             background-color: var(--primary-color);
@@ -192,6 +221,10 @@
             background-color: #27ae60;
         }
 
+        .btn-duplicates {
+            background-color: #ff5722;
+        }
+
         .btn-form {
             background-color: #9b59b6;
             padding: 0.5rem 1rem;
@@ -205,6 +238,10 @@
 
         .btn-delete {
             background-color: #e74c3c;
+        }
+
+        .btn-delete-duplicate {
+            background-color: #ff5722;
         }
 
         .btn-logout {
@@ -292,6 +329,17 @@
 
         tr:hover {
             background-color: #f1f1f1;
+        }
+
+        .duplicate-row {
+            background-color: var(--duplicate-color) !important;
+            animation: pulseDuplicate 1.5s infinite;
+        }
+
+        @keyframes pulseDuplicate {
+            0% { background-color: var(--duplicate-color); }
+            50% { background-color: #ffcdd2; }
+            100% { background-color: var(--duplicate-color); }
         }
 
         th[onclick] {
@@ -434,6 +482,12 @@
             20%, 40%, 60%, 80% { transform: translateX(5px); }
         }
 
+        @keyframes pulseDuplicate {
+            0% { background-color: var(--duplicate-color); }
+            50% { background-color: #ffcdd2; }
+            100% { background-color: var(--duplicate-color); }
+        }
+
         /* الطباعة */
         @media print {
             body {
@@ -472,6 +526,17 @@
             .search-container {
                 width: 100%;
                 max-width: 100%;
+                margin-bottom: 10px;
+            }
+            
+            .stats-container {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .stat-box {
+                width: 100%;
+                max-width: 250px;
                 margin-bottom: 10px;
             }
         }
@@ -516,6 +581,9 @@
                     </button>
                     <button id="excelBtn" class="btn btn-excel">
                         <i class="fas fa-file-excel"></i> تصدير لإكسل
+                    </button>
+                    <button id="showDuplicatesBtn" class="btn btn-duplicates">
+                        <i class="fas fa-clone"></i> عرض المكررات
                     </button>
                 </div>
                 
@@ -609,6 +677,7 @@
             const refreshBtn = document.getElementById('refreshBtn');
             const printBtn = document.getElementById('printBtn');
             const excelBtn = document.getElementById('excelBtn');
+            const showDuplicatesBtn = document.getElementById('showDuplicatesBtn');
             const searchInput = document.getElementById('searchInput');
             const statusMessage = document.getElementById('statusMessage');
             const loadingIndicator = document.getElementById('loadingIndicator');
@@ -632,6 +701,7 @@
             refreshBtn.addEventListener('click', loadStudentsData);
             printBtn.addEventListener('click', printTable);
             excelBtn.addEventListener('click', exportToExcel);
+            showDuplicatesBtn.addEventListener('click', showOnlyDuplicates);
             searchInput.addEventListener('input', searchStudents);
             
             // دالة التحقق من تسجيل الدخول
@@ -742,6 +812,68 @@
                 showStatus(`تم العثور على ${Object.keys(filteredData).length} نتيجة`, 'success');
             }
             
+            // دالة البحث عن تسجيلات مكررة
+            function findDuplicateStudents(students) {
+                const duplicates = {};
+                const seen = {};
+                
+                Object.entries(students).forEach(([key, student]) => {
+                    const identifier = `${student.firstName}_${student.lastName}_${student.parentPhone}`;
+                    
+                    if (seen[identifier]) {
+                        if (!duplicates[identifier]) {
+                            duplicates[identifier] = [seen[identifier]];
+                        }
+                        duplicates[identifier].push(key);
+                    } else {
+                        seen[identifier] = key;
+                    }
+                });
+                
+                return duplicates;
+            }
+            
+            // دالة عرض المكررات فقط
+            function showOnlyDuplicates() {
+                if (!studentsData) {
+                    showStatus('لا توجد بيانات طلاب متاحة', 'error');
+                    return;
+                }
+                
+                const duplicates = findDuplicateStudents(studentsData);
+                const duplicatesData = {};
+                
+                Object.values(duplicates).flat().forEach(key => {
+                    duplicatesData[key] = studentsData[key];
+                });
+                
+                if (Object.keys(duplicatesData).length > 0) {
+                    filteredData = duplicatesData;
+                    displayStudents(filteredData);
+                    showStatus(`تم العثور على ${Object.keys(duplicatesData).length} تسجيل مكرر`, 'success');
+                } else {
+                    showStatus('لا توجد تسجيلات مكررة', 'success');
+                }
+            }
+            
+            // دالة حذف تسجيل مكرر
+            window.deleteDuplicateStudent = function(studentId) {
+                if (confirm('هل أنت متأكد من حذف هذا التسجيل المكرر؟')) {
+                    showLoading();
+                    
+                    database.ref('students/' + studentId).remove()
+                        .then(() => {
+                            showStatus('تم حذف التسجيل المكرر بنجاح', 'success');
+                            loadStudentsData();
+                        })
+                        .catch(error => {
+                            showStatus('حدث خطأ أثناء الحذف: ' + error.message, 'error');
+                            console.error(error);
+                        })
+                        .finally(hideLoading);
+                }
+            }
+            
             // دالة مساعدة لعرض نوع التسجيل
             function getRegistrationTypeDisplay(registrationType) {
                 if (!registrationType) return '';
@@ -755,8 +887,52 @@
                     return;
                 }
 
-                // تحويل البيانات إلى مصفوفة وترتيبها حسب تاريخ التسجيل
-                const studentsArray = Object.entries(students).map(([key, student]) => ({ key, ...student }));
+                // حساب الإحصائيات
+                const stats = {
+                    total: 0,
+                    new: 0,
+                    existing: 0,
+                    duplicates: 0
+                };
+
+                const duplicates = findDuplicateStudents(students);
+                const duplicatesList = Object.values(duplicates).flat();
+                stats.duplicates = duplicatesList.length;
+
+                // تحويل البيانات إلى مصفوفة وترتيبها
+                const studentsArray = Object.entries(students).map(([key, student]) => {
+                    stats.total++;
+                    if (student.registrationType === 'new') stats.new++;
+                    else stats.existing++;
+                    
+                    return { 
+                        key, 
+                        ...student,
+                        isDuplicate: duplicatesList.includes(key)
+                    };
+                });
+                
+                // إضافة صف الإحصائيات أعلى الجدول
+                const statsHTML = `
+                    <div class="stats-container">
+                        <div class="stat-box">
+                            <div style="font-size: 1.2rem; font-weight: bold; color: var(--primary-color);">${stats.total}</div>
+                            <div>إجمالي المتمدرسين</div>
+                        </div>
+                        <div class="stat-box">
+                            <div style="font-size: 1.2rem; font-weight: bold; color: var(--primary-color);">${stats.new}</div>
+                            <div>مسجل جديد</div>
+                        </div>
+                        <div class="stat-box">
+                            <div style="font-size: 1.2rem; font-weight: bold; color: var(--primary-color);">${stats.existing}</div>
+                            <div>مسجل من قبل</div>
+                        </div>
+                        <div class="stat-box">
+                            <div style="font-size: 1.2rem; font-weight: bold; color: ${stats.duplicates > 0 ? 'var(--error-color)' : 'var(--primary-color)'};">${stats.duplicates}</div>
+                            <div>تسجيلات مكررة</div>
+                        </div>
+                    </div>
+                `;
                 
                 studentsArray.sort((a, b) => {
                     const dateA = new Date(a.registrationDate || 0);
@@ -764,7 +940,7 @@
                     return sortOrder === 'desc' ? dateB - dateA : dateA - dateB;
                 });
 
-                let tableHTML = `
+                let tableHTML = statsHTML + `
                     <div class="printable">
                         <table>
                             <thead>
@@ -774,17 +950,7 @@
                                     <th>الاسم</th>
                                     <th>اللقب</th>
                                     <th>اسم الأب</th>
-                                    <th>اسم الأم</th>
-                                    <th>تاريخ الميلاد</th>
-                                    <th>مكان الميلاد</th>
-                                    <th>العنوان</th>
                                     <th>رقم الهاتف</th>
-                                    <th>الحالة الاجتماعية</th>
-                                    <th>الحالة الصحية</th>
-                                    <th>نوع المرض</th>
-                                    <th>يتناول أدوية</th>
-                                    <th>الزمرة الدموية</th>
-                                    <th>ملاحظات</th>
                                     <th onclick="toggleSortOrder()" style="cursor:pointer;">
                                         تاريخ التسجيل 
                                         <i class="fas fa-sort${sortOrder === 'desc' ? '-down' : '-up'}"></i>
@@ -794,9 +960,9 @@
                             <tbody>
                 `;
                 
-                studentsArray.forEach(({ key, ...student }) => {
+                studentsArray.forEach(({ key, isDuplicate, ...student }) => {
                     tableHTML += `
-                        <tr>
+                        <tr class="${isDuplicate ? 'duplicate-row' : ''}">
                             <td>
                                 <button onclick="printStudentForm('${key}')" class="btn btn-form no-print">
                                     <i class="fas fa-print"></i> استمارة
@@ -804,25 +970,20 @@
                                 <button onclick="editStudent('${key}')" class="btn btn-form btn-edit no-print">
                                     <i class="fas fa-edit"></i> تعديل
                                 </button>
-                                <button onclick="deleteStudent('${key}')" class="btn btn-form btn-delete no-print">
-                                    <i class="fas fa-trash"></i> حذف
+                                ${isDuplicate ? `
+                                <button onclick="deleteDuplicateStudent('${key}')" class="btn btn-form btn-delete-duplicate no-print">
+                                    <i class="fas fa-trash-alt"></i> حذف مكرر
                                 </button>
+                                ` : ''}
                             </td>
-                            <td>${getRegistrationTypeDisplay(student.registrationType)}</td>
+                            <td>
+                                ${getRegistrationTypeDisplay(student.registrationType)}
+                                ${isDuplicate ? '<span style="color:red;font-size:0.8em;">(مكرر)</span>' : ''}
+                            </td>
                             <td>${formatData(student.firstName)}</td>
                             <td>${formatData(student.lastName)}</td>
                             <td>${formatData(student.fatherName)}</td>
-                            <td>${formatData(student.motherName)}</td>
-                            <td class="latin-numbers">${formatDate(student.birthDate)}</td>
-                            <td>${formatData(student.birthPlace)}</td>
-                            <td>${formatData(student.address)}</td>
                             <td class="latin-numbers">${formatData(student.parentPhone)}</td>
-                            <td>${formatData(student.socialStatus)}</td>
-                            <td>${student.isSick === 'نعم' ? 'مريض' : 'سليم'}</td>
-                            <td>${formatData(student.sicknessType)}</td>
-                            <td>${formatData(student.takesMedicine)}</td>
-                            <td>${formatData(student.bloodType)}</td>
-                            <td>${formatData(student.notes)}</td>
                             <td class="latin-numbers">${formatDate(student.registrationDate)}</td>
                         </tr>
                     `;
@@ -927,6 +1088,14 @@
                                     <textarea id="editNotes">${student.notes || ''}</textarea>
                                 </div>
                                 
+                                <div class="form-group">
+                                    <label for="editRegistrationType">نوع التسجيل:</label>
+                                    <select id="editRegistrationType">
+                                        <option value="new" ${student.registrationType === 'new' ? 'selected' : ''}>تسجيل جديد</option>
+                                        <option value="existing" ${student.registrationType !== 'new' ? 'selected' : ''}>مسجل من قبل</option>
+                                    </select>
+                                </div>
+                                
                                 <div class="form-buttons">
                                     <button type="button" onclick="saveStudentChanges()" class="btn" style="background-color: var(--primary-color);">
                                         <i class="fas fa-save"></i> حفظ التغييرات
@@ -961,7 +1130,7 @@
                     takesMedicine: document.getElementById('editTakesMedicine').value,
                     bloodType: document.getElementById('editBloodType').value,
                     notes: document.getElementById('editNotes').value,
-                    // تاريخ التسجيل يبقى كما هو
+                    registrationType: document.getElementById('editRegistrationType').value,
                     registrationDate: studentsData[studentId].registrationDate
                 };
                 
@@ -1067,6 +1236,9 @@
                             }
                             tr:nth-child(even) {
                                 background-color: #f9f9f9;
+                            }
+                            .duplicate-row {
+                                background-color: #ffebee !important;
                             }
                             .footer {
                                 text-align: center;
