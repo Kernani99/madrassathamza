@@ -18,6 +18,8 @@
             --gold-color: #d4af37;
             --error-color: #e74c3c;
             --success-color: #2ecc71;
+            --reserve-color: #f39c12;
+            --info-color: #3498db;
         }
 
         * {
@@ -31,17 +33,18 @@
             background-color: var(--light-bg);
             color: var(--text-color);
             line-height: 1.6;
+            padding-bottom: 60px;
         }
 
         header {
             background: linear-gradient(rgba(26, 77, 46, 0.95), rgba(26, 77, 46, 0.95)),
                         url('https://img.freepik.com/free-vector/abstract-islamic-golden-pattern-backdrop-ethnic-style_1017-54276.jpg') center/cover;
             color: white;
-            padding: 2rem 1rem;
+            padding: 1.5rem 1rem;
             text-align: center;
             position: relative;
             overflow: hidden;
-            min-height: 200px;
+            min-height: 180px;
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -51,7 +54,7 @@
         }
 
         .logo {
-            width: 150px;
+            width: 130px;
             margin: 0.5rem auto;
             filter: drop-shadow(0 2px 5px rgba(0,0,0,0.3));
         }
@@ -59,21 +62,21 @@
         header h1 {
             margin: 0.5rem 0;
             text-shadow: 0 2px 4px rgba(0,0,0,0.3);
-            font-size: 1.8rem;
+            font-size: 1.6rem;
             line-height: 1.3;
             font-weight: 700;
         }
 
         .container {
             max-width: 1200px;
-            margin: 3rem auto;
+            margin: 2rem auto;
             padding: 0 1.5rem;
         }
 
         .dashboard {
             background: white;
             border-radius: 15px;
-            padding: 2.5rem;
+            padding: 2rem;
             box-shadow: 0 5px 20px rgba(0,0,0,0.1);
             position: relative;
         }
@@ -81,8 +84,8 @@
         .page-title {
             color: var(--primary-color);
             text-align: center;
-            margin-bottom: 2rem;
-            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+            font-size: 1.6rem;
             font-weight: 800;
             position: relative;
         }
@@ -90,43 +93,50 @@
         .page-title::after {
             content: '';
             position: absolute;
-            bottom: -10px;
+            bottom: -8px;
             right: 50%;
             transform: translateX(50%);
-            width: 80px;
-            height: 4px;
+            width: 70px;
+            height: 3px;
             background: var(--gold-color);
             border-radius: 3px;
         }
 
         .section-title {
             color: var(--primary-dark);
-            margin: 2rem 0 1rem;
+            margin: 1.5rem 0 1rem;
             padding-bottom: 0.5rem;
             border-bottom: 2px solid var(--gold-color);
-            font-size: 1.3rem;
+            font-size: 1.2rem;
         }
 
         .groups-container {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 1.5rem;
-            margin-top: 2rem;
+            gap: 1.2rem;
+            margin-top: 1.5rem;
         }
 
         .group-card {
             background: var(--light-bg);
             border-radius: 10px;
-            padding: 1.5rem;
+            padding: 1.2rem;
             box-shadow: 0 3px 10px rgba(0,0,0,0.1);
             border: 1px solid #ddd;
+            position: relative;
+            transition: transform 0.3s;
+        }
+
+        .group-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.15);
         }
 
         .group-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 1rem;
+            margin-bottom: 0.8rem;
             padding-bottom: 0.5rem;
             border-bottom: 1px solid var(--gold-color);
         }
@@ -134,15 +144,15 @@
         .group-title {
             font-weight: 700;
             color: var(--primary-dark);
-            font-size: 1.2rem;
+            font-size: 1.1rem;
         }
 
         .group-time {
             background: var(--primary-color);
             color: white;
-            padding: 0.3rem 0.8rem;
+            padding: 0.2rem 0.6rem;
             border-radius: 20px;
-            font-size: 0.9rem;
+            font-size: 0.8rem;
         }
 
         .group-count {
@@ -150,19 +160,19 @@
             color: white;
             padding: 0.2rem 0.6rem;
             border-radius: 50%;
-            font-size: 0.9rem;
+            font-size: 0.8rem;
             margin-right: 0.5rem;
         }
 
         .student-list {
             list-style: none;
-            max-height: 400px;
+            max-height: 350px;
             overflow-y: auto;
             padding: 0.5rem;
         }
 
         .student-item {
-            padding: 0.8rem;
+            padding: 0.7rem;
             border-bottom: 1px dashed #ddd;
             display: flex;
             justify-content: space-between;
@@ -172,6 +182,7 @@
 
         .student-item:hover {
             background-color: rgba(26, 77, 46, 0.05);
+            border-radius: 5px;
         }
 
         .student-item:last-child {
@@ -185,27 +196,31 @@
 
         .student-id {
             color: #666;
-            font-size: 0.9rem;
-            margin-left: 1rem;
+            font-size: 0.85rem;
+            margin-left: 0.8rem;
         }
 
         .student-actions {
             display: flex;
-            gap: 0.5rem;
+            gap: 0.4rem;
         }
 
-        .btn-move {
-            background: var(--primary-color);
+        .btn-action {
             color: white;
             border: none;
-            width: 30px;
-            height: 30px;
+            width: 28px;
+            height: 28px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
             transition: all 0.3s;
+            font-size: 0.9rem;
+        }
+
+        .btn-move {
+            background: var(--primary-color);
         }
 
         .btn-move:hover {
@@ -213,25 +228,43 @@
             transform: scale(1.1);
         }
 
+        .btn-remove {
+            background: var(--error-color);
+        }
+
+        .btn-remove:hover {
+            background: #c0392b;
+            transform: scale(1.1);
+        }
+
+        .btn-reserve {
+            background: var(--reserve-color);
+        }
+
+        .btn-reserve:hover {
+            background: #e67e22;
+            transform: scale(1.1);
+        }
+
         .controls {
             display: flex;
             justify-content: space-between;
-            margin-top: 2rem;
+            margin-top: 1.8rem;
             flex-wrap: wrap;
-            gap: 1rem;
+            gap: 0.8rem;
         }
 
         .btn {
-            padding: 0.8rem 1.5rem;
+            padding: 0.7rem 1.3rem;
             border-radius: 50px;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s;
             border: none;
-            font-size: 1rem;
+            font-size: 0.95rem;
             display: inline-flex;
             align-items: center;
-            gap: 0.5rem;
+            gap: 0.4rem;
         }
 
         .btn-primary {
@@ -241,6 +274,8 @@
 
         .btn-primary:hover {
             background-color: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
         }
 
         .btn-secondary {
@@ -251,23 +286,47 @@
 
         .btn-secondary:hover {
             background-color: #e5e5e5;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        .btn-reserve-action {
+            background-color: var(--reserve-color);
+            color: white;
+        }
+
+        .btn-reserve-action:hover {
+            background-color: #e67e22;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        .btn-info {
+            background-color: var(--info-color);
+            color: white;
+        }
+
+        .btn-info:hover {
+            background-color: #2980b9;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
         }
 
         .search-filter {
             display: flex;
-            gap: 1rem;
-            margin-bottom: 2rem;
+            gap: 0.8rem;
+            margin-bottom: 1.8rem;
             flex-wrap: wrap;
         }
 
         .form-control {
-            padding: 0.8rem 1rem;
+            padding: 0.7rem 0.9rem;
             border: 1px solid #ddd;
             border-radius: 8px;
-            font-size: 1rem;
+            font-size: 0.95rem;
             transition: all 0.3s;
             flex: 1;
-            min-width: 200px;
+            min-width: 180px;
         }
 
         .form-control:focus {
@@ -279,29 +338,34 @@
         .stats {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 1rem;
-            margin-bottom: 2rem;
+            gap: 0.9rem;
+            margin-bottom: 1.8rem;
         }
 
         .stat-card {
             background: white;
             border-radius: 10px;
-            padding: 1.5rem;
+            padding: 1.2rem;
             box-shadow: 0 3px 10px rgba(0,0,0,0.1);
             text-align: center;
             border-top: 4px solid var(--primary-color);
+            transition: transform 0.3s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-3px);
         }
 
         .stat-value {
-            font-size: 2rem;
+            font-size: 1.8rem;
             font-weight: 700;
             color: var(--primary-dark);
-            margin: 0.5rem 0;
+            margin: 0.4rem 0;
         }
 
         .stat-label {
             color: #666;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
         }
 
         .spinner {
@@ -319,10 +383,10 @@
         }
 
         .spinner-inner {
-            width: 50px;
-            height: 50px;
-            border: 5px solid #f3f3f3;
-            border-top: 5px solid var(--primary-color);
+            width: 45px;
+            height: 45px;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid var(--primary-color);
             border-radius: 50%;
             animation: spin 1s linear infinite;
         }
@@ -332,7 +396,7 @@
             100% { transform: rotate(360deg); }
         }
 
-        .move-options {
+        .modal {
             position: fixed;
             top: 0;
             left: 0;
@@ -345,7 +409,7 @@
             z-index: 1000;
         }
 
-        .move-options-content {
+        .modal-content {
             background: white;
             padding: 2rem;
             border-radius: 10px;
@@ -353,45 +417,157 @@
             max-width: 500px;
             max-height: 80vh;
             overflow-y: auto;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
         }
 
-        .move-options-title {
+        .modal-title {
             color: var(--primary-dark);
             margin-bottom: 1.5rem;
             text-align: center;
+            position: relative;
+            padding-bottom: 0.8rem;
         }
 
-        .move-options-list {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 1rem;
+        .modal-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            right: 50%;
+            transform: translateX(50%);
+            width: 60px;
+            height: 3px;
+            background: var(--gold-color);
+            border-radius: 3px;
         }
 
-        .move-option {
+        .reserve-section {
+            margin-top: 2rem;
+            padding: 1.5rem;
+            background-color: #fff8e1;
+            border-radius: 10px;
+            border: 1px solid var(--reserve-color);
+        }
+
+        .reserve-list {
+            margin-top: 1rem;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .reserve-item {
             padding: 1rem;
-            border: 1px solid #ddd;
+            border-bottom: 1px solid #ffe0b2;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: white;
             border-radius: 8px;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.3s;
+            margin-bottom: 0.8rem;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
         }
 
-        .move-option:hover {
-            background: var(--light-bg);
-            border-color: var(--primary-color);
+        .reserve-info {
+            flex: 1;
+        }
+
+        .reserve-actions {
+            display: flex;
+            gap: 0.4rem;
+        }
+
+        .print-section {
+            display: none;
+        }
+
+        @media print {
+            body * {
+                visibility: hidden;
+            }
+            .print-section, .print-section * {
+                visibility: visible;
+            }
+            .print-section {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+                height: auto;
+            }
+        }
+
+        .print-header {
+            text-align: center;
+            margin-bottom: 2rem;
+            padding: 1rem;
+            border-bottom: 2px solid var(--gold-color);
+        }
+
+        .print-logo {
+            width: 100px;
+            height: auto;
+        }
+
+        .print-title {
+            margin: 0.8rem 0;
+            color: var(--primary-dark);
+            font-size: 1.3rem;
+        }
+
+        .print-group-info {
+            margin-bottom: 1.2rem;
+            padding-bottom: 0.8rem;
+        }
+
+        .print-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+            font-size: 0.9rem;
+        }
+
+        .print-table th {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 0.7rem;
+            text-align: right;
+        }
+
+        .print-table td {
+            padding: 0.5rem;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .print-table tr:nth-child(even) {
+            background-color: #f9f9f9;
         }
 
         footer {
             background-color: var(--primary-dark);
             color: white;
-            padding: 2rem 0;
+            padding: 1.5rem 0;
             text-align: center;
-            margin-top: 3rem;
+            margin-top: 2rem;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
         }
 
         .copyright {
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             color: #ccc;
+        }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 1rem;
+            border-radius: 5px;
+            color: white;
+            background: var(--success-color);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            z-index: 2000;
+            display: none;
         }
 
         @media (max-width: 992px) {
@@ -402,28 +578,24 @@
             .stats {
                 grid-template-columns: repeat(2, 1fr);
             }
-            
-            .move-options-list {
-                grid-template-columns: 1fr;
-            }
         }
 
         @media (max-width: 768px) {
             .container {
-                margin: 2rem auto;
+                margin: 1.5rem auto;
                 padding: 0 1rem;
             }
             
             .dashboard {
-                padding: 1.5rem;
+                padding: 1.2rem;
             }
             
             header h1 {
-                font-size: 1.5rem;
+                font-size: 1.4rem;
             }
             
             .page-title {
-                font-size: 1.5rem;
+                font-size: 1.4rem;
             }
 
             .groups-container {
@@ -445,6 +617,8 @@
         <img src="https://i.ibb.co/jZrxhFsf/1-min.png" alt="شعار المدرسة" class="logo">
         <h1>تقسيم الطلبة إلى أفواج</h1>
     </header>
+
+    <div class="notification" id="notification"></div>
 
     <main class="container">
         <div class="dashboard">
@@ -494,10 +668,21 @@
                     <button class="btn btn-secondary" id="clearAssignmentsBtn">
                         <i class="fas fa-undo"></i> إعادة تعيين
                     </button>
+                    <button class="btn btn-info" id="manualAssignBtn">
+                        <i class="fas fa-user-plus"></i> توزيع يدوي
+                    </button>
+                    <button class="btn btn-reserve-action" id="showReserveBtn">
+                        <i class="fas fa-exchange-alt"></i> طلبات التغيير
+                    </button>
                 </div>
-                <button class="btn btn-primary" id="saveBtn">
-                    <i class="fas fa-save"></i> حفظ التوزيع
-                </button>
+                <div>
+                    <button class="btn btn-primary" id="saveBtn">
+                        <i class="fas fa-save"></i> حفظ التوزيع
+                    </button>
+                    <button class="btn btn-info" id="printBtn">
+                        <i class="fas fa-print"></i> طباعة الأفواج
+                    </button>
+                </div>
             </div>
             
             <h3 class="section-title">الأفواج الدراسية</h3>
@@ -505,17 +690,121 @@
             <div class="groups-container" id="groupsContainer">
                 <!-- سيتم ملء هذه الأقسام بواسطة JavaScript -->
             </div>
+
+            <!-- قسم طلبات التغيير -->
+            <div class="reserve-section" id="reserveSection" style="display: none;">
+                <h3 class="section-title">طلبات تغيير الأفواج</h3>
+                <div class="reserve-list" id="reserveList">
+                    <!-- سيتم ملء هذه القائمة بواسطة JavaScript -->
+                </div>
+            </div>
         </div>
     </main>
 
     <!-- نافذة اختيار الفوج الهدف -->
-    <div class="move-options" id="moveOptions">
-        <div class="move-options-content">
-            <h3 class="move-options-title">اختر الفوج الهدف</h3>
+    <div class="modal" id="moveOptions">
+        <div class="modal-content">
+            <h3 class="modal-title">اختر الفوج الهدف</h3>
             <div class="move-options-list" id="moveOptionsList">
                 <!-- سيتم ملء الخيارات بواسطة JavaScript -->
             </div>
         </div>
+    </div>
+
+    <!-- نافذة التوزيع اليدوي -->
+    <div class="modal" id="manualAssign">
+        <div class="modal-content">
+            <h3 class="modal-title">توزيع طالب يدوياً</h3>
+            <div class="manual-assign-form">
+                <div class="form-group">
+                    <label for="studentSelect" class="form-label">اختر الطالب</label>
+                    <select id="studentSelect" class="form-control">
+                        <option value="">-- اختر طالب --</option>
+                        <!-- سيتم ملء الطلبة بواسطة JavaScript -->
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="targetGroup" class="form-label">الفوج الهدف</label>
+                    <select id="targetGroup" class="form-control">
+                        <option value="">-- اختر فوج --</option>
+                        <option value="group1">الفوج الأول (08:00-11:00)</option>
+                        <option value="group2">الفوج الثاني (08:00-11:00)</option>
+                        <option value="group3">الفوج الثالث (11:00-14:00)</option>
+                        <option value="group4">الفوج الرابع (11:00-14:00)</option>
+                        <option value="group5">الفوج الخامس (14:00-17:00)</option>
+                        <option value="group6">الفوج السادس (14:00-17:00)</option>
+                        <option value="unassigned">غير موزع</option>
+                    </select>
+                </div>
+                <div class="form-group" style="flex-direction: row; gap: 10px; margin-top: 1rem;">
+                    <button class="btn btn-primary" id="confirmManualAssign">تأكيد التوزيع</button>
+                    <button class="btn btn-secondary" id="cancelManualAssign">إلغاء</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- نافذة طلب تغيير الفوج -->
+    <div class="modal" id="reserveRequest">
+        <div class="modal-content">
+            <h3 class="modal-title">طلب تغيير الفوج</h3>
+            <div class="form-group">
+                <label class="form-label">الطالب: <span id="reserveStudentName"></span></label>
+            </div>
+            <div class="form-group">
+                <label class="form-label">الفوج الحالي: <span id="reserveCurrentGroup"></span></label>
+            </div>
+            <div class="form-group">
+                <label for="reserveTargetGroup" class="form-label">الفوج المطلوب</label>
+                <select id="reserveTargetGroup" class="form-control">
+                    <option value="">-- اختر فوج --</option>
+                    <option value="group1">الفوج الأول (08:00-11:00)</option>
+                    <option value="group2">الفوج الثاني (08:00-11:00)</option>
+                    <option value="group3">الفوج الثالث (11:00-14:00)</option>
+                    <option value="group4">الفوج الرابع (11:00-14:00)</option>
+                    <option value="group5">الفوج الخامس (14:00-17:00)</option>
+                    <option value="group6">الفوج السادس (14:00-17:00)</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="reserveReason" class="form-label">سبب التغيير</label>
+                <textarea id="reserveReason" class="form-control" rows="3" placeholder="أدخل سبب طلب التغيير"></textarea>
+            </div>
+            <div class="form-group" style="flex-direction: row; gap: 10px; margin-top: 1rem;">
+                <button class="btn btn-primary" id="confirmReserveRequest">تأكيد الطلب</button>
+                <button class="btn btn-secondary" id="cancelReserveRequest">إلغاء</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- قسم الطباعة -->
+    <div class="print-section" id="printSection">
+        <div class="print-header">
+            <img src="https://i.ibb.co/jZrxhFsf/1-min.png" alt="شعار المجمع" class="print-logo">
+            <h1 class="print-title">المجمع القرآني حمزة بن عبدالمطلب</h1>
+            <h2 class="print-title">قائمة الطلبة - <span id="printGroupTitle"></span></h2>
+            <div class="print-group-info">
+                <p id="printGroupTime"></p>
+                <p>تاريخ الطباعة: <span id="printDate"></span></p>
+            </div>
+        </div>
+        <table class="print-table" id="printTable">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>الاسم الكامل</th>
+                    <th>رقم التسجيل</th>
+                    <th>تاريخ الميلاد</th>
+                    <th>مكان الميلاد</th>
+                    <th>اسم الأب</th>
+                    <th>اسم الأم</th>
+                    <th>رقم الهاتف</th>
+                </tr>
+            </thead>
+            <tbody id="printTableBody">
+                <!-- سيتم ملء الجدول بواسطة JavaScript -->
+            </tbody>
+        </table>
     </div>
 
     <footer>
@@ -541,8 +830,24 @@
                 measurementId: "G-H57ECZPTT7"
             };
 
-            const app = firebase.initializeApp(firebaseConfig);
+            // Initialize Firebase
+            firebase.initializeApp(firebaseConfig);
             const database = firebase.database();
+            
+            // تعريف الأفواج
+            const groups = [
+                { id: 'group1', name: 'الفوج الأول', time: '08:00-11:00' },
+                { id: 'group2', name: 'الفوج الثاني', time: '08:00-11:00' },
+                { id: 'group3', name: 'الفوج الثالث', time: '11:00-14:00' },
+                { id: 'group4', name: 'الفوج الرابع', time: '11:00-14:00' },
+                { id: 'group5', name: 'الفوج الخامس', time: '14:00-17:00' },
+                { id: 'group6', name: 'الفوج السادس', time: '14:00-17:00' }
+            ];
+            
+            let allStudents = [];
+            let filteredStudents = [];
+            let currentStudentToMove = null;
+            let reserveRequests = [];
             
             // عناصر واجهة المستخدم
             const loadingSpinner = document.getElementById('loadingSpinner');
@@ -558,32 +863,50 @@
             const saveBtn = document.getElementById('saveBtn');
             const moveOptions = document.getElementById('moveOptions');
             const moveOptionsList = document.getElementById('moveOptionsList');
-            
-            // تعريف الأفواج
-            const groups = [
-                { id: 'group1', name: 'الفوج الأول', time: '08:00-11:00' },
-                { id: 'group2', name: 'الفوج الثاني', time: '08:00-11:00' },
-                { id: 'group3', name: 'الفوج الثالث', time: '11:00-14:00' },
-                { id: 'group4', name: 'الفوج الرابع', time: '11:00-14:00' },
-                { id: 'group5', name: 'الفوج الخامس', time: '14:00-17:00' },
-                { id: 'group6', name: 'الفوج السادس', time: '14:00-17:00' }
-            ];
-            
-            let allStudents = [];
-            let filteredStudents = [];
-            let currentStudentToMove = null;
+            const manualAssignBtn = document.getElementById('manualAssignBtn');
+            const manualAssign = document.getElementById('manualAssign');
+            const studentSelect = document.getElementById('studentSelect');
+            const targetGroup = document.getElementById('targetGroup');
+            const confirmManualAssign = document.getElementById('confirmManualAssign');
+            const cancelManualAssign = document.getElementById('cancelManualAssign');
+            const showReserveBtn = document.getElementById('showReserveBtn');
+            const reserveSection = document.getElementById('reserveSection');
+            const reserveList = document.getElementById('reserveList');
+            const reserveRequest = document.getElementById('reserveRequest');
+            const reserveStudentName = document.getElementById('reserveStudentName');
+            const reserveCurrentGroup = document.getElementById('reserveCurrentGroup');
+            const reserveTargetGroup = document.getElementById('reserveTargetGroup');
+            const reserveReason = document.getElementById('reserveReason');
+            const confirmReserveRequest = document.getElementById('confirmReserveRequest');
+            const cancelReserveRequest = document.getElementById('cancelReserveRequest');
+            const printBtn = document.getElementById('printBtn');
+            const printSection = document.getElementById('printSection');
+            const printGroupTitle = document.getElementById('printGroupTitle');
+            const printGroupTime = document.getElementById('printGroupTime');
+            const printDate = document.getElementById('printDate');
+            const printTableBody = document.getElementById('printTableBody');
+            const notification = document.getElementById('notification');
+            const yearEl = document.getElementById('year');
             
             // عرض السنة في التذييل
-            document.getElementById('year').textContent = new Date().getFullYear();
+            yearEl.textContent = new Date().getFullYear();
             
             // تحميل البيانات عند فتح الصفحة
             loadStudents();
+            loadReserveRequests();
             
             // أحداث الأزرار
             searchBtn.addEventListener('click', filterStudents);
             autoAssignBtn.addEventListener('click', autoAssignStudents);
             clearAssignmentsBtn.addEventListener('click', clearAssignments);
             saveBtn.addEventListener('click', saveAssignments);
+            manualAssignBtn.addEventListener('click', showManualAssign);
+            confirmManualAssign.addEventListener('click', confirmManualAssignment);
+            cancelManualAssign.addEventListener('click', () => manualAssign.style.display = 'none');
+            showReserveBtn.addEventListener('click', toggleReserveSection);
+            confirmReserveRequest.addEventListener('click', confirmReserve);
+            cancelReserveRequest.addEventListener('click', () => reserveRequest.style.display = 'none');
+            printBtn.addEventListener('click', showPrintOptions);
             
             // دالة لتحميل الطلبة من قاعدة البيانات
             function loadStudents() {
@@ -591,19 +914,38 @@
                 
                 database.ref('students').on('value', (snapshot) => {
                     allStudents = [];
-                    snapshot.forEach(childSnapshot => {
-                        const student = childSnapshot.val();
-                        student.id = childSnapshot.key;
-                        allStudents.push(student);
-                    });
+                    if (snapshot.exists()) {
+                        snapshot.forEach(childSnapshot => {
+                            const student = childSnapshot.val();
+                            student.id = childSnapshot.key;
+                            allStudents.push(student);
+                        });
+                    }
                     
                     updateStatistics();
                     renderGroups();
+                    populateStudentSelect();
                     loadingSpinner.style.display = 'none';
+                    showNotification('تم تحميل بيانات الطلبة بنجاح', 'success');
                 }, (error) => {
                     console.error('Error loading students:', error);
                     loadingSpinner.style.display = 'none';
-                    alert('حدث خطأ أثناء تحميل بيانات الطلبة');
+                    showNotification('حدث خطأ أثناء تحميل بيانات الطلبة', 'error');
+                });
+            }
+            
+            // دالة لتحميل طلبات التغيير من قاعدة البيانات
+            function loadReserveRequests() {
+                database.ref('reserveRequests').on('value', (snapshot) => {
+                    reserveRequests = [];
+                    if (snapshot.exists()) {
+                        snapshot.forEach(childSnapshot => {
+                            const request = childSnapshot.val();
+                            request.id = childSnapshot.key;
+                            reserveRequests.push(request);
+                        });
+                    }
+                    renderReserveRequests();
                 });
             }
             
@@ -664,6 +1006,16 @@
                 groupCount.textContent = students.length;
                 groupInfo.appendChild(groupCount);
                 
+                // زر طباعة الفوج
+                const printBtn = document.createElement('button');
+                printBtn.className = 'btn-action';
+                printBtn.style.backgroundColor = '#3498db';
+                printBtn.innerHTML = '<i class="fas fa-print"></i>';
+                printBtn.title = 'طباعة الفوج';
+                printBtn.style.marginLeft = '5px';
+                printBtn.addEventListener('click', () => printGroup(group.id));
+                groupInfo.appendChild(printBtn);
+                
                 groupHeader.appendChild(groupTitle);
                 groupHeader.appendChild(groupInfo);
                 
@@ -686,10 +1038,10 @@
                     const studentActions = document.createElement('div');
                     studentActions.className = 'student-actions';
                     
-                    // إضافة أزرار التحريك بين الأفواج
+                    // زر نقل إلى فوج آخر
                     if (group.id !== 'unassigned') {
                         const moveBtn = document.createElement('button');
-                        moveBtn.className = 'btn-move';
+                        moveBtn.className = 'btn-action btn-move';
                         moveBtn.innerHTML = '<i class="fas fa-exchange-alt"></i>';
                         moveBtn.title = 'نقل إلى فوج آخر';
                         moveBtn.addEventListener('click', (e) => {
@@ -697,6 +1049,30 @@
                             showMoveOptions(student.id);
                         });
                         studentActions.appendChild(moveBtn);
+                    }
+                    
+                    // زر إزالة التوزيع
+                    const removeBtn = document.createElement('button');
+                    removeBtn.className = 'btn-action btn-remove';
+                    removeBtn.innerHTML = '<i class="fas fa-times"></i>';
+                    removeBtn.title = 'إزالة التوزيع';
+                    removeBtn.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        removeAssignment(student.id);
+                    });
+                    studentActions.appendChild(removeBtn);
+                    
+                    // زر طلب تغيير الفوج
+                    if (group.id !== 'unassigned') {
+                        const reserveBtn = document.createElement('button');
+                        reserveBtn.className = 'btn-action btn-reserve';
+                        reserveBtn.innerHTML = '<i class="fas fa-exchange-alt"></i>';
+                        reserveBtn.title = 'طلب تغيير الفوج';
+                        reserveBtn.addEventListener('click', (e) => {
+                            e.stopPropagation();
+                            showReserveRequest(student.id);
+                        });
+                        studentActions.appendChild(reserveBtn);
                     }
                     
                     studentItem.appendChild(studentName);
@@ -727,6 +1103,7 @@
                     unassignedOption.addEventListener('click', () => {
                         moveStudent(studentId, 'unassigned');
                         moveOptions.style.display = 'none';
+                        showNotification('تم نقل الطالب إلى غير الموزعين', 'success');
                     });
                     moveOptionsList.appendChild(unassignedOption);
                 }
@@ -740,6 +1117,7 @@
                         groupOption.addEventListener('click', () => {
                             moveStudent(studentId, group.id);
                             moveOptions.style.display = 'none';
+                            showNotification(`تم نقل الطالب إلى ${group.name}`, 'success');
                         });
                         moveOptionsList.appendChild(groupOption);
                     }
@@ -766,6 +1144,22 @@
                 renderGroups();
             }
             
+            // دالة لإزالة توزيع طالب معين
+            function removeAssignment(studentId) {
+                if (!confirm('هل أنت متأكد من إزالة توزيع هذا الطالب؟')) {
+                    return;
+                }
+                
+                const studentIndex = allStudents.findIndex(s => s.id === studentId);
+                if (studentIndex === -1) return;
+                
+                allStudents[studentIndex].group = null;
+                
+                updateStatistics();
+                renderGroups();
+                showNotification('تم إزالة توزيع الطالب بنجاح', 'success');
+            }
+            
             // دالة للبحث والتصفية
             function filterStudents() {
                 const searchTerm = searchInput.value.toLowerCase();
@@ -773,9 +1167,9 @@
                 
                 filteredStudents = allStudents.filter(student => {
                     const matchesSearch = searchTerm === '' || 
-                        student.firstName.toLowerCase().includes(searchTerm) || 
-                        student.lastName.toLowerCase().includes(searchTerm) ||
-                        student.registrationNumber.toLowerCase().includes(searchTerm);
+                        (student.firstName && student.firstName.toLowerCase().includes(searchTerm)) || 
+                        (student.lastName && student.lastName.toLowerCase().includes(searchTerm)) ||
+                        (student.registrationNumber && student.registrationNumber.toLowerCase().includes(searchTerm));
                     
                     const matchesGroup = selectedGroup === '' || 
                         (selectedGroup === 'unassigned' && !student.group) || 
@@ -793,7 +1187,7 @@
                 groupsContainer.innerHTML = '';
                 
                 if (filteredStudents.length === 0) {
-                    groupsContainer.innerHTML = '<p style="grid-column: 1/-1; text-align: center;">لا توجد نتائج مطابقة للبحث</p>';
+                    groupsContainer.innerHTML = '<p style="grid-column: 1/-1; text-align: center; padding: 2rem;">لا توجد نتائج مطابقة للبحث</p>';
                     return;
                 }
                 
@@ -813,32 +1207,74 @@
                 }
                 
                 // تصفية الطلبة غير الموزعين
-                const unassignedStudents = allStudents.filter(s => !s.group);
+                let unassignedStudents = allStudents.filter(s => !s.group);
                 
                 if (unassignedStudents.length === 0) {
-                    alert('لا يوجد طلبة غير موزعين');
+                    showNotification('لا يوجد طلبة غير موزعين', 'info');
                     return;
                 }
                 
-                // توزيع الطلبة بالتساوي على الأفواج
-                const studentsPerGroup = Math.ceil(unassignedStudents.length / groups.length);
+                // فصل الطلبة مواليد 2020 لوضعهم في الفوج الخامس والسادس
+                const students2020 = unassignedStudents.filter(student => {
+                    if (student.birthDate) {
+                        const birthYear = new Date(student.birthDate).getFullYear();
+                        return birthYear === 2020;
+                    }
+                    return false;
+                });
                 
-                groups.forEach((group, index) => {
-                    const start = index * studentsPerGroup;
-                    const end = start + studentsPerGroup;
-                    const groupStudents = unassignedStudents.slice(start, end);
+                const otherStudents = unassignedStudents.filter(student => {
+                    if (student.birthDate) {
+                        const birthYear = new Date(student.birthDate).getFullYear();
+                        return birthYear !== 2020;
+                    }
+                    return true;
+                });
+                
+                // توزيع الطلبة مواليد 2020 على الفوج الخامس والسادس
+                if (students2020.length > 0) {
+                    const studentsPerGroup = Math.ceil(students2020.length / 2);
                     
-                    groupStudents.forEach(student => {
+                    // الفوج الخامس
+                    const group5Students = students2020.slice(0, studentsPerGroup);
+                    group5Students.forEach(student => {
                         const studentIndex = allStudents.findIndex(s => s.id === student.id);
                         if (studentIndex !== -1) {
-                            allStudents[studentIndex].group = group.id;
+                            allStudents[studentIndex].group = 'group5';
                         }
                     });
-                });
+                    
+                    // الفوج السادس
+                    const group6Students = students2020.slice(studentsPerGroup);
+                    group6Students.forEach(student => {
+                        const studentIndex = allStudents.findIndex(s => s.id === student.id);
+                        if (studentIndex !== -1) {
+                            allStudents[studentIndex].group = 'group6';
+                        }
+                    });
+                }
+                
+                // توزيع بقية الطلبة على الأفواج الأربعة الأولى
+                if (otherStudents.length > 0) {
+                    const studentsPerGroup = Math.ceil(otherStudents.length / 4);
+                    
+                    groups.slice(0, 4).forEach((group, index) => {
+                        const start = index * studentsPerGroup;
+                        const end = start + studentsPerGroup;
+                        const groupStudents = otherStudents.slice(start, end);
+                        
+                        groupStudents.forEach(student => {
+                            const studentIndex = allStudents.findIndex(s => s.id === student.id);
+                            if (studentIndex !== -1) {
+                                allStudents[studentIndex].group = group.id;
+                            }
+                        });
+                    });
+                }
                 
                 updateStatistics();
                 renderGroups();
-                alert('تم توزيع الطلبة تلقائياً على الأفواج');
+                showNotification('تم توزيع الطلبة تلقائياً على الأفواج', 'success');
             }
             
             // دالة لإعادة تعيين التوزيع
@@ -853,7 +1289,7 @@
                 
                 updateStatistics();
                 renderGroups();
-                alert('تم إعادة تعيين توزيع الطلبة');
+                showNotification('تم إعادة تعيين توزيع الطلبة', 'success');
             }
             
             // دالة لحفظ التوزيع في قاعدة البيانات
@@ -868,13 +1304,345 @@
                 database.ref().update(updates)
                     .then(() => {
                         loadingSpinner.style.display = 'none';
-                        alert('تم حفظ توزيع الطلبة بنجاح');
+                        showNotification('تم حفظ توزيع الطلبة بنجاح', 'success');
                     })
                     .catch(error => {
                         loadingSpinner.style.display = 'none';
                         console.error('Error saving assignments:', error);
-                        alert('حدث خطأ أثناء حفظ التوزيع');
+                        showNotification('حدث خطأ أثناء حفظ التوزيع', 'error');
                     });
+            }
+            
+            // دالة لملء قائمة الطلبة في التوزيع اليدوي
+            function populateStudentSelect() {
+                studentSelect.innerHTML = '<option value="">-- اختر طالب --</option>';
+                
+                allStudents.forEach(student => {
+                    const option = document.createElement('option');
+                    option.value = student.id;
+                    option.textContent = `${student.firstName} ${student.lastName} - ${student.registrationNumber}`;
+                    studentSelect.appendChild(option);
+                });
+            }
+            
+            // دالة لعرض نافذة التوزيع اليدوي
+            function showManualAssign() {
+                manualAssign.style.display = 'flex';
+            }
+            
+            // دالة لتأكيد التوزيع اليدوي
+            function confirmManualAssignment() {
+                const studentId = studentSelect.value;
+                const targetGroupId = targetGroup.value;
+                
+                if (!studentId || !targetGroupId) {
+                    showNotification('الرجاء اختيار الطالب والفوج الهدف', 'error');
+                    return;
+                }
+                
+                moveStudent(studentId, targetGroupId);
+                manualAssign.style.display = 'none';
+                showNotification('تم توزيع الطالب يدوياً بنجاح', 'success');
+            }
+            
+            // دالة لعرض/إخفاء قسم طلبات التغيير
+            function toggleReserveSection() {
+                reserveSection.style.display = reserveSection.style.display === 'none' ? 'block' : 'none';
+            }
+            
+            // دالة لعرض نافذة طلب تغيير الفوج
+            function showReserveRequest(studentId) {
+                const student = allStudents.find(s => s.id === studentId);
+                if (!student) return;
+                
+                currentStudentToMove = studentId;
+                reserveStudentName.textContent = `${student.firstName} ${student.lastName}`;
+                
+                const currentGroup = groups.find(g => g.id === student.group);
+                reserveCurrentGroup.textContent = currentGroup ? `${currentGroup.name} (${currentGroup.time})` : 'غير موزع';
+                
+                // ملء خيارات الفوج الهدف (استثناء الفوج الحالي)
+                reserveTargetGroup.innerHTML = '<option value="">-- اختر فوج --</option>';
+                groups.forEach(group => {
+                    if (group.id !== student.group) {
+                        const option = document.createElement('option');
+                        option.value = group.id;
+                        option.textContent = `${group.name} (${group.time})`;
+                        reserveTargetGroup.appendChild(option);
+                    }
+                });
+                
+                reserveReason.value = '';
+                reserveRequest.style.display = 'flex';
+            }
+            
+            // دالة لتأكيد طلب التغيير
+            function confirmReserve() {
+                const targetGroupId = reserveTargetGroup.value;
+                const reason = reserveReason.value.trim();
+                
+                if (!targetGroupId) {
+                    showNotification('الرجاء اختيار الفوج المطلوب', 'error');
+                    return;
+                }
+                
+                if (!reason) {
+                    showNotification('الرجاء إدخال سبب التغيير', 'error');
+                    return;
+                }
+                
+                const student = allStudents.find(s => s.id === currentStudentToMove);
+                if (!student) return;
+                
+                const currentGroup = groups.find(g => g.id === student.group);
+                const targetGroup = groups.find(g => g.id === targetGroupId);
+                
+                const request = {
+                    studentId: currentStudentToMove,
+                    studentName: `${student.firstName} ${student.lastName}`,
+                    currentGroup: currentGroup ? currentGroup.id : null,
+                    currentGroupName: currentGroup ? `${currentGroup.name} (${currentGroup.time})` : 'غير موزع',
+                    targetGroup: targetGroupId,
+                    targetGroupName: targetGroup ? `${targetGroup.name} (${targetGroup.time})` : '',
+                    reason: reason,
+                    status: 'pending',
+                    createdAt: new Date().toISOString()
+                };
+                
+                // حفظ الطلب في قاعدة البيانات
+                const newRequestRef = database.ref('reserveRequests').push();
+                newRequestRef.set(request)
+                    .then(() => {
+                        showNotification('تم إرسال طلب التغيير بنجاح', 'success');
+                        reserveRequest.style.display = 'none';
+                    })
+                    .catch(error => {
+                        console.error('Error saving reserve request:', error);
+                        showNotification('حدث خطأ أثناء إرسال طلب التغيير', 'error');
+                    });
+            }
+            
+            // دالة لعرض طلبات التغيير
+            function renderReserveRequests() {
+                reserveList.innerHTML = '';
+                
+                if (reserveRequests.length === 0) {
+                    reserveList.innerHTML = '<p style="text-align: center; padding: 1rem;">لا توجد طلبات تغيير</p>';
+                    return;
+                }
+                
+                reserveRequests.forEach((request, index) => {
+                    const reserveItem = document.createElement('div');
+                    reserveItem.className = 'reserve-item';
+                    
+                    const reserveInfo = document.createElement('div');
+                    reserveInfo.className = 'reserve-info';
+                    reserveInfo.innerHTML = `
+                        <p><strong>#${index + 1}</strong></p>
+                        <p><strong>الطالب:</strong> ${request.studentName}</p>
+                        <p><strong>الفوج الحالي:</strong> ${request.currentGroupName}</p>
+                        <p><strong>الفوج المطلوب:</strong> ${request.targetGroupName}</p>
+                        <p><strong>السبب:</strong> ${request.reason}</p>
+                        <p><strong>الحالة:</strong> ${request.status === 'pending' ? 'قيد الانتظار' : 'مكتمل'}</p>
+                    `;
+                    
+                    const reserveActions = document.createElement('div');
+                    reserveActions.className = 'reserve-actions';
+                    
+                    if (request.status === 'pending') {
+                        const approveBtn = document.createElement('button');
+                        approveBtn.className = 'btn-action';
+                        approveBtn.innerHTML = '<i class="fas fa-check"></i>';
+                        approveBtn.title = 'موافقة';
+                        approveBtn.style.backgroundColor = '#2ecc71';
+                        approveBtn.addEventListener('click', () => approveReserveRequest(request.id, request.studentId, request.targetGroup));
+                        reserveActions.appendChild(approveBtn);
+                        
+                        const rejectBtn = document.createElement('button');
+                        rejectBtn.className = 'btn-action btn-remove';
+                        rejectBtn.innerHTML = '<i class="fas fa-times"></i>';
+                        rejectBtn.title = 'رفض';
+                        rejectBtn.addEventListener('click', () => rejectReserveRequest(request.id));
+                        reserveActions.appendChild(rejectBtn);
+                    }
+                    
+                    reserveItem.appendChild(reserveInfo);
+                    reserveItem.appendChild(reserveActions);
+                    reserveList.appendChild(reserveItem);
+                });
+            }
+            
+            // دالة للموافقة على طلب التغيير
+            function approveReserveRequest(requestId, studentId, targetGroupId) {
+                if (!confirm('هل أنت متأكد من الموافقة على طلب التغيير؟')) {
+                    return;
+                }
+                
+                // نقل الطالب إلى الفوج الجديد
+                moveStudent(studentId, targetGroupId);
+                
+                // تحديث حالة الطلب في قاعدة البيانات
+                database.ref(`reserveRequests/${requestId}`).update({
+                    status: 'approved',
+                    approvedAt: new Date().toISOString()
+                })
+                .then(() => {
+                    showNotification('تمت الموافقة على طلب التغيير ونقل الطالب', 'success');
+                })
+                .catch(error => {
+                    console.error('Error approving reserve request:', error);
+                    showNotification('حدث خطأ أثناء الموافقة على طلب التغيير', 'error');
+                });
+            }
+            
+            // دالة لرفض طلب التغيير
+            function rejectReserveRequest(requestId) {
+                if (!confirm('هل أنت متأكد من رفض طلب التغيير؟')) {
+                    return;
+                }
+                
+                // تحديث حالة الطلب في قاعدة البيانات
+                database.ref(`reserveRequests/${requestId}`).update({
+                    status: 'rejected',
+                    rejectedAt: new Date().toISOString()
+                })
+                .then(() => {
+                    showNotification('تم رفض طلب التغيير', 'success');
+                })
+                .catch(error => {
+                    console.error('Error rejecting reserve request:', error);
+                    showNotification('حدث خطأ أثناء رفض طلب التغيير', 'error');
+                });
+            }
+            
+            // دالة لعرض خيارات الطباعة
+            function showPrintOptions() {
+                moveOptionsList.innerHTML = '';
+                
+                // إضافة خيار طباعة جميع الأفواج
+                const allOption = document.createElement('div');
+                allOption.className = 'move-option';
+                allOption.textContent = 'جميع الأفواج';
+                allOption.addEventListener('click', () => {
+                    printAllGroups();
+                    moveOptions.style.display = 'none';
+                });
+                moveOptionsList.appendChild(allOption);
+                
+                // إضافة خيارات طباعة كل فوج على حدة
+                groups.forEach(group => {
+                    const groupOption = document.createElement('div');
+                    groupOption.className = 'move-option';
+                    groupOption.textContent = `${group.name} (${group.time})`;
+                    groupOption.addEventListener('click', () => {
+                        printGroup(group.id);
+                        moveOptions.style.display = 'none';
+                    });
+                    moveOptionsList.appendChild(groupOption);
+                });
+                
+                // إضافة خيار طباعة الطلبة غير الموزعين
+                const unassignedOption = document.createElement('div');
+                unassignedOption.className = 'move-option';
+                unassignedOption.textContent = 'الطلبة غير الموزعين';
+                unassignedOption.addEventListener('click', () => {
+                    printUnassignedStudents();
+                    moveOptions.style.display = 'none';
+                });
+                moveOptionsList.appendChild(unassignedOption);
+                
+                moveOptions.style.display = 'flex';
+            }
+            
+            // دالة لطباعة فوج معين
+            function printGroup(groupId) {
+                const group = groups.find(g => g.id === groupId);
+                const students = allStudents.filter(s => s.group === groupId);
+                
+                if (!group || students.length === 0) {
+                    showNotification('لا يوجد طلبة في هذا الفوج', 'info');
+                    return;
+                }
+                
+                preparePrintData(group.name, group.time, students);
+                window.print();
+            }
+            
+            // دالة لطباعة جميع الأفواج
+            function printAllGroups() {
+                const allStudentsInGroups = allStudents.filter(s => s.group);
+                
+                if (allStudentsInGroups.length === 0) {
+                    showNotification('لا يوجد طلبة موزعين على الأفواج', 'info');
+                    return;
+                }
+                
+                preparePrintData('جميع الأفواج', '', allStudentsInGroups);
+                window.print();
+            }
+            
+            // دالة لطباعة الطلبة غير الموزعين
+            function printUnassignedStudents() {
+                const unassignedStudents = allStudents.filter(s => !s.group);
+                
+                if (unassignedStudents.length === 0) {
+                    showNotification('لا يوجد طلبة غير موزعين', 'info');
+                    return;
+                }
+                
+                preparePrintData('الطلبة غير الموزعين', '', unassignedStudents);
+                window.print();
+            }
+            
+            // دالة لإعداد بيانات الطباعة
+            function preparePrintData(groupName, groupTime, students) {
+                printGroupTitle.textContent = groupName;
+                printGroupTime.textContent = groupTime ? `وقت الفوج: ${groupTime}` : '';
+                printDate.textContent = new Date().toLocaleDateString('ar-EG');
+                
+                printTableBody.innerHTML = '';
+                
+                students.forEach((student, index) => {
+                    const row = document.createElement('tr');
+                    
+                    // تنسيق تاريخ الميلاد
+                    let birthDateFormatted = 'غير محدد';
+                    if (student.birthDate) {
+                        const date = new Date(student.birthDate);
+                        birthDateFormatted = date.toLocaleDateString('ar-EG');
+                    }
+                    
+                    row.innerHTML = `
+                        <td>${index + 1}</td>
+                        <td>${student.firstName} ${student.lastName}</td>
+                        <td>${student.registrationNumber || 'غير محدد'}</td>
+                        <td>${birthDateFormatted}</td>
+                        <td>${student.birthPlace || 'غير محدد'}</td>
+                        <td>${student.fatherName || 'غير محدد'}</td>
+                        <td>${student.motherName || 'غير محدد'}</td>
+                        <td>${student.phone || 'غير محدد'}</td>
+                    `;
+                    
+                    printTableBody.appendChild(row);
+                });
+            }
+            
+            // دالة لعرض الإشعارات
+            function showNotification(message, type) {
+                notification.textContent = message;
+                notification.style.display = 'block';
+                
+                if (type === 'success') {
+                    notification.style.backgroundColor = '#2ecc71';
+                } else if (type === 'error') {
+                    notification.style.backgroundColor = '#e74c3c';
+                } else if (type === 'info') {
+                    notification.style.backgroundColor = '#3498db';
+                }
+                
+                setTimeout(() => {
+                    notification.style.display = 'none';
+                }, 3000);
             }
         });
     </script>
