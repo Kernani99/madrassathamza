@@ -742,6 +742,7 @@
             let sortOrder = 'desc';
             
             mainContent.style.display = 'block';
+            migrateSocialStatus();
             loadStudentsData();
             
             refreshBtn.addEventListener('click', loadStudentsData);
@@ -749,6 +750,26 @@
             excelBtn.addEventListener('click', exportToExcel);
             showDuplicatesBtn.addEventListener('click', showOnlyDuplicates);
             searchInput.addEventListener('input', searchStudents);
+            
+            // دالة لتحويل الحالة الاجتماعية "أعزب" إلى "عادية" في قاعدة البيانات
+            function migrateSocialStatus() {
+                database.ref('students').once('value')
+                    .then(snapshot => {
+                        const students = snapshot.val();
+                        if (students) {
+                            Object.entries(students).forEach(([key, student]) => {
+                                if (student.socialStatus === 'أعزب') {
+                                    database.ref('students/' + key).update({
+                                        socialStatus: 'عادية'
+                                    });
+                                }
+                            });
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error migrating social status:', error);
+                    });
+            }
             
             function loadStudentsData() {
                 showLoading();
@@ -790,7 +811,8 @@
                                 (student.firstName && student.firstName.toLowerCase().includes(searchTerm)) ||
                                 (student.lastName && student.lastName.toLowerCase().includes(searchTerm)) ||
                                 (student.parentPhone && student.parentPhone.includes(searchTerm)) ||
-                                (student.address && student.address.toLowerCase().includes(searchTerm))
+                                (student.address && student.address.toLowerCase().includes(searchTerm)) ||
+                                (student.socialStatus && student.socialStatus.toLowerCase().includes(searchTerm))
                             );
                         })
                     );
@@ -1105,7 +1127,7 @@
                                 <div class="form-group">
                                     <label for="editSocialStatus">الحالة الاجتماعية:</label>
                                     <select id="editSocialStatus">
-                                        <option value="أعزب" ${student.socialStatus === 'أعزب' ? 'selected' : ''}>أعزب</option>
+                                        <option value="عادية" ${student.socialStatus === 'عادية' ? 'selected' : ''}>عادية</option>
                                         <option value="متزوج" ${student.socialStatus === 'متزوج' ? 'selected' : ''}>متزوج</option>
                                         <option value="مطلق" ${student.socialStatus === 'مطلق' ? 'selected' : ''}>مطلق</option>
                                         <option value="أرمل" ${student.socialStatus === 'أرمل' ? 'selected' : ''}>أرمل</option>
@@ -1477,7 +1499,7 @@
                     <div class="info-item"><span class="info-label">العنوان:</span> ${student.address || 'غير محدد'}</div>
                     <div class="info-item"><span class="info-label">رقم الهاتف:</span> ${student.parentPhone || 'غير محدد'}</div>
                     <div class="info-item"><span class="info-label">الحالة الاجتماعية:</span> ${student.socialStatus || 'غير محدد'}</div>
-                    Капсовиков: ${student.bloodType || 'غير محدد'}</div>
+                    <div class="info-item"><span class="info-label">الزمرة الدموية:</span> ${student.bloodType || 'غير محدد'}</div>
                     <div class="info-item"><span class="info-label">الحالة الصحية:</span> ${student.isSick === 'نعم' ? 'مريض' : 'سليم'}</div>
                     ${student.sicknessType ? `<div class="info-item"><span class="info-label">نوع المرض:</span> ${student.sicknessType}</div>` : ''}
                     ${student.takesMedicine ? `<div class="info-item"><span class="info-label">الأدوية:</span> ${student.takesMedicine}</div>` : ''}
