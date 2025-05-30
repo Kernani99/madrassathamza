@@ -97,7 +97,7 @@
         .login-btn:hover {
             background-color: var(--primary-light);
             transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            box-shadow: 0Sampling 5px 15px rgba(0,0,0,0.1);
         }
 
         .login-error {
@@ -141,7 +141,7 @@
             background: white;
             border-radius: 10px;
             padding: 1.5rem;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
             margin-bottom: 2rem;
             overflow-x: auto;
         }
@@ -178,7 +178,7 @@
 
         .stat-box:hover {
             transform: translateY(-3px);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
         }
 
         /* الأزرار */
@@ -399,12 +399,97 @@
             width: 210mm;
             min-height: 297mm;
             margin: 0 auto;
-            padding: 20mm;
+            padding: 8mm;
             background: white;
             box-shadow: 0 0 10px rgba(0,0,0,0.1);
             position: relative;
             box-sizing: border-box;
             page-break-after: always;
+        }
+
+        .form-header {
+            text-align: center;
+            margin-bottom: 8mm;
+        }
+
+        .form-logo {
+            height: 20mm;
+            margin-bottom: 3mm;
+        }
+
+        .form-title {
+            color: var(--primary-color);
+            font-size: 16pt;
+            margin: 0;
+        }
+
+        .form-subtitle {
+            color: var(--text-color);
+            font-size: 12pt;
+            margin: 2mm 0;
+        }
+
+        .form-qr {
+            display: block;
+            margin: 2mm auto;
+            width: 20mm;
+            height: 20mm;
+        }
+
+        .form-section {
+            margin-bottom: 6mm;
+        }
+
+        .section-title {
+            color: var(--primary-color);
+            font-size: 10pt;
+            font-weight: bold;
+            border-bottom: 1px solid var(--accent-color);
+            padding-bottom: 1mm;
+            margin-bottom: 3mm;
+        }
+
+        .student-info {
+            font-size: 9pt;
+        }
+
+        .info-item {
+            margin-bottom: 1.5mm;
+        }
+
+        .info-label {
+            font-weight: bold;
+            margin-left: 5mm;
+        }
+
+        .financial-box {
+            border: 1px solid #ddd;
+            padding: 4mm;
+            border-radius: 2mm;
+            margin-top: 3mm;
+        }
+
+        .financial-title {
+            font-weight: bold;
+            font-size: 9pt;
+            margin-bottom: 2mm;
+        }
+
+        .financial-content {
+            font-size: 8pt;
+            line-height: 1.4;
+        }
+
+        .signature-area {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 10mm;
+        }
+
+        .signature-line {
+            width: 35mm;
+            border-top: 1px solid #000;
+            margin-bottom: 1mm;
         }
 
         /* نموذج التعديل */
@@ -490,24 +575,98 @@
 
         /* الطباعة */
         @media print {
-            body {
-                background: none;
-                margin: 0;
-                padding: 0;
+            body * {
+                visibility: hidden;
             }
-            
-            .no-print, .no-print * {
-                display: none !important;
+
+            .student-form, .student-form * {
+                visibility: visible;
             }
-            
+
             .student-form {
                 display: block !important;
-                box-shadow: none;
-                margin: 0;
-                padding: 20mm;
+                position: absolute;
+                top: 0;
+                left: 0;
                 width: 210mm;
-                min-height: 297mm;
-                page-break-after: always;
+                height: 297mm;
+                margin: 0;
+                padding: 8mm;
+                box-shadow: none;
+                background: white;
+            }
+
+            .form-logo {
+                height: 20mm;
+                max-width: 100%;
+                margin-bottom: 3mm;
+            }
+
+            .form-title {
+                font-size: 16pt;
+            }
+
+            .form-subtitle {
+                font-size: 12pt;
+                margin: 2mm 0;
+            }
+
+            .form-qr {
+                display: block;
+                margin: 2mm auto;
+                width: 20mm;
+                height: 20mm;
+            }
+
+            .form-section {
+                margin-bottom: 6mm;
+            }
+
+            .section-title {
+                font-size: 10pt;
+                border-bottom: 1px solid #000;
+                padding-bottom: 1mm;
+                margin-bottom: 3mm;
+            }
+
+            .student-info {
+                font-size: 9pt;
+            }
+
+            .info-item {
+                margin-bottom: 1.5mm;
+            }
+
+            .financial-box {
+                border: 1px solid #000;
+                padding: 5mm; /* Increased for print */
+                border-radius: 2mm;
+                margin-top: 3mm;
+            }
+
+            .financial-title {
+                font-size: 10pt; /* Increased for print */
+                margin-bottom: 2mm;
+            }
+
+            .financial-content {
+                font-size: 9pt; /* Increased for print */
+                line-height: 1.5;
+            }
+
+            .signature-area {
+                margin-top: 10mm;
+            }
+
+            .signature-line {
+                width: 35mm;
+                border-top: 1px solid #000;
+                margin-bottom: 1mm;
+            }
+
+            @page {
+                size: A4;
+                margin: 0;
             }
         }
 
@@ -611,6 +770,7 @@
             <img src="https://i.ibb.co/jZrxhFsf/1-min.png" alt="شعار المجمع القرآني" class="form-logo">
             <h1 class="form-title">المجمع القرآني حمزة بن عبدالمطلب</h1>
             <h2 class="form-subtitle">استمارة تسجيل الطالب</h2>
+            <img src="https://api.qrserver.com/v1/create-qr-code/?size=80x80&data=https://example.com" alt="QR Code" class="form-qr">
         </div>
         
         <div class="form-section">
@@ -1257,7 +1417,7 @@
                         </div>
                         ${document.querySelector('.printable table').outerHTML}
                         <div class="footer">
-                            <p>جميع الحقوق محفوظة &copy; المجمع القرآني حمزة بن عبدالمطلب ${new Date().getFullYear()}</p>
+                            <p>جميع الحقوق محفوظة © المجمع القرآني حمزة بن عبدالمطلب ${new Date().getFullYear()}</p>
                         </div>
                     </body>
                     </html>
@@ -1392,31 +1552,41 @@
                 const formTemplate = document.getElementById('studentFormTemplate').cloneNode(true);
                 formTemplate.id = 'studentFormToPrint';
                 formTemplate.classList.remove('no-print');
+                formTemplate.style.display = 'block';
                 
-                // ملء المعلومات الشخصية فقط
+                // ملء المعلومات الشخصية
                 const personalInfoHTML = `
                     <div class="info-item"><span class="info-label">الاسم الكامل:</span> ${student.firstName || ''} ${student.lastName || ''}</div>
                     <div class="info-item"><span class="info-label">اسم الأب:</span> ${student.fatherName || 'غير محدد'}</div>
                     <div class="info-item"><span class="info-label">اسم الأم:</span> ${student.motherName || 'غير محدد'}</div>
                     <div class="info-item"><span class="info-label">نوع التسجيل:</span> ${student.registrationType ? getRegistrationTypeDisplay(student.registrationType) : 'غير محدد'}</div>
-                    <div class="info-item"><span class="info-label">تاريخ الميلاد:</span> ${formatDate(student.birthDate) || 'غير محدد'}</div>
+                    <div class="info-item"><span class="info-label">تاريخ الميلاد:</span> ${formatDate(student.birthDate, true) || 'غير محدد'}</div>
                     <div class="info-item"><span class="info-label">مكان الميلاد:</span> ${student.birthPlace || 'غير محدد'}</div>
                     <div class="info-item"><span class="info-label">العنوان:</span> ${student.address || 'غير محدد'}</div>
                     <div class="info-item"><span class="info-label">رقم الهاتف:</span> ${student.parentPhone || 'غير محدد'}</div>
                     <div class="info-item"><span class="info-label">الحالة الاجتماعية:</span> ${student.socialStatus || 'غير محدد'}</div>
                     <div class="info-item"><span class="info-label">الزمرة الدموية:</span> ${student.bloodType || 'غير محدد'}</div>
                     <div class="info-item"><span class="info-label">الحالة الصحية:</span> ${student.isSick === 'نعم' ? 'مريض' : 'سليم'}</div>
+                    ${student.sicknessType ? `<div class="info-item"><span class="info-label">نوع المرض:</span> ${student.sicknessType}</div>` : ''}
+                    ${student.takesMedicine ? `<div class="info-item"><span class="info-label">الأدوية:</span> ${student.takesMedicine}</div>` : ''}
+                    ${student.notes ? `<div class="info-item"><span class="info-label">ملاحظات:</span> ${student.notes}</div>` : ''}
                 `;
                 
                 formTemplate.querySelector('#studentPersonalInfo').innerHTML = personalInfoHTML;
                 
-                // إضافة الاستمارة إلى الجسم وطباعتها
+                // إخفاء جميع العناصر الأخرى
+                document.body.style.visibility = 'hidden';
+                formTemplate.style.visibility = 'visible';
+                
+                // إضافة الاستمارة إلى الجسم
                 document.body.appendChild(formTemplate);
                 
+                // إضافة تأخير لضمان التحميل
                 setTimeout(() => {
                     window.print();
                     document.body.removeChild(formTemplate);
-                }, 500);
+                    document.body.style.visibility = 'visible';
+                }, 100);
             }
             
             // دوال مساعدة
@@ -1424,11 +1594,21 @@
                 return data ? data : '<span class="empty-data">غير محدد</span>';
             }
             
-            function formatDate(dateString) {
+            function formatDate(dateString, useLatinNumerals = false) {
                 if (!dateString) return '<span class="empty-data">غير محدد</span>';
                 try {
                     const date = new Date(dateString);
-                    return isNaN(date.getTime()) ? dateString : date.toLocaleDateString('en-US');
+                    if (isNaN(date.getTime())) return dateString;
+                    
+                    let formattedDate = date.toLocaleDateString('ar-EG');
+                    if (useLatinNumerals) {
+                        const arabicToLatin = {
+                            '٠': '0', '١': '1', '٢': '2', '٣': '3', '٤': '4',
+                            '٥': '5', '٦': '6', '٧': '7', '٨': '8', '٩': '9'
+                        };
+                        formattedDate = formattedDate.replace(/[٠١٢٣٤٥٦٧٨٩]/g, char => arabicToLatin[char]);
+                    }
+                    return formattedDate;
                 } catch {
                     return dateString;
                 }
