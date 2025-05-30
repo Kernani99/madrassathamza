@@ -20,6 +20,8 @@
             --success-color: #2ecc71;
             --reserve-color: #f39c12;
             --info-color: #3498db;
+            --warning-color: #f1c40f;
+            --max-group-color: #e74c3c;
         }
 
         * {
@@ -127,6 +129,11 @@
             transition: transform 0.3s;
         }
 
+        .group-card.max-reached {
+            border: 2px solid var(--max-group-color);
+            box-shadow: 0 0 0 3px rgba(231, 76, 60, 0.2);
+        }
+
         .group-card:hover {
             transform: translateY(-5px);
             box-shadow: 0 5px 15px rgba(0,0,0,0.15);
@@ -162,6 +169,10 @@
             border-radius: 50%;
             font-size: 0.8rem;
             margin-right: 0.5rem;
+        }
+
+        .group-count.max-reached {
+            background: var(--max-group-color);
         }
 
         .student-list {
@@ -226,6 +237,11 @@
         .btn-move:hover {
             background: var(--primary-dark);
             transform: scale(1.1);
+        }
+
+        .btn-move:disabled {
+            background: #95a5a6;
+            cursor: not-allowed;
         }
 
         .btn-remove {
@@ -308,6 +324,17 @@
 
         .btn-info:hover {
             background-color: #2980b9;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        .btn-warning {
+            background-color: var(--warning-color);
+            color: white;
+        }
+
+        .btn-warning:hover {
+            background-color: #f39c12;
             transform: translateY(-2px);
             box-shadow: 0 4px 8px rgba(0,0,0,0.1);
         }
@@ -568,6 +595,46 @@
             box-shadow: 0 4px 12px rgba(0,0,0,0.15);
             z-index: 2000;
             display: none;
+        }
+
+        .move-option {
+            padding: 0.8rem;
+            margin: 0.5rem 0;
+            background: #f8f9fa;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 1px solid #ddd;
+        }
+
+        .move-option:hover {
+            background: #e9ecef;
+            transform: translateY(-2px);
+        }
+
+        .move-option.disabled {
+            background: #e9ecef;
+            color: #6c757d;
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+
+        .move-option.disabled:hover {
+            transform: none;
+        }
+
+        .group-status {
+            font-size: 0.8rem;
+            margin-top: 0.3rem;
+        }
+
+        .group-status.full {
+            color: var(--max-group-color);
+            font-weight: bold;
+        }
+
+        .group-status.available {
+            color: var(--success-color);
         }
 
         @media (max-width: 992px) {
@@ -844,6 +911,9 @@
                 { id: 'group6', name: 'الفوج السادس', time: '14:00-17:00' }
             ];
             
+            // الحد الأقصى لعدد الطلبة في كل فوج
+            const MAX_STUDENTS_PER_GROUP = 35;
+            
             let allStudents = [];
             let filteredStudents = [];
             let currentStudentToMove = null;
@@ -960,6 +1030,12 @@
                 unassignedStudentsEl.textContent = unassigned;
             }
             
+            // دالة للتحقق من أن الفوج لم يصل للحد الأقصى
+            function isGroupFull(groupId) {
+                const groupStudents = allStudents.filter(s => s.group === groupId);
+                return groupStudents.length >= MAX_STUDENTS_PER_GROUP;
+            }
+            
             // دالة لعرض الأفواج والطلبة
             function renderGroups() {
                 groupsContainer.innerHTML = '';
@@ -967,21 +1043,23 @@
                 // عرض الأفواج الستة
                 groups.forEach(group => {
                     const groupStudents = allStudents.filter(s => s.group === group.id);
-                    createGroupCard(group, groupStudents);
+                    const isFull = isGroupFull(group.id);
+                    createGroupCard(group, groupStudents, isFull);
                 });
                 
                 // عرض الطلبة غير الموزعين
                 const unassignedStudents = allStudents.filter(s => !s.group);
                 createGroupCard(
                     { id: 'unassigned', name: 'طلبة غير موزعين', time: '' },
-                    unassignedStudents
+                    unassignedStudents,
+                    false
                 );
             }
             
             // دالة لإنشاء بطاقة الفوج
-            function createGroupCard(group, students) {
+            function createGroupCard(group, students, isFull) {
                 const groupCard = document.createElement('div');
-                groupCard.className = 'group-card';
+                groupCard.className = `group-card ${isFull ? 'max-reached' : ''}`;
                 groupCard.dataset.groupId = group.id;
                 
                 const groupHeader = document.createElement('div');
@@ -1002,7 +1080,7 @@
                 }
                 
                 const groupCount = document.createElement('div');
-                groupCount.className = 'group-count';
+                groupCount.className = `group-count ${isFull ? 'max-reached' : ''}`;
                 groupCount.textContent = students.length;
                 groupInfo.appendChild(groupCount);
                 
@@ -1018,6 +1096,14 @@
                 
                 groupHeader.appendChild(groupTitle);
                 groupHeader.appendChild(groupInfo);
+                
+                // إضافة حالة الفوج (كامل أو متاح)
+                if (group.id !== 'unassigned') {
+                    const groupStatus = document.createElement('div');
+                    groupStatus.className = `group-status ${isFull ? 'full' : 'available'}`;
+                    groupStatus.textContent = isFull ? 'الفوج ممتلئ' : `متاح (${MAX_STUDENTS_PER_GROUP - students.length} مقاعد)`;
+                    groupHeader.appendChild(groupStatus);
+                }
                 
                 const studentList = document.createElement('ul');
                 studentList.className = 'student-list';
@@ -1053,14 +1139,14 @@
                     
                     // زر إزالة التوزيع
                     const removeBtn = document.createElement('button');
-                    removeBtn.className = 'btn-action btn-remove';
-                    removeBtn.innerHTML = '<i class="fas fa-times"></i>';
-                    removeBtn.title = 'إزالة التوزيع';
-                    removeBtn.addEventListener('click', (e) => {
-                        e.stopPropagation();
-                        removeAssignment(student.id);
-                    });
-                    studentActions.appendChild(removeBtn);
+                        removeBtn.className = 'btn-action btn-remove';
+                        removeBtn.innerHTML = '<i class="fas fa-times"></i>';
+                        removeBtn.title = 'إزالة التوزيع';
+                        removeBtn.addEventListener('click', (e) => {
+                            e.stopPropagation();
+                            removeAssignment(student.id);
+                        });
+                        studentActions.appendChild(removeBtn);
                     
                     // زر طلب تغيير الفوج
                     if (group.id !== 'unassigned') {
@@ -1112,13 +1198,21 @@
                 groups.forEach(group => {
                     if (group.id !== currentGroupId) {
                         const groupOption = document.createElement('div');
-                        groupOption.className = 'move-option';
-                        groupOption.textContent = `${group.name} (${group.time})`;
-                        groupOption.addEventListener('click', () => {
-                            moveStudent(studentId, group.id);
-                            moveOptions.style.display = 'none';
-                            showNotification(`تم نقل الطالب إلى ${group.name}`, 'success');
-                        });
+                        const isFull = isGroupFull(group.id);
+                        
+                        groupOption.className = `move-option ${isFull ? 'disabled' : ''}`;
+                        groupOption.textContent = `${group.name} (${group.time}) ${isFull ? ' - ممتلئ' : ''}`;
+                        
+                        if (!isFull) {
+                            groupOption.addEventListener('click', () => {
+                                moveStudent(studentId, group.id);
+                                moveOptions.style.display = 'none';
+                                showNotification(`تم نقل الطالب إلى ${group.name}`, 'success');
+                            });
+                        } else {
+                            groupOption.title = 'هذا الفوج ممتلئ ولا يمكن إضافة المزيد من الطلبة';
+                        }
+                        
                         moveOptionsList.appendChild(groupOption);
                     }
                 });
@@ -1137,6 +1231,12 @@
             function moveStudent(studentId, targetGroupId) {
                 const studentIndex = allStudents.findIndex(s => s.id === studentId);
                 if (studentIndex === -1) return;
+                
+                // التحقق من أن الفوج الهدف ليس ممتلئًا
+                if (targetGroupId !== 'unassigned' && isGroupFull(targetGroupId)) {
+                    showNotification('لا يمكن نقل الطالب إلى هذا الفوج لأنه ممتلئ', 'error');
+                    return;
+                }
                 
                 allStudents[studentIndex].group = targetGroupId === 'unassigned' ? null : targetGroupId;
                 
@@ -1197,7 +1297,7 @@
                     time: ''
                 };
                 
-                createGroupCard(searchResultsGroup, filteredStudents);
+                createGroupCard(searchResultsGroup, filteredStudents, false);
             }
             
             // دالة للتوزيع التلقائي
@@ -1214,62 +1314,34 @@
                     return;
                 }
                 
-                // فصل الطلبة مواليد 2020 لوضعهم في الفوج الخامس والسادس
-                const students2020 = unassignedStudents.filter(student => {
-                    if (student.birthDate) {
-                        const birthYear = new Date(student.birthDate).getFullYear();
-                        return birthYear === 2020;
-                    }
-                    return false;
-                });
+                // توزيع الطلبة على الأفواج مع مراعاة الحد الأقصى
+                let currentGroupIndex = 0;
                 
-                const otherStudents = unassignedStudents.filter(student => {
-                    if (student.birthDate) {
-                        const birthYear = new Date(student.birthDate).getFullYear();
-                        return birthYear !== 2020;
-                    }
-                    return true;
-                });
-                
-                // توزيع الطلبة مواليد 2020 على الفوج الخامس والسادس
-                if (students2020.length > 0) {
-                    const studentsPerGroup = Math.ceil(students2020.length / 2);
+                for (let student of unassignedStudents) {
+                    // البحث عن أول فوج غير ممتلئ
+                    let groupAssigned = false;
+                    let attempts = 0;
                     
-                    // الفوج الخامس
-                    const group5Students = students2020.slice(0, studentsPerGroup);
-                    group5Students.forEach(student => {
-                        const studentIndex = allStudents.findIndex(s => s.id === student.id);
-                        if (studentIndex !== -1) {
-                            allStudents[studentIndex].group = 'group5';
-                        }
-                    });
-                    
-                    // الفوج السادس
-                    const group6Students = students2020.slice(studentsPerGroup);
-                    group6Students.forEach(student => {
-                        const studentIndex = allStudents.findIndex(s => s.id === student.id);
-                        if (studentIndex !== -1) {
-                            allStudents[studentIndex].group = 'group6';
-                        }
-                    });
-                }
-                
-                // توزيع بقية الطلبة على الأفواج الأربعة الأولى
-                if (otherStudents.length > 0) {
-                    const studentsPerGroup = Math.ceil(otherStudents.length / 4);
-                    
-                    groups.slice(0, 4).forEach((group, index) => {
-                        const start = index * studentsPerGroup;
-                        const end = start + studentsPerGroup;
-                        const groupStudents = otherStudents.slice(start, end);
+                    while (!groupAssigned && attempts < groups.length) {
+                        const targetGroup = groups[currentGroupIndex];
                         
-                        groupStudents.forEach(student => {
+                        if (!isGroupFull(targetGroup.id)) {
                             const studentIndex = allStudents.findIndex(s => s.id === student.id);
                             if (studentIndex !== -1) {
-                                allStudents[studentIndex].group = group.id;
+                                allStudents[studentIndex].group = targetGroup.id;
+                                groupAssigned = true;
                             }
-                        });
-                    });
+                        }
+                        
+                        currentGroupIndex = (currentGroupIndex + 1) % groups.length;
+                        attempts++;
+                    }
+                    
+                    // إذا لم يتم تعيين الطالب في أي فوج (جميع الأفواج ممتلئة)
+                    if (!groupAssigned) {
+                        showNotification('تم توزيع جميع الطلبة الممكنة، بعض الأفواج ممتلئة', 'warning');
+                        break;
+                    }
                 }
                 
                 updateStatistics();
@@ -1340,6 +1412,12 @@
                     return;
                 }
                 
+                // التحقق من أن الفوج الهدف ليس ممتلئًا
+                if (targetGroupId !== 'unassigned' && isGroupFull(targetGroupId)) {
+                    showNotification('لا يمكن نقل الطالب إلى هذا الفوج لأنه ممتلئ', 'error');
+                    return;
+                }
+                
                 moveStudent(studentId, targetGroupId);
                 manualAssign.style.display = 'none';
                 showNotification('تم توزيع الطالب يدوياً بنجاح', 'success');
@@ -1364,10 +1442,16 @@
                 // ملء خيارات الفوج الهدف (استثناء الفوج الحالي)
                 reserveTargetGroup.innerHTML = '<option value="">-- اختر فوج --</option>';
                 groups.forEach(group => {
-                    if (group.id !== student.group) {
+                    if (group.id !== student.group && !isGroupFull(group.id)) {
                         const option = document.createElement('option');
                         option.value = group.id;
                         option.textContent = `${group.name} (${group.time})`;
+                        reserveTargetGroup.appendChild(option);
+                    } else if (group.id !== student.group) {
+                        const option = document.createElement('option');
+                        option.value = group.id;
+                        option.textContent = `${group.name} (${group.time}) - ممتلئ`;
+                        option.disabled = true;
                         reserveTargetGroup.appendChild(option);
                     }
                 });
@@ -1388,6 +1472,12 @@
                 
                 if (!reason) {
                     showNotification('الرجاء إدخال سبب التغيير', 'error');
+                    return;
+                }
+                
+                // التحقق من أن الفوج الهدف ليس ممتلئًا
+                if (isGroupFull(targetGroupId)) {
+                    showNotification('لا يمكن نقل الطالب إلى هذا الفوج لأنه ممتلئ', 'error');
                     return;
                 }
                 
@@ -1443,7 +1533,8 @@
                         <p><strong>الفوج الحالي:</strong> ${request.currentGroupName}</p>
                         <p><strong>الفوج المطلوب:</strong> ${request.targetGroupName}</p>
                         <p><strong>السبب:</strong> ${request.reason}</p>
-                        <p><strong>الحالة:</strong> ${request.status === 'pending' ? 'قيد الانتظار' : 'مكتمل'}</p>
+                        <p><strong>الحالة:</strong> ${request.status === 'pending' ? 'قيد الانتظار' : request.status === 'approved' ? 'تمت الموافقة' : 'مرفوض'}</p>
+                        <p><strong>تاريخ الطلب:</strong> ${new Date(request.createdAt).toLocaleString('ar-EG')}</p>
                     `;
                     
                     const reserveActions = document.createElement('div');
@@ -1475,6 +1566,12 @@
             // دالة للموافقة على طلب التغيير
             function approveReserveRequest(requestId, studentId, targetGroupId) {
                 if (!confirm('هل أنت متأكد من الموافقة على طلب التغيير؟')) {
+                    return;
+                }
+                
+                // التحقق من أن الفوج الهدف ليس ممتلئًا
+                if (isGroupFull(targetGroupId)) {
+                    showNotification('لا يمكن الموافقة على الطلب لأن الفوج الهدف ممتلئ', 'error');
                     return;
                 }
                 
@@ -1638,6 +1735,8 @@
                     notification.style.backgroundColor = '#e74c3c';
                 } else if (type === 'info') {
                     notification.style.backgroundColor = '#3498db';
+                } else if (type === 'warning') {
+                    notification.style.backgroundColor = '#f39c12';
                 }
                 
                 setTimeout(() => {
