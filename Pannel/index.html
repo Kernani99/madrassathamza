@@ -149,6 +149,12 @@
             padding: 0.5rem 1rem;
             font-size: 0.9rem;
             margin: 0 0.2rem;
+            transition: all 0.3s;
+        }
+
+        .btn-form:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
         }
 
         .btn-edit {
@@ -208,6 +214,13 @@
             top: 50%;
             transform: translateY(-50%);
             color: #777;
+        }
+
+        .filter-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            margin: 10px 0;
         }
 
         .table-container {
@@ -271,6 +284,13 @@
         .subscription-unpaid {
             color: var(--unpaid-color);
             font-weight: bold;
+        }
+
+        .info-value {
+            padding: 8px;
+            background-color: #f5f5f5;
+            border-radius: 4px;
+            margin-top: 5px;
         }
 
         @keyframes pulseDuplicate {
@@ -621,6 +641,9 @@
                 max-width: 250px;
                 margin-bottom: 10px;
             }
+            .filter-buttons {
+                justify-content: center;
+            }
         }
     </style>
 </head>
@@ -651,6 +674,24 @@
                     </button>
                     <button id="showDuplicatesBtn" class="btn btn-duplicates">
                         <i class="fas fa-clone"></i> عرض المكررات
+                    </button>
+                </div>
+                
+                <div class="filter-buttons no-print">
+                    <button onclick="filterStudents('complete')" class="btn btn-form" style="background-color: var(--complete-color);">
+                        <i class="fas fa-check-circle"></i> ملفات مكتملة
+                    </button>
+                    <button onclick="filterStudents('incomplete')" class="btn btn-form" style="background-color: var(--incomplete-color);">
+                        <i class="fas fa-times-circle"></i> ملفات غير مكتملة
+                    </button>
+                    <button onclick="filterStudents('existing')" class="btn btn-form" style="background-color: #3498db;">
+                        <i class="fas fa-user-check"></i> مسجل من قبل
+                    </button>
+                    <button onclick="filterStudents('new')" class="btn btn-form" style="background-color: #9b59b6;">
+                        <i class="fas fa-user-plus"></i> مسجل جديد
+                    </button>
+                    <button onclick="filterStudents('all')" class="btn btn-form">
+                        <i class="fas fa-list"></i> عرض الكل
                     </button>
                 </div>
                 
@@ -751,7 +792,6 @@
             showDuplicatesBtn.addEventListener('click', showOnlyDuplicates);
             searchInput.addEventListener('input', searchStudents);
             
-            // دالة لتحويل الحالة الاجتماعية "أعزب" إلى "عادية" في قاعدة البيانات
             function migrateSocialStatus() {
                 database.ref('students').once('value')
                     .then(snapshot => {
@@ -862,6 +902,41 @@
                 } else {
                     showStatus('لا توجد تسجيلات مكررة', 'success');
                 }
+            }
+            
+            function filterStudents(filterType) {
+                if (!studentsData) return;
+
+                filteredData = Object.fromEntries(
+                    Object.entries(studentsData).filter(([key, student]) => {
+                        switch(filterType) {
+                            case 'complete':
+                                return student.fileStatus === 'مكتمل';
+                            case 'incomplete':
+                                return student.fileStatus !== 'مكتمل';
+                            case 'existing':
+                                return student.registrationType !== 'new';
+                            case 'new':
+                                return student.registrationType === 'new';
+                            default:
+                                return true;
+                        }
+                    })
+                );
+
+                displayStudents(filteredData);
+                showStatus(`تم تصفية النتائج حسب: ${getFilterName(filterType)} (${Object.keys(filteredData).length} نتيجة)`, 'success');
+            }
+
+            function getFilterName(filterType) {
+                const names = {
+                    'complete': 'الملفات المكتملة',
+                    'incomplete': 'الملفات غير المكتملة',
+                    'existing': 'المسجلين من قبل',
+                    'new': 'المسجلين الجدد',
+                    'all': 'الكل'
+                };
+                return names[filterType] || filterType;
             }
             
             window.deleteDuplicateStudent = function(studentId) {
@@ -979,7 +1054,7 @@
                         </div>
                         <div class="stat-box">
                             <div style="font-size: 1.2rem; font-weight: bold; color: var(--primary-color);">${stats.existing}</div>
-                            <div>مسجل من قبل</div>
+                            <div>مسجل من قبل (${Math.round((stats.existing / stats.total) * 100)}%)</div>
                         </div>
                         <div class="stat-box">
                             <div style="font-size: 1.2rem; font-weight: bold; color: ${stats.duplicates > 0 ? 'var(--error-color)' : 'var(--primary-color)'};">${stats.duplicates}</div>
@@ -1035,6 +1110,9 @@
                                 <button onclick="printStudentForm('${key}')" class="btn btn-form no-print">
                                     <i class="fas fa-print"></i> استمارة
                                 </button>
+                                <button onclick="showFullStudentInfo('${key}')" class="btn btn-form" title="عرض كل المعلومات">
+                                    <i class="fas fa-info-circle"></i> التفاصيل
+                                </button>
                                 <button onclick="editStudent('${key}')" class="btn btn-form btn-edit no-print">
                                     <i class="fas fa-edit"></i> تعديل
                                 </button>
@@ -1073,6 +1151,92 @@
                 
                 studentsTable.innerHTML = tableHTML;
             }
+            
+            window.showFullStudentInfo = function(studentId) {
+                const student = studentsData[studentId];
+                if (!student) return;
+
+                const infoHtml = `
+                    <div class="edit-form-overlay">
+                        <div class="edit-form-container" style="max-width: 800px;">
+                            <h2>معلومات الطالب الكاملة</h2>
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                                <div class="form-group">
+                                    <label>الاسم:</label>
+                                    <div class="info-value">${formatData(student.firstName)}</div>
+                                </div>
+                                <div class="form-group">
+                                    <label>اللقب:</label>
+                                    <div class="info-value">${formatData(student.lastName)}</div>
+                                </div>
+                                <div class="form-group">
+                                    <label>اسم الأب:</label>
+                                    <div class="info-value">${formatData(student.fatherName)}</div>
+                                </div>
+                                <div class="form-group">
+                                    <label>اسم الأم:</label>
+                                    <div class="info-value">${formatData(student.motherName)}</div>
+                                </div>
+                                <div class="form-group">
+                                    <label>تاريخ الميلاد:</label>
+                                    <div class="info-value">${formatDate(student.birthDate, true)}</div>
+                                </div>
+                                <div class="form-group">
+                                    <label>مكان الميلاد:</label>
+                                    <div class="info-value">${formatData(student.birthPlace)}</div>
+                                </div>
+                                <div class="form-group">
+                                    <label>العنوان:</label>
+                                    <div class="info-value">${formatData(student.address)}</div>
+                                </div>
+                                <div class="form-group">
+                                    <label>رقم الهاتف:</label>
+                                    <div class="info-value">${formatData(student.parentPhone)}</div>
+                                </div>
+                                <div class="form-group">
+                                    <label>الحالة الاجتماعية:</label>
+                                    <div class="info-value">${formatData(student.socialStatus)}</div>
+                                </div>
+                                <div class="form-group">
+                                    <label>الحالة الصحية:</label>
+                                    <div class="info-value">${student.isSick === 'نعم' ? 'مريض' : 'سليم'}</div>
+                                </div>
+                                <div class="form-group">
+                                    <label>نوع المرض:</label>
+                                    <div class="info-value">${formatData(student.sicknessType)}</div>
+                                </div>
+                                <div class="form-group">
+                                    <label>الأدوية:</label>
+                                    <div class="info-value">${formatData(student.takesMedicine)}</div>
+                                </div>
+                                <div class="form-group">
+                                    <label>الزمرة الدموية:</label>
+                                    <div class="info-value">${formatData(student.bloodType)}</div>
+                                </div>
+                                <div class="form-group">
+                                    <label>حالة الملف:</label>
+                                    <div class="info-value">${getFileStatusDisplay(student.fileStatus)}</div>
+                                </div>
+                                <div class="form-group">
+                                    <label>حالة الاشتراك:</label>
+                                    <div class="info-value">${getSubscriptionStatusDisplay(student.subscriptionStatus)}</div>
+                                </div>
+                                <div class="form-group" style="grid-column: span 2;">
+                                    <label>ملاحظات:</label>
+                                    <div class="info-value">${formatData(student.notes)}</div>
+                                </div>
+                            </div>
+                            <div class="form-buttons">
+                                <button onclick="closeEditForm()" class="btn" style="background-color: #95a5a6;">
+                                    <i class="fas fa-times"></i> إغلاق
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+
+                document.body.insertAdjacentHTML('beforeend', infoHtml);
+            };
             
             window.editStudent = function(studentId) {
                 const student = studentsData[studentId];
