@@ -16,12 +16,15 @@
             --light-bg: #f9f9f7;
             --error-color: #e74c3c;
             --success-color: #2ecc71;
+            --warning-color: #f39c12;
             --overlay-color: rgba(0, 0, 0, 0.7);
             --duplicate-color: #ffebee;
             --complete-color: #2ecc71;
             --incomplete-color: #e74c3c;
             --paid-color: #27ae60;
-            --unpaid-color: #e74c3c;
+            --unpaid-color: #f39c12;
+            --existing-color: #3498db;
+            --new-color: #9b59b6;
         }
 
         body {
@@ -76,24 +79,26 @@
 
         .stats-container {
             background: var(--secondary-color);
-            padding: 15px;
+            padding: 10px;
             border-radius: 10px;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
             display: flex;
-            justify-content: space-around;
-            flex-wrap: wrap;
+            justify-content: space-between;
+            flex-wrap: nowrap;
+            overflow-x: auto;
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            gap: 5px;
         }
 
         .stat-box {
             text-align: center;
-            padding: 10px;
-            min-width: 150px;
+            padding: 8px;
+            min-width: 120px;
             background: white;
             border-radius: 8px;
-            margin: 5px;
             box-shadow: 0 1px 3px rgba(0,0,0,0.1);
             transition: all 0.3s;
+            flex-shrink: 0;
         }
 
         .stat-box:hover {
@@ -146,10 +151,16 @@
 
         .btn-form {
             background-color: #9b59b6;
-            padding: 0.5rem 1rem;
-            font-size: 0.9rem;
-            margin: 0 0.2rem;
+            padding: 0.5rem;
+            font-size: 1rem;
+            margin: 0.2rem;
             transition: all 0.3s;
+            border-radius: 5px;
+            min-width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .btn-form:hover {
@@ -167,14 +178,10 @@
 
         .btn-complete-file {
             background-color: var(--complete-color);
-            padding: 0.5rem;
-            font-size: 0.8rem;
         }
 
         .btn-confirm-subscription {
             background-color: var(--paid-color);
-            padding: 0.5rem;
-            font-size: 0.8rem;
         }
 
         .controls {
@@ -221,6 +228,24 @@
             flex-wrap: wrap;
             gap: 5px;
             margin: 10px 0;
+            justify-content: center;
+        }
+
+        .filter-btn {
+            margin: 3px;
+            flex-grow: 1;
+            max-width: 200px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            padding: 8px 12px;
+            cursor: pointer;
+        }
+
+        .filter-btn.active {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            border: 2px solid var(--accent-color);
         }
 
         .table-container {
@@ -240,7 +265,7 @@
 
         th, td {
             border: 1px solid #e0e0e0;
-            padding: 10px 12px;
+            padding: 8px 10px;
             text-align: right;
         }
 
@@ -284,6 +309,19 @@
         .subscription-unpaid {
             color: var(--unpaid-color);
             font-weight: bold;
+        }
+
+        .action-buttons {
+            display: flex;
+            flex-wrap: nowrap;
+            gap: 5px;
+        }
+
+        .action-buttons .btn-form {
+            min-width: 36px;
+            height: 36px;
+            padding: 0;
+            font-size: 1.1rem;
         }
 
         .info-value {
@@ -633,16 +671,33 @@
                 margin-bottom: 10px;
             }
             .stats-container {
-                flex-direction: column;
-                align-items: center;
+                flex-wrap: wrap;
+                justify-content: center;
             }
             .stat-box {
-                width: 100%;
-                max-width: 250px;
-                margin-bottom: 10px;
+                min-width: 100px;
+                font-size: 0.9rem;
+                padding: 5px;
             }
             .filter-buttons {
-                justify-content: center;
+                justify-content: flex-start;
+            }
+            .filter-btn {
+                max-width: 100%;
+                font-size: 0.9rem;
+                padding: 5px 8px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .stat-box {
+                min-width: 80px;
+                font-size: 0.8rem;
+            }
+            .action-buttons .btn-form {
+                min-width: 32px;
+                height: 32px;
+                font-size: 1rem;
             }
         }
     </style>
@@ -678,19 +733,22 @@
                 </div>
                 
                 <div class="filter-buttons no-print">
-                    <button onclick="filterStudents('complete')" class="btn btn-form" style="background-color: var(--complete-color);">
+                    <button data-filter="complete" class="btn btn-form filter-btn" style="background-color: var(--complete-color);">
                         <i class="fas fa-check-circle"></i> ملفات مكتملة
                     </button>
-                    <button onclick="filterStudents('incomplete')" class="btn btn-form" style="background-color: var(--incomplete-color);">
+                    <button data-filter="incomplete" class="btn btn-form filter-btn" style="background-color: var(--incomplete-color);">
                         <i class="fas fa-times-circle"></i> ملفات غير مكتملة
                     </button>
-                    <button onclick="filterStudents('existing')" class="btn btn-form" style="background-color: #3498db;">
+                    <button data-filter="unpaid" class="btn btn-form filter-btn" style="background-color: var(--unpaid-color);">
+                        <i class="fas fa-money-bill-wave"></i> اشتراك غير مدفوع
+                    </button>
+                    <button data-filter="existing" class="btn btn-form filter-btn" style="background-color: var(--existing-color);">
                         <i class="fas fa-user-check"></i> مسجل من قبل
                     </button>
-                    <button onclick="filterStudents('new')" class="btn btn-form" style="background-color: #9b59b6;">
+                    <button data-filter="new" class="btn btn-form filter-btn" style="background-color: var(--new-color);">
                         <i class="fas fa-user-plus"></i> مسجل جديد
                     </button>
-                    <button onclick="filterStudents('all')" class="btn btn-form">
+                    <button data-filter="all" class="btn btn-form filter-btn active">
                         <i class="fas fa-list"></i> عرض الكل
                     </button>
                 </div>
@@ -783,7 +841,6 @@
             let sortOrder = 'desc';
             
             mainContent.style.display = 'block';
-            migrateSocialStatus();
             loadStudentsData();
             
             refreshBtn.addEventListener('click', loadStudentsData);
@@ -792,25 +849,22 @@
             showDuplicatesBtn.addEventListener('click', showOnlyDuplicates);
             searchInput.addEventListener('input', searchStudents);
             
-            function migrateSocialStatus() {
-                database.ref('students').once('value')
-                    .then(snapshot => {
-                        const students = snapshot.val();
-                        if (students) {
-                            Object.entries(students).forEach(([key, student]) => {
-                                if (student.socialStatus === 'أعزب') {
-                                    database.ref('students/' + key).update({
-                                        socialStatus: 'عادية'
-                                    });
-                                }
-                            });
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Error migrating social status:', error);
+            // إضافة مستمعين لأزرار الفلتر
+            document.querySelectorAll('.filter-btn').forEach(button => {
+                button.addEventListener('click', function() {
+                    const filterType = this.getAttribute('data-filter');
+                    filterStudents(filterType);
+                    
+                    // إزالة التنشيط من جميع الأزرار
+                    document.querySelectorAll('.filter-btn').forEach(btn => {
+                        btn.classList.remove('active');
                     });
-            }
-            
+                    
+                    // تنشيط الزر الحالي
+                    this.classList.add('active');
+                });
+            });
+
             function loadStudentsData() {
                 showLoading();
                 hideStatus();
@@ -905,7 +959,10 @@
             }
             
             function filterStudents(filterType) {
-                if (!studentsData) return;
+                if (!studentsData) {
+                    showStatus('لا توجد بيانات طلاب متاحة', 'error');
+                    return;
+                }
 
                 filteredData = Object.fromEntries(
                     Object.entries(studentsData).filter(([key, student]) => {
@@ -914,10 +971,14 @@
                                 return student.fileStatus === 'مكتمل';
                             case 'incomplete':
                                 return student.fileStatus !== 'مكتمل';
+                            case 'unpaid':
+                                return !student.subscriptionStatus || student.subscriptionStatus !== 'مدفوع';
                             case 'existing':
-                                return student.registrationType !== 'new';
+                                return student.registrationType && student.registrationType !== 'new';
                             case 'new':
-                                return student.registrationType === 'new';
+                                return student.registrationType && student.registrationType === 'new';
+                            case 'all':
+                                return true;
                             default:
                                 return true;
                         }
@@ -932,6 +993,7 @@
                 const names = {
                     'complete': 'الملفات المكتملة',
                     'incomplete': 'الملفات غير المكتملة',
+                    'unpaid': 'الاشتراك غير المدفوع',
                     'existing': 'المسجلين من قبل',
                     'new': 'المسجلين الجدد',
                     'all': 'الكل'
@@ -1020,6 +1082,8 @@
                     duplicates: 0,
                     completeFiles: 0,
                     incompleteFiles: 0,
+                    paidSubscriptions: 0,
+                    unpaidSubscriptions: 0,
                     totalSubscription: 0
                 };
 
@@ -1033,7 +1097,12 @@
                     else stats.existing++;
                     if (student.fileStatus === 'مكتمل') stats.completeFiles++;
                     else stats.incompleteFiles++;
-                    if (student.subscriptionStatus === 'مدفوع') stats.totalSubscription += SUBSCRIPTION_AMOUNT;
+                    if (student.subscriptionStatus === 'مدفوع') {
+                        stats.paidSubscriptions++;
+                        stats.totalSubscription += SUBSCRIPTION_AMOUNT;
+                    } else {
+                        stats.unpaidSubscriptions++;
+                    }
                     
                     return { 
                         key, 
@@ -1046,31 +1115,39 @@
                     <div class="stats-container">
                         <div class="stat-box">
                             <div style="font-size: 1.2rem; font-weight: bold; color: var(--primary-color);">${stats.total}</div>
-                            <div>إجمالي المتمدرسين</div>
+                            <div>إجمالي الطلاب</div>
                         </div>
                         <div class="stat-box">
-                            <div style="font-size: 1.2rem; font-weight: bold; color: var(--primary-color);">${stats.new}</div>
-                            <div>مسجل جديد</div>
+                            <div style="font-size: 1.2rem; font-weight: bold; color: var(--new-color);">${stats.new}</div>
+                            <div>جدد</div>
                         </div>
                         <div class="stat-box">
-                            <div style="font-size: 1.2rem; font-weight: bold; color: var(--primary-color);">${stats.existing}</div>
-                            <div>مسجل من قبل (${Math.round((stats.existing / stats.total) * 100)}%)</div>
+                            <div style="font-size: 1.2rem; font-weight: bold; color: var(--existing-color);">${stats.existing}</div>
+                            <div>من قبل</div>
                         </div>
                         <div class="stat-box">
                             <div style="font-size: 1.2rem; font-weight: bold; color: ${stats.duplicates > 0 ? 'var(--error-color)' : 'var(--primary-color)'};">${stats.duplicates}</div>
-                            <div>تسجيلات مكررة</div>
+                            <div>مكررات</div>
                         </div>
                         <div class="stat-box">
                             <div style="font-size: 1.2rem; font-weight: bold; color: var(--complete-color);">${stats.completeFiles}</div>
-                            <div>ملفات مكتملة</div>
+                            <div>مكتملة</div>
                         </div>
                         <div class="stat-box">
                             <div style="font-size: 1.2rem; font-weight: bold; color: var(--incomplete-color);">${stats.incompleteFiles}</div>
-                            <div>ملفات غير مكتملة</div>
+                            <div>غير مكتملة</div>
+                        </div>
+                        <div class="stat-box">
+                            <div style="font-size: 1.2rem; font-weight: bold; color: var(--paid-color);">${stats.paidSubscriptions}</div>
+                            <div>مدفوعة</div>
+                        </div>
+                        <div class="stat-box">
+                            <div style="font-size: 1.2rem; font-weight: bold; color: var(--unpaid-color);">${stats.unpaidSubscriptions}</div>
+                            <div>غير مدفوعة</div>
                         </div>
                         <div class="stat-box">
                             <div style="font-size: 1.2rem; font-weight: bold; color: var(--primary-color);">${stats.totalSubscription.toLocaleString('ar-DZ')} دج</div>
-                            <div>إجمالي الاشتراكات</div>
+                            <div>إجمالي</div>
                         </div>
                     </div>
                 `;
@@ -1107,26 +1184,28 @@
                     tableHTML += `
                         <tr class="${isDuplicate ? 'duplicate-row' : ''}">
                             <td>
-                                <button onclick="printStudentForm('${key}')" class="btn btn-form no-print">
-                                    <i class="fas fa-print"></i> استمارة
-                                </button>
-                                <button onclick="showFullStudentInfo('${key}')" class="btn btn-form" title="عرض كل المعلومات">
-                                    <i class="fas fa-info-circle"></i> التفاصيل
-                                </button>
-                                <button onclick="editStudent('${key}')" class="btn btn-form btn-edit no-print">
-                                    <i class="fas fa-edit"></i> تعديل
-                                </button>
-                                <button onclick="markFileComplete('${key}')" class="btn btn-form btn-complete-file no-print" title="جعل الملف مكتمل">
-                                    <i class="fas fa-check-circle"></i>
-                                </button>
-                                <button onclick="confirmSubscription('${key}')" class="btn btn-form btn-confirm-subscription no-print" title="تأكيد الاشتراك (7000 دج)">
-                                    <i class="fas fa-money-check-alt"></i>
-                                </button>
-                                ${isDuplicate ? `
-                                <button onclick="deleteDuplicateStudent('${key}')" class="btn btn-form btn-delete-duplicate no-print">
-                                    <i class="fas fa-trash-alt"></i> حذف مكرر
-                                </button>
-                                ` : ''}
+                                <div class="action-buttons">
+                                    <button onclick="printStudentForm('${key}')" class="btn btn-form no-print" title="طباعة الاستمارة">
+                                        <i class="fas fa-print"></i>
+                                    </button>
+                                    <button onclick="showFullStudentInfo('${key}')" class="btn btn-form" title="عرض التفاصيل">
+                                        <i class="fas fa-info-circle"></i>
+                                    </button>
+                                    <button onclick="editStudent('${key}')" class="btn btn-form btn-edit no-print" title="تعديل البيانات">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    <button onclick="markFileComplete('${key}')" class="btn btn-form btn-complete-file no-print" title="جعل الملف مكتمل">
+                                        <i class="fas fa-check-circle"></i>
+                                    </button>
+                                    <button onclick="confirmSubscription('${key}')" class="btn btn-form btn-confirm-subscription no-print" title="تأكيد الاشتراك">
+                                        <i class="fas fa-money-check-alt"></i>
+                                    </button>
+                                    ${isDuplicate ? `
+                                    <button onclick="deleteDuplicateStudent('${key}')" class="btn btn-form btn-delete-duplicate no-print" title="حذف مكرر">
+                                        <i class="fas fa-trash-alt"></i>
+                                    </button>
+                                    ` : ''}
+                                </div>
                             </td>
                             <td>
                                 ${getRegistrationTypeDisplay(student.registrationType)}
@@ -1504,7 +1583,7 @@
                                 font-weight: bold;
                             }
                             .subscription-unpaid {
-                                color: #e74c3c;
+                                color: #f39c12;
                                 font-weight: bold;
                             }
                             .footer {
