@@ -41,11 +41,11 @@
             background: linear-gradient(rgba(26, 77, 46, 0.95), rgba(26, 77, 46, 0.95)),
                         url('https://img.freepik.com/free-vector/abstract-islamic-golden-pattern-backdrop-ethnic-style_1017-54276.jpg') center/cover;
             color: white;
-            padding: 1.5rem 1rem;
+            padding: 1rem;
             text-align: center;
             position: relative;
             overflow: hidden;
-            min-height: 180px;
+            min-height: 150px;
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -55,7 +55,7 @@
         }
 
         .logo {
-            width: 130px;
+            width: 100px;
             margin: 0.5rem auto;
             filter: drop-shadow(0 2px 5px rgba(0,0,0,0.3));
         }
@@ -63,30 +63,30 @@
         header h1 {
             margin: 0.5rem 0;
             text-shadow: 0 2px 4px rgba(0,0,0,0.3);
-            font-size: 1.6rem;
+            font-size: 1.4rem;
             line-height: 1.3;
             font-weight: 700;
         }
 
         .container {
             max-width: 1200px;
-            margin: 2rem auto;
-            padding: 0 1.5rem;
+            margin: 1.5rem auto;
+            padding: 0 1rem;
         }
 
         .dashboard {
             background: white;
             border-radius: 15px;
-            padding: 2rem;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            padding: 1.2rem;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
             position: relative;
         }
 
         .page-title {
             color: var(--primary-color);
             text-align: center;
-            margin-bottom: 1.5rem;
-            font-size: 1.6rem;
+            margin-bottom: 1.2rem;
+            font-size: 1.4rem;
             font-weight: 800;
             position: relative;
         }
@@ -97,7 +97,7 @@
             bottom: -8px;
             right: 50%;
             transform: translateX(50%);
-            width: 70px;
+            width: 60px;
             height: 3px;
             background: var(--gold-color);
             border-radius: 3px;
@@ -105,40 +105,44 @@
 
         .section-title {
             color: var(--primary-dark);
-            margin: 1.5rem 0 1rem;
+            margin: 1.2rem 0 0.8rem;
             padding-bottom: 0.5rem;
             border-bottom: 2px solid var(--gold-color);
-            font-size: 1.2rem;
+            font-size: 1.1rem;
         }
 
         .timetable-container {
-            margin-top: 2rem;
+            margin-top: 1.5rem;
+            width: 100%;
             overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
         }
 
         .timetable {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 1rem;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            min-width: 600px;
+            margin-top: 0.8rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            min-width: 500px;
         }
 
         .timetable th {
             background-color: var(--primary-color);
             color: white;
-            padding: 12px;
+            padding: 10px 8px;
             text-align: center;
             font-weight: 600;
             position: sticky;
             top: 0;
+            font-size: 0.9rem;
         }
 
         .timetable td {
-            padding: 12px;
+            padding: 10px 8px;
             border: 1px solid #e0e0e0;
             text-align: center;
             vertical-align: middle;
+            font-size: 0.85rem;
         }
 
         .timetable tr:nth-child(even) {
@@ -152,57 +156,62 @@
         .teacher-name {
             font-weight: 600;
             color: var(--primary-dark);
-            min-width: 150px;
+            min-width: 120px;
         }
 
         .class-time {
             background-color: rgba(74, 120, 86, 0.1);
-            padding: 8px 12px;
-            border-radius: 6px;
+            padding: 6px 8px;
+            border-radius: 4px;
             font-weight: 500;
             color: var(--accent-color);
             display: inline-block;
-            min-width: 120px;
+            min-width: 100px;
+            font-size: 0.85rem;
         }
 
         .category-male {
             background-color: rgba(52, 152, 219, 0.1);
             color: #2980b9;
-            padding: 8px 12px;
-            border-radius: 6px;
+            padding: 6px 8px;
+            border-radius: 4px;
             display: inline-block;
-            min-width: 150px;
+            min-width: 120px;
+            font-size: 0.85rem;
         }
 
         .category-female {
             background-color: rgba(231, 76, 60, 0.1);
             color: #c0392b;
-            padding: 8px 12px;
-            border-radius: 6px;
+            padding: 6px 8px;
+            border-radius: 4px;
             display: inline-block;
-            min-width: 150px;
+            min-width: 120px;
+            font-size: 0.85rem;
         }
 
         .category-quran {
             background-color: rgba(46, 204, 113, 0.1);
             color: #27ae60;
-            padding: 8px 12px;
-            border-radius: 6px;
+            padding: 6px 8px;
+            border-radius: 4px;
             display: inline-block;
-            min-width: 150px;
+            min-width: 120px;
+            font-size: 0.85rem;
         }
 
         .btn {
-            padding: 0.7rem 1.3rem;
+            padding: 0.6rem 1rem;
             border-radius: 50px;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s;
             border: none;
-            font-size: 0.95rem;
+            font-size: 0.85rem;
             display: inline-flex;
             align-items: center;
             gap: 0.4rem;
+            margin: 0.2rem;
         }
 
         .btn-primary {
@@ -231,29 +240,31 @@
         .controls {
             display: flex;
             justify-content: center;
-            gap: 1rem;
-            margin-top: 2rem;
+            gap: 0.5rem;
+            margin-top: 1.5rem;
             flex-wrap: wrap;
         }
 
         .day-tabs {
             display: flex;
             justify-content: center;
-            margin-bottom: 1.5rem;
+            margin-bottom: 1rem;
             flex-wrap: wrap;
-            gap: 0.5rem;
+            gap: 0.3rem;
+            padding: 0.2rem;
         }
 
         .day-tab {
-            padding: 0.7rem 1.5rem;
+            padding: 0.5rem 1rem;
             background-color: #f1f1f1;
             border-radius: 50px;
             cursor: pointer;
             transition: all 0.3s;
             font-weight: 600;
             border: 1px solid #ddd;
-            min-width: 90px;
+            min-width: 70px;
             text-align: center;
+            font-size: 0.85rem;
         }
 
         .day-tab.active {
@@ -268,21 +279,93 @@
 
         .notification {
             position: fixed;
-            top: 20px;
-            right: 20px;
-            padding: 1rem;
+            top: 15px;
+            right: 15px;
+            padding: 0.8rem;
             border-radius: 5px;
             color: white;
             background: var(--success-color);
             box-shadow: 0 4px 12px rgba(0,0,0,0.15);
             z-index: 2000;
             display: none;
+            font-size: 0.9rem;
+            max-width: 90%;
         }
 
         .print-section {
             display: none;
             background: white;
-            padding: 20px;
+            padding: 15px;
+        }
+
+        /* تحسينات خاصة للهواتف */
+        @media (max-width: 480px) {
+            header {
+                min-height: 130px;
+                padding: 0.8rem;
+            }
+            
+            .logo {
+                width: 80px;
+            }
+            
+            header h1 {
+                font-size: 1.2rem;
+                margin: 0.3rem 0;
+            }
+            
+            .container {
+                padding: 0 0.8rem;
+                margin: 1rem auto;
+            }
+            
+            .dashboard {
+                padding: 1rem;
+                border-radius: 12px;
+            }
+            
+            .page-title {
+                font-size: 1.2rem;
+                margin-bottom: 1rem;
+            }
+            
+            .section-title {
+                font-size: 1rem;
+                margin: 1rem 0 0.6rem;
+            }
+            
+            .timetable th {
+                padding: 8px 6px;
+                font-size: 0.8rem;
+            }
+            
+            .timetable td {
+                padding: 8px 6px;
+                font-size: 0.8rem;
+            }
+            
+            .day-tab {
+                padding: 0.4rem 0.8rem;
+                min-width: 60px;
+                font-size: 0.8rem;
+            }
+            
+            .btn {
+                padding: 0.5rem 0.8rem;
+                font-size: 0.8rem;
+            }
+            
+            .class-time, .category-male, 
+            .category-female, .category-quran {
+                padding: 4px 6px;
+                min-width: 90px;
+                font-size: 0.8rem;
+            }
+            
+            .teacher-name {
+                min-width: 100px;
+                font-size: 0.85rem;
+            }
         }
 
         @media print {
@@ -309,52 +392,52 @@
                 width: 100%;
                 height: auto;
                 margin: 0;
-                padding: 20px;
+                padding: 15px;
                 background: white;
             }
             
             .print-header {
                 text-align: center;
-                margin-bottom: 15px;
-                padding-bottom: 15px;
+                margin-bottom: 10px;
+                padding-bottom: 10px;
                 border-bottom: 2px solid var(--primary-color);
             }
             
             .print-logo {
-                width: 100px;
+                width: 80px;
                 height: auto;
-                margin-bottom: 10px;
+                margin-bottom: 8px;
             }
             
             .print-title {
                 color: var(--primary-dark);
                 margin: 5px 0;
-                font-size: 16pt;
+                font-size: 14pt;
             }
             
             .print-subtitle {
-                margin: 10px 0;
-                font-size: 12pt;
+                margin: 8px 0;
+                font-size: 11pt;
             }
             
             .print-table {
                 width: 100%;
                 border-collapse: collapse;
-                margin-top: 10px;
-                font-size: 10pt;
+                margin-top: 8px;
+                font-size: 9pt;
                 page-break-inside: avoid;
             }
             
             .print-table th {
                 background-color: var(--primary-color);
                 color: white;
-                padding: 8px;
+                padding: 6px;
                 text-align: right;
                 border: 1px solid #ddd;
             }
             
             .print-table td {
-                padding: 8px;
+                padding: 6px;
                 border: 1px solid #ddd;
                 text-align: right;
             }
@@ -365,43 +448,7 @@
             
             @page {
                 size: A4;
-                margin: 15mm;
-            }
-        }
-
-        @media (max-width: 768px) {
-            .container {
-                margin: 1.5rem auto;
-                padding: 0 1rem;
-            }
-            
-            .dashboard {
-                padding: 1.2rem;
-            }
-            
-            header h1 {
-                font-size: 1.4rem;
-            }
-            
-            .page-title {
-                font-size: 1.4rem;
-            }
-            
-            .timetable th, .timetable td {
-                padding: 10px 8px;
-                font-size: 0.85rem;
-            }
-            
-            .day-tab {
-                padding: 0.6rem 1rem;
-                font-size: 0.9rem;
-                min-width: 80px;
-            }
-            
-            .class-time, .category-male, 
-            .category-female, .category-quran {
-                padding: 6px 8px;
-                min-width: 100px;
+                margin: 10mm;
             }
         }
     </style>
@@ -448,10 +495,10 @@
             
             <div class="controls">
                 <button class="btn btn-primary" id="printBtn">
-                    <i class="fas fa-print"></i> طباعة الجدول
+                    <i class="fas fa-print"></i> طباعة
                 </button>
                 <button class="btn btn-secondary" id="refreshBtn">
-                    <i class="fas fa-sync-alt"></i> تحديث البيانات
+                    <i class="fas fa-sync-alt"></i> تحديث
                 </button>
             </div>
         </div>
@@ -482,7 +529,7 @@
     </div>
 
     <footer>
-        <div class="copyright" style="text-align: center; margin-top: 2rem; color: #666;">
+        <div class="copyright" style="text-align: center; margin-top: 1.5rem; color: #666; font-size: 0.8rem;">
             <p>جميع الحقوق محفوظة &copy; المجمع القرآني حمزة بن عبدالمطلب <span id="year"></span></p>
         </div>
     </footer>
@@ -737,7 +784,7 @@
                 if (dayData.length === 0) {
                     timetableBody.innerHTML = `
                         <tr>
-                            <td colspan="4" style="text-align: center; padding: 20px;">
+                            <td colspan="4" style="text-align: center; padding: 15px;">
                                 لا توجد حصص مسجلة لهذا اليوم
                             </td>
                         </tr>
