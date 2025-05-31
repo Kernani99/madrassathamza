@@ -113,6 +113,7 @@
 
         .timetable-container {
             margin-top: 2rem;
+            overflow-x: auto;
         }
 
         .timetable {
@@ -120,6 +121,7 @@
             border-collapse: collapse;
             margin-top: 1rem;
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            min-width: 600px;
         }
 
         .timetable th {
@@ -128,12 +130,15 @@
             padding: 12px;
             text-align: center;
             font-weight: 600;
+            position: sticky;
+            top: 0;
         }
 
         .timetable td {
-            padding: 10px;
+            padding: 12px;
             border: 1px solid #e0e0e0;
             text-align: center;
+            vertical-align: middle;
         }
 
         .timetable tr:nth-child(even) {
@@ -147,34 +152,44 @@
         .teacher-name {
             font-weight: 600;
             color: var(--primary-dark);
+            min-width: 150px;
         }
 
         .class-time {
             background-color: rgba(74, 120, 86, 0.1);
-            padding: 5px 8px;
-            border-radius: 4px;
+            padding: 8px 12px;
+            border-radius: 6px;
             font-weight: 500;
             color: var(--accent-color);
-        }
-
-        .class-section {
-            color: #666;
-            font-size: 0.9rem;
+            display: inline-block;
+            min-width: 120px;
         }
 
         .category-male {
             background-color: rgba(52, 152, 219, 0.1);
             color: #2980b9;
+            padding: 8px 12px;
+            border-radius: 6px;
+            display: inline-block;
+            min-width: 150px;
         }
 
         .category-female {
             background-color: rgba(231, 76, 60, 0.1);
             color: #c0392b;
+            padding: 8px 12px;
+            border-radius: 6px;
+            display: inline-block;
+            min-width: 150px;
         }
 
         .category-quran {
             background-color: rgba(46, 204, 113, 0.1);
             color: #27ae60;
+            padding: 8px 12px;
+            border-radius: 6px;
+            display: inline-block;
+            min-width: 150px;
         }
 
         .btn {
@@ -237,6 +252,8 @@
             transition: all 0.3s;
             font-weight: 600;
             border: 1px solid #ddd;
+            min-width: 90px;
+            text-align: center;
         }
 
         .day-tab.active {
@@ -337,7 +354,7 @@
             }
             
             .print-table td {
-                padding: 6px;
+                padding: 8px;
                 border: 1px solid #ddd;
                 text-align: right;
             }
@@ -371,13 +388,20 @@
             }
             
             .timetable th, .timetable td {
-                padding: 8px 5px;
+                padding: 10px 8px;
                 font-size: 0.85rem;
             }
             
             .day-tab {
-                padding: 0.5rem 1rem;
+                padding: 0.6rem 1rem;
                 font-size: 0.9rem;
+                min-width: 80px;
+            }
+            
+            .class-time, .category-male, 
+            .category-female, .category-quran {
+                padding: 6px 8px;
+                min-width: 100px;
             }
         }
     </style>
@@ -412,7 +436,6 @@
                                 <th>#</th>
                                 <th>التوقيت</th>
                                 <th>الفئة</th>
-                                <th>القسم</th>
                                 <th>المعلم/ة</th>
                             </tr>
                         </thead>
@@ -449,7 +472,6 @@
                     <th>#</th>
                     <th>التوقيت</th>
                     <th>الفئة</th>
-                    <th>القسم</th>
                     <th>المعلم/ة</th>
                 </tr>
             </thead>
@@ -470,188 +492,188 @@
             // بيانات الجدول الزمني المعدلة حسب الطلب
             const timetableData = {
                 saturday: [
-                    { time: "07:00 - 10:00", category: "فئة الذكور كبار", section: "", teacher: "عبد السلام بلقط" },
-                    { time: "15:00 - 18:00", category: "فئة الذكور صغار", section: "", teacher: "عبد السلام بلقط" },
-                    { time: "07:00 - 10:00", category: "فئة الذكور كبار", section: "", teacher: "عبد الهادي عبادلية" },
-                    { time: "15:00 - 18:00", category: "فئة الذكور صغار", section: "", teacher: "عبد الهادي عبادلية" },
-                    { time: "07:00 - 10:00", category: "فئة الذكور كبار", section: "", teacher: "عبد القادر إسالمة" },
-                    { time: "15:00 - 18:00", category: "فئة الذكور صغار", section: "", teacher: "عبد القادر إسالمة" },
-                    { time: "07:00 - 10:00", category: "فئة الذكور (قرءان)", section: "", teacher: "إسماعيل قرناني" },
-                    { time: "15:00 - 18:00", category: "فئة الذكور صغار", section: "", teacher: "إسماعيل قرناني" },
-                    { time: "05:00 - 07:00", category: "فئة الذكور كبار", section: "", teacher: "اليزيد بوكركر" },
-                    { time: "16:30 - 18:30", category: "فئة الذكور صغار", section: "", teacher: "اليزيد بوكركر" },
-                    { time: "07:00 - 10:00", category: "فئة الذكور كبار", section: "", teacher: "ياسين عبدو" },
-                    { time: "15:00 - 18:00", category: "فئة الذكور صغار", section: "", teacher: "ياسين عبدو" },
-                    { time: "07:00 - 10:00", category: "فئة التلقين (قرءان)", section: "", teacher: "أحلام عباز" },
-                    { time: "16:00 - 19:00", category: "فئة التحفيظ (قرءان)", section: "", teacher: "أحلام عباز" },
-                    { time: "07:00 - 09:00", category: "إناث كبار", section: "", teacher: "إلهام شيباطي" },
-                    { time: "16:00 - 19:00", category: "إناث كبار", section: "", teacher: "إلهام شيباطي" },
-                    { time: "07:00 - 10:00", category: "إناث كبار", section: "", teacher: "أميرة سايح" },
-                    { time: "15:00 - 18:00", category: "إناث كبار", section: "", teacher: "أميرة سايح" },
-                    { time: "07:00 - 09:30", category: "إناث كبار", section: "", teacher: "فطيمة برتال" },
-                    { time: "09:30 - 12:00", category: "إناث تلقين", section: "", teacher: "فطيمة برتال" },
-                    { time: "07:00 - 09:30", category: "إناث (قرءان)", section: "", teacher: "مريم بلعتروس" },
-                    { time: "10:00 - 12:30", category: "إناث (قرءان)", section: "", teacher: "مريم بلعتروس" },
-                    { time: "07:00 - 10:00", category: "إناث كبار", section: "", teacher: "خولة رحموني" },
-                    { time: "10:00 - 12:30", category: "إناث صغار", section: "", teacher: "خولة رحموني" },
-                    { time: "07:00 - 09:00", category: "إناث تلقين", section: "", teacher: "لبنى بعزيز" },
-                    { time: "09:00 - 11:00", category: "إناث تلقين", section: "", teacher: "لبنى بعزيز" },
-                    { time: "15:00 - 17:00", category: "ذكور تلقين", section: "", teacher: "منى مفرج" },
-                    { time: "17:00 - 19:00", category: "إناث تلقين", section: "", teacher: "منى مفرج" },
-                    { time: "07:30 - 09:30", category: "ذكور تلقين", section: "", teacher: "فلة ذياب" },
-                    { time: "09:30 - 11:30", category: "إناث تلقين", section: "", teacher: "فلة ذياب" },
-                    { time: "16:00 - 19:00", category: "إناث كبار", section: "", teacher: "رندة بلوصيف" },
-                    { time: "16:00 - 19:00", category: "إناث كبار", section: "", teacher: "أسماء بوعكاز" },
-                    { time: "07:00 - 10:00", category: "فئة الذكور", section: "", teacher: "نبيلة نعيجة" },
-                    { time: "09:00 - 11:00", category: "المرشدة الدينية", section: "", teacher: "ليلى ساعو" },
-                    { time: "15:00 - 17:00", category: "المرشدة الدينية", section: "", teacher: "ليلى ساعو" }
+                    { time: "07:00 - 10:00", category: "فئة الذكور كبار", teacher: "عبد السلام بلقط" },
+                    { time: "15:00 - 18:00", category: "فئة الذكور صغار", teacher: "عبد السلام بلقط" },
+                    { time: "07:00 - 10:00", category: "فئة الذكور كبار", teacher: "عبد الهادي عبادلية" },
+                    { time: "15:00 - 18:00", category: "فئة الذكور صغار", teacher: "عبد الهادي عبادلية" },
+                    { time: "07:00 - 10:00", category: "فئة الذكور كبار", teacher: "عبد القادر إسالمة" },
+                    { time: "15:00 - 18:00", category: "فئة الذكور صغار", teacher: "عبد القادر إسالمة" },
+                    { time: "07:00 - 10:00", category: "فئة الذكور (قرءان)", teacher: "إسماعيل قرناني" },
+                    { time: "15:00 - 18:00", category: "فئة الذكور صغار", teacher: "إسماعيل قرناني" },
+                    { time: "05:00 - 07:00", category: "فئة الذكور كبار", teacher: "اليزيد بوكركر" },
+                    { time: "16:30 - 18:30", category: "فئة الذكور صغار", teacher: "اليزيد بوكركر" },
+                    { time: "07:00 - 10:00", category: "فئة الذكور كبار", teacher: "ياسين عبدو" },
+                    { time: "15:00 - 18:00", category: "فئة الذكور صغار", teacher: "ياسين عبدو" },
+                    { time: "07:00 - 10:00", category: "فئة التلقين (قرءان)", teacher: "أحلام عباز" },
+                    { time: "16:00 - 19:00", category: "فئة التحفيظ (قرءان)", teacher: "أحلام عباز" },
+                    { time: "07:00 - 09:00", category: "إناث كبار", teacher: "إلهام شيباطي" },
+                    { time: "16:00 - 19:00", category: "إناث كبار", teacher: "إلهام شيباطي" },
+                    { time: "07:00 - 10:00", category: "إناث كبار", teacher: "أميرة سايح" },
+                    { time: "15:00 - 18:00", category: "إناث كبار", teacher: "أميرة سايح" },
+                    { time: "07:00 - 09:30", category: "إناث كبار", teacher: "فطيمة برتال" },
+                    { time: "09:30 - 12:00", category: "إناث تلقين", teacher: "فطيمة برتال" },
+                    { time: "07:00 - 09:30", category: "إناث (قرءان)", teacher: "مريم بلعتروس" },
+                    { time: "10:00 - 12:30", category: "إناث (قرءان)", teacher: "مريم بلعتروس" },
+                    { time: "07:00 - 10:00", category: "إناث كبار", teacher: "خولة رحموني" },
+                    { time: "10:00 - 12:30", category: "إناث صغار", teacher: "خولة رحموني" },
+                    { time: "07:00 - 09:00", category: "إناث تلقين", teacher: "لبنى بعزيز" },
+                    { time: "09:00 - 11:00", category: "إناث تلقين", teacher: "لبنى بعزيز" },
+                    { time: "15:00 - 17:00", category: "ذكور تلقين", teacher: "منى مفرج" },
+                    { time: "17:00 - 19:00", category: "إناث تلقين", teacher: "منى مفرج" },
+                    { time: "07:30 - 09:30", category: "ذكور تلقين", teacher: "فلة ذياب" },
+                    { time: "09:30 - 11:30", category: "إناث تلقين", teacher: "فلة ذياب" },
+                    { time: "16:00 - 19:00", category: "إناث كبار", teacher: "رندة بلوصيف" },
+                    { time: "16:00 - 19:00", category: "إناث كبار", teacher: "أسماء بوعكاز" },
+                    { time: "07:00 - 10:00", category: "فئة الذكور", teacher: "نبيلة نعيجة" },
+                    { time: "09:00 - 11:00", category: "المرشدة الدينية", teacher: "ليلى ساعو" },
+                    { time: "15:00 - 17:00", category: "المرشدة الدينية", teacher: "ليلى ساعو" }
                 ],
                 sunday: [
-                    { time: "07:00 - 10:00", category: "فئة الذكور كبار", section: "", teacher: "عبد السلام بلقط" },
-                    { time: "15:00 - 18:00", category: "فئة الذكور صغار", section: "", teacher: "عبد السلام بلقط" },
-                    { time: "07:00 - 10:00", category: "فئة الذكور كبار", section: "", teacher: "عبد الهادي عبادلية" },
-                    { time: "15:00 - 18:00", category: "فئة الذكور صغار", section: "", teacher: "عبد الهادي عبادلية" },
-                    { time: "07:00 - 10:00", category: "فئة الذكور كبار", section: "", teacher: "عبد القادر إسالمة" },
-                    { time: "15:00 - 18:00", category: "فئة الذكور صغار", section: "", teacher: "عبد القادر إسالمة" },
-                    { time: "07:00 - 10:00", category: "فئة الذكور (قرءان)", section: "", teacher: "إسماعيل قرناني" },
-                    { time: "15:00 - 18:00", category: "فئة الذكور صغار", section: "", teacher: "إسماعيل قرناني" },
-                    { time: "05:00 - 07:00", category: "فئة الذكور كبار", section: "", teacher: "اليزيد بوكركر" },
-                    { time: "16:30 - 18:30", category: "فئة الذكور صغار", section: "", teacher: "اليزيد بوكركر" },
-                    { time: "07:00 - 10:00", category: "فئة الذكور كبار", section: "", teacher: "ياسين عبدو" },
-                    { time: "15:00 - 18:00", category: "فئة الذكور صغار", section: "", teacher: "ياسين عبدو" },
-                    { time: "07:00 - 10:00", category: "فئة التلقين (قرءان)", section: "", teacher: "أحلام عباز" },
-                    { time: "16:00 - 19:00", category: "فئة التحفيظ (قرءان)", section: "", teacher: "أحلام عباز" },
-                    { time: "07:00 - 09:00", category: "إناث كبار", section: "", teacher: "إلهام شيباطي" },
-                    { time: "16:00 - 19:00", category: "إناث كبار", section: "", teacher: "إلهام شيباطي" },
-                    { time: "07:00 - 10:00", category: "إناث كبار", section: "", teacher: "أميرة سايح" },
-                    { time: "15:00 - 18:00", category: "إناث كبار", section: "", teacher: "أميرة سايح" },
-                    { time: "07:00 - 09:30", category: "إناث كبار", section: "", teacher: "فطيمة برتال" },
-                    { time: "09:30 - 12:00", category: "إناث تلقين", section: "", teacher: "فطيمة برتال" },
-                    { time: "07:00 - 09:30", category: "إناث (قرءان)", section: "", teacher: "مريم بلعتروس" },
-                    { time: "10:00 - 12:30", category: "إناث (قرءان)", section: "", teacher: "مريم بلعتروس" },
-                    { time: "07:00 - 10:00", category: "إناث كبار", section: "", teacher: "خولة رحموني" },
-                    { time: "10:00 - 12:30", category: "إناث صغار", section: "", teacher: "خولة رحموني" },
-                    { time: "07:00 - 09:00", category: "إناث تلقين", section: "", teacher: "لبنى بعزيز" },
-                    { time: "09:00 - 11:00", category: "إناث تلقين", section: "", teacher: "لبنى بعزيز" },
-                    { time: "15:00 - 17:00", category: "ذكور تلقين", section: "", teacher: "منى مفرج" },
-                    { time: "17:00 - 19:00", category: "إناث تلقين", section: "", teacher: "منى مفرج" },
-                    { time: "07:30 - 09:30", category: "ذكور تلقين", section: "", teacher: "فلة ذياب" },
-                    { time: "09:30 - 11:30", category: "إناث تلقين", section: "", teacher: "فلة ذياب" },
-                    { time: "16:00 - 19:00", category: "إناث كبار", section: "", teacher: "رندة بلوصيف" },
-                    { time: "16:00 - 19:00", category: "إناث كبار", section: "", teacher: "أسماء بوعكاز" },
-                    { time: "07:00 - 10:00", category: "فئة الذكور", section: "", teacher: "نبيلة نعيجة" },
-                    { time: "09:00 - 11:00", category: "المرشدة الدينية", section: "", teacher: "ليلى ساعو" },
-                    { time: "15:00 - 17:00", category: "المرشدة الدينية", section: "", teacher: "ليلى ساعو" }
+                    { time: "07:00 - 10:00", category: "فئة الذكور كبار", teacher: "عبد السلام بلقط" },
+                    { time: "15:00 - 18:00", category: "فئة الذكور صغار", teacher: "عبد السلام بلقط" },
+                    { time: "07:00 - 10:00", category: "فئة الذكور كبار", teacher: "عبد الهادي عبادلية" },
+                    { time: "15:00 - 18:00", category: "فئة الذكور صغار", teacher: "عبد الهادي عبادلية" },
+                    { time: "07:00 - 10:00", category: "فئة الذكور كبار", teacher: "عبد القادر إسالمة" },
+                    { time: "15:00 - 18:00", category: "فئة الذكور صغار", teacher: "عبد القادر إسالمة" },
+                    { time: "07:00 - 10:00", category: "فئة الذكور (قرءان)", teacher: "إسماعيل قرناني" },
+                    { time: "15:00 - 18:00", category: "فئة الذكور صغار", teacher: "إسماعيل قرناني" },
+                    { time: "05:00 - 07:00", category: "فئة الذكور كبار", teacher: "اليزيد بوكركر" },
+                    { time: "16:30 - 18:30", category: "فئة الذكور صغار", teacher: "اليزيد بوكركر" },
+                    { time: "07:00 - 10:00", category: "فئة الذكور كبار", teacher: "ياسين عبدو" },
+                    { time: "15:00 - 18:00", category: "فئة الذكور صغار", teacher: "ياسين عبدو" },
+                    { time: "07:00 - 10:00", category: "فئة التلقين (قرءان)", teacher: "أحلام عباز" },
+                    { time: "16:00 - 19:00", category: "فئة التحفيظ (قرءان)", teacher: "أحلام عباز" },
+                    { time: "07:00 - 09:00", category: "إناث كبار", teacher: "إلهام شيباطي" },
+                    { time: "16:00 - 19:00", category: "إناث كبار", teacher: "إلهام شيباطي" },
+                    { time: "07:00 - 10:00", category: "إناث كبار", teacher: "أميرة سايح" },
+                    { time: "15:00 - 18:00", category: "إناث كبار", teacher: "أميرة سايح" },
+                    { time: "07:00 - 09:30", category: "إناث كبار", teacher: "فطيمة برتال" },
+                    { time: "09:30 - 12:00", category: "إناث تلقين", teacher: "فطيمة برتال" },
+                    { time: "07:00 - 09:30", category: "إناث (قرءان)", teacher: "مريم بلعتروس" },
+                    { time: "10:00 - 12:30", category: "إناث (قرءان)", teacher: "مريم بلعتروس" },
+                    { time: "07:00 - 10:00", category: "إناث كبار", teacher: "خولة رحموني" },
+                    { time: "10:00 - 12:30", category: "إناث صغار", teacher: "خولة رحموني" },
+                    { time: "07:00 - 09:00", category: "إناث تلقين", teacher: "لبنى بعزيز" },
+                    { time: "09:00 - 11:00", category: "إناث تلقين", teacher: "لبنى بعزيز" },
+                    { time: "15:00 - 17:00", category: "ذكور تلقين", teacher: "منى مفرج" },
+                    { time: "17:00 - 19:00", category: "إناث تلقين", teacher: "منى مفرج" },
+                    { time: "07:30 - 09:30", category: "ذكور تلقين", teacher: "فلة ذياب" },
+                    { time: "09:30 - 11:30", category: "إناث تلقين", teacher: "فلة ذياب" },
+                    { time: "16:00 - 19:00", category: "إناث كبار", teacher: "رندة بلوصيف" },
+                    { time: "16:00 - 19:00", category: "إناث كبار", teacher: "أسماء بوعكاز" },
+                    { time: "07:00 - 10:00", category: "فئة الذكور", teacher: "نبيلة نعيجة" },
+                    { time: "09:00 - 11:00", category: "المرشدة الدينية", teacher: "ليلى ساعو" },
+                    { time: "15:00 - 17:00", category: "المرشدة الدينية", teacher: "ليلى ساعو" }
                 ],
                 monday: [
-                    { time: "07:00 - 10:00", category: "فئة الذكور كبار", section: "", teacher: "عبد السلام بلقط" },
-                    { time: "15:00 - 18:00", category: "فئة الذكور صغار", section: "", teacher: "عبد السلام بلقط" },
-                    { time: "07:00 - 10:00", category: "فئة الذكور كبار", section: "", teacher: "عبد الهادي عبادلية" },
-                    { time: "15:00 - 18:00", category: "فئة الذكور صغار", section: "", teacher: "عبد الهادي عبادلية" },
-                    { time: "07:00 - 10:00", category: "فئة الذكور كبار", section: "", teacher: "عبد القادر إسالمة" },
-                    { time: "15:00 - 18:00", category: "فئة الذكور صغار", section: "", teacher: "عبد القادر إسالمة" },
-                    { time: "07:00 - 10:00", category: "فئة الذكور (قرءان)", section: "", teacher: "إسماعيل قرناني" },
-                    { time: "15:00 - 18:00", category: "فئة الذكور صغار", section: "", teacher: "إسماعيل قرناني" },
-                    { time: "05:00 - 07:00", category: "فئة الذكور كبار", section: "", teacher: "اليزيد بوكركر" },
-                    { time: "16:30 - 18:30", category: "فئة الذكور صغار", section: "", teacher: "اليزيد بوكركر" },
-                    { time: "07:00 - 10:00", category: "فئة الذكور كبار", section: "", teacher: "ياسين عبدو" },
-                    { time: "15:00 - 18:00", category: "فئة الذكور صغار", section: "", teacher: "ياسين عبدو" },
-                    { time: "07:00 - 10:00", category: "فئة التلقين (قرءان)", section: "", teacher: "أحلام عباز" },
-                    { time: "16:00 - 19:00", category: "فئة التحفيظ (قرءان)", section: "", teacher: "أحلام عباز" },
-                    { time: "07:00 - 09:00", category: "إناث كبار", section: "", teacher: "إلهام شيباطي" },
-                    { time: "16:00 - 19:00", category: "إناث كبار", section: "", teacher: "إلهام شيباطي" },
-                    { time: "07:00 - 10:00", category: "إناث كبار", section: "", teacher: "أميرة سايح" },
-                    { time: "15:00 - 18:00", category: "إناث كبار", section: "", teacher: "أميرة سايح" },
-                    { time: "07:00 - 09:30", category: "إناث كبار", section: "", teacher: "فطيمة برتال" },
-                    { time: "09:30 - 12:00", category: "إناث تلقين", section: "", teacher: "فطيمة برتال" },
-                    { time: "07:00 - 09:30", category: "إناث (قرءان)", section: "", teacher: "مريم بلعتروس" },
-                    { time: "10:00 - 12:30", category: "إناث (قرءان)", section: "", teacher: "مريم بلعتروس" },
-                    { time: "07:00 - 10:00", category: "إناث كبار", section: "", teacher: "خولة رحموني" },
-                    { time: "10:00 - 12:30", category: "إناث صغار", section: "", teacher: "خولة رحموني" },
-                    { time: "07:00 - 09:00", category: "إناث تلقين", section: "", teacher: "لبنى بعزيز" },
-                    { time: "09:00 - 11:00", category: "إناث تلقين", section: "", teacher: "لبنى بعزيز" },
-                    { time: "15:00 - 17:00", category: "ذكور تلقين", section: "", teacher: "منى مفرج" },
-                    { time: "17:00 - 19:00", category: "إناث تلقين", section: "", teacher: "منى مفرج" },
-                    { time: "07:30 - 09:30", category: "ذكور تلقين", section: "", teacher: "فلة ذياب" },
-                    { time: "09:30 - 11:30", category: "إناث تلقين", section: "", teacher: "فلة ذياب" },
-                    { time: "16:00 - 19:00", category: "إناث كبار", section: "", teacher: "رندة بلوصيف" },
-                    { time: "16:00 - 19:00", category: "إناث كبار", section: "", teacher: "أسماء بوعكاز" },
-                    { time: "07:00 - 10:00", category: "فئة الذكور", section: "", teacher: "نبيلة نعيجة" },
-                    { time: "09:00 - 11:00", category: "المرشدة الدينية", section: "", teacher: "ليلى ساعو" },
-                    { time: "15:00 - 17:00", category: "المرشدة الدينية", section: "", teacher: "ليلى ساعو" }
+                    { time: "07:00 - 10:00", category: "فئة الذكور كبار", teacher: "عبد السلام بلقط" },
+                    { time: "15:00 - 18:00", category: "فئة الذكور صغار", teacher: "عبد السلام بلقط" },
+                    { time: "07:00 - 10:00", category: "فئة الذكور كبار", teacher: "عبد الهادي عبادلية" },
+                    { time: "15:00 - 18:00", category: "فئة الذكور صغار", teacher: "عبد الهادي عبادلية" },
+                    { time: "07:00 - 10:00", category: "فئة الذكور كبار", teacher: "عبد القادر إسالمة" },
+                    { time: "15:00 - 18:00", category: "فئة الذكور صغار", teacher: "عبد القادر إسالمة" },
+                    { time: "07:00 - 10:00", category: "فئة الذكور (قرءان)", teacher: "إسماعيل قرناني" },
+                    { time: "15:00 - 18:00", category: "فئة الذكور صغار", teacher: "إسماعيل قرناني" },
+                    { time: "05:00 - 07:00", category: "فئة الذكور كبار", teacher: "اليزيد بوكركر" },
+                    { time: "16:30 - 18:30", category: "فئة الذكور صغار", teacher: "اليزيد بوكركر" },
+                    { time: "07:00 - 10:00", category: "فئة الذكور كبار", teacher: "ياسين عبدو" },
+                    { time: "15:00 - 18:00", category: "فئة الذكور صغار", teacher: "ياسين عبدو" },
+                    { time: "07:00 - 10:00", category: "فئة التلقين (قرءان)", teacher: "أحلام عباز" },
+                    { time: "16:00 - 19:00", category: "فئة التحفيظ (قرءان)", teacher: "أحلام عباز" },
+                    { time: "07:00 - 09:00", category: "إناث كبار", teacher: "إلهام شيباطي" },
+                    { time: "16:00 - 19:00", category: "إناث كبار", teacher: "إلهام شيباطي" },
+                    { time: "07:00 - 10:00", category: "إناث كبار", teacher: "أميرة سايح" },
+                    { time: "15:00 - 18:00", category: "إناث كبار", teacher: "أميرة سايح" },
+                    { time: "07:00 - 09:30", category: "إناث كبار", teacher: "فطيمة برتال" },
+                    { time: "09:30 - 12:00", category: "إناث تلقين", teacher: "فطيمة برتال" },
+                    { time: "07:00 - 09:30", category: "إناث (قرءان)", teacher: "مريم بلعتروس" },
+                    { time: "10:00 - 12:30", category: "إناث (قرءان)", teacher: "مريم بلعتروس" },
+                    { time: "07:00 - 10:00", category: "إناث كبار", teacher: "خولة رحموني" },
+                    { time: "10:00 - 12:30", category: "إناث صغار", teacher: "خولة رحموني" },
+                    { time: "07:00 - 09:00", category: "إناث تلقين", teacher: "لبنى بعزيز" },
+                    { time: "09:00 - 11:00", category: "إناث تلقين", teacher: "لبنى بعزيز" },
+                    { time: "15:00 - 17:00", category: "ذكور تلقين", teacher: "منى مفرج" },
+                    { time: "17:00 - 19:00", category: "إناث تلقين", teacher: "منى مفرج" },
+                    { time: "07:30 - 09:30", category: "ذكور تلقين", teacher: "فلة ذياب" },
+                    { time: "09:30 - 11:30", category: "إناث تلقين", teacher: "فلة ذياب" },
+                    { time: "16:00 - 19:00", category: "إناث كبار", teacher: "رندة بلوصيف" },
+                    { time: "16:00 - 19:00", category: "إناث كبار", teacher: "أسماء بوعكاز" },
+                    { time: "07:00 - 10:00", category: "فئة الذكور", teacher: "نبيلة نعيجة" },
+                    { time: "09:00 - 11:00", category: "المرشدة الدينية", teacher: "ليلى ساعو" },
+                    { time: "15:00 - 17:00", category: "المرشدة الدينية", teacher: "ليلى ساعو" }
                 ],
                 tuesday: [
-                    { time: "07:00 - 10:00", category: "فئة الذكور كبار", section: "", teacher: "عبد السلام بلقط" },
-                    { time: "15:00 - 18:00", category: "فئة الذكور صغار", section: "", teacher: "عبد السلام بلقط" },
-                    { time: "07:00 - 10:00", category: "فئة الذكور كبار", section: "", teacher: "عبد الهادي عبادلية" },
-                    { time: "15:00 - 18:00", category: "فئة الذكور صغار", section: "", teacher: "عبد الهادي عبادلية" },
-                    { time: "07:00 - 10:00", category: "فئة الذكور كبار", section: "", teacher: "عبد القادر إسالمة" },
-                    { time: "15:00 - 18:00", category: "فئة الذكور صغار", section: "", teacher: "عبد القادر إسالمة" },
-                    { time: "07:00 - 10:00", category: "فئة الذكور (قرءان)", section: "", teacher: "إسماعيل قرناني" },
-                    { time: "15:00 - 18:00", category: "فئة الذكور صغار", section: "", teacher: "إسماعيل قرناني" },
-                    { time: "05:00 - 07:00", category: "فئة الذكور كبار", section: "", teacher: "اليزيد بوكركر" },
-                    { time: "16:30 - 18:30", category: "فئة الذكور صغار", section: "", teacher: "اليزيد بوكركر" },
-                    { time: "07:00 - 10:00", category: "فئة الذكور كبار", section: "", teacher: "ياسين عبدو" },
-                    { time: "15:00 - 18:00", category: "فئة الذكور صغار", section: "", teacher: "ياسين عبدو" },
-                    { time: "07:00 - 10:00", category: "فئة التلقين (قرءان)", section: "", teacher: "أحلام عباز" },
-                    { time: "16:00 - 19:00", category: "فئة التحفيظ (قرءان)", section: "", teacher: "أحلام عباز" },
-                    { time: "07:00 - 09:00", category: "إناث كبار", section: "", teacher: "إلهام شيباطي" },
-                    { time: "16:00 - 19:00", category: "إناث كبار", section: "", teacher: "إلهام شيباطي" },
-                    { time: "07:00 - 10:00", category: "إناث كبار", section: "", teacher: "أميرة سايح" },
-                    { time: "15:00 - 18:00", category: "إناث كبار", section: "", teacher: "أميرة سايح" },
-                    { time: "07:00 - 09:30", category: "إناث كبار", section: "", teacher: "فطيمة برتال" },
-                    { time: "09:30 - 12:00", category: "إناث تلقين", section: "", teacher: "فطيمة برتال" },
-                    { time: "07:00 - 09:30", category: "إناث (قرءان)", section: "", teacher: "مريم بلعتروس" },
-                    { time: "10:00 - 12:30", category: "إناث (قرءان)", section: "", teacher: "مريم بلعتروس" },
-                    { time: "07:00 - 10:00", category: "إناث كبار", section: "", teacher: "خولة رحموني" },
-                    { time: "10:00 - 12:30", category: "إناث صغار", section: "", teacher: "خولة رحموني" },
-                    { time: "07:00 - 09:00", category: "إناث تلقين", section: "", teacher: "لبنى بعزيز" },
-                    { time: "09:00 - 11:00", category: "إناث تلقين", section: "", teacher: "لبنى بعزيز" },
-                    { time: "15:00 - 17:00", category: "ذكور تلقين", section: "", teacher: "منى مفرج" },
-                    { time: "17:00 - 19:00", category: "إناث تلقين", section: "", teacher: "منى مفرج" },
-                    { time: "07:30 - 09:30", category: "ذكور تلقين", section: "", teacher: "فلة ذياب" },
-                    { time: "09:30 - 11:30", category: "إناث تلقين", section: "", teacher: "فلة ذياب" },
-                    { time: "16:00 - 19:00", category: "إناث كبار", section: "", teacher: "رندة بلوصيف" },
-                    { time: "16:00 - 19:00", category: "إناث كبار", section: "", teacher: "أسماء بوعكاز" },
-                    { time: "07:00 - 10:00", category: "فئة الذكور", section: "", teacher: "نبيلة نعيجة" },
-                    { time: "09:00 - 11:00", category: "المرشدة الدينية", section: "", teacher: "ليلى ساعو" },
-                    { time: "15:00 - 17:00", category: "المرشدة الدينية", section: "", teacher: "ليلى ساعو" }
+                    { time: "07:00 - 10:00", category: "فئة الذكور كبار", teacher: "عبد السلام بلقط" },
+                    { time: "15:00 - 18:00", category: "فئة الذكور صغار", teacher: "عبد السلام بلقط" },
+                    { time: "07:00 - 10:00", category: "فئة الذكور كبار", teacher: "عبد الهادي عبادلية" },
+                    { time: "15:00 - 18:00", category: "فئة الذكور صغار", teacher: "عبد الهادي عبادلية" },
+                    { time: "07:00 - 10:00", category: "فئة الذكور كبار", teacher: "عبد القادر إسالمة" },
+                    { time: "15:00 - 18:00", category: "فئة الذكور صغار", teacher: "عبد القادر إسالمة" },
+                    { time: "07:00 - 10:00", category: "فئة الذكور (قرءان)", teacher: "إسماعيل قرناني" },
+                    { time: "15:00 - 18:00", category: "فئة الذكور صغار", teacher: "إسماعيل قرناني" },
+                    { time: "05:00 - 07:00", category: "فئة الذكور كبار", teacher: "اليزيد بوكركر" },
+                    { time: "16:30 - 18:30", category: "فئة الذكور صغار", teacher: "اليزيد بوكركر" },
+                    { time: "07:00 - 10:00", category: "فئة الذكور كبار", teacher: "ياسين عبدو" },
+                    { time: "15:00 - 18:00", category: "فئة الذكور صغار", teacher: "ياسين عبدو" },
+                    { time: "07:00 - 10:00", category: "فئة التلقين (قرءان)", teacher: "أحلام عباز" },
+                    { time: "16:00 - 19:00", category: "فئة التحفيظ (قرءان)", teacher: "أحلام عباز" },
+                    { time: "07:00 - 09:00", category: "إناث كبار", teacher: "إلهام شيباطي" },
+                    { time: "16:00 - 19:00", category: "إناث كبار", teacher: "إلهام شيباطي" },
+                    { time: "07:00 - 10:00", category: "إناث كبار", teacher: "أميرة سايح" },
+                    { time: "15:00 - 18:00", category: "إناث كبار", teacher: "أميرة سايح" },
+                    { time: "07:00 - 09:30", category: "إناث كبار", teacher: "فطيمة برتال" },
+                    { time: "09:30 - 12:00", category: "إناث تلقين", teacher: "فطيمة برتال" },
+                    { time: "07:00 - 09:30", category: "إناث (قرءان)", teacher: "مريم بلعتروس" },
+                    { time: "10:00 - 12:30", category: "إناث (قرءان)", teacher: "مريم بلعتروس" },
+                    { time: "07:00 - 10:00", category: "إناث كبار", teacher: "خولة رحموني" },
+                    { time: "10:00 - 12:30", category: "إناث صغار", teacher: "خولة رحموني" },
+                    { time: "07:00 - 09:00", category: "إناث تلقين", teacher: "لبنى بعزيز" },
+                    { time: "09:00 - 11:00", category: "إناث تلقين", teacher: "لبنى بعزيز" },
+                    { time: "15:00 - 17:00", category: "ذكور تلقين", teacher: "منى مفرج" },
+                    { time: "17:00 - 19:00", category: "إناث تلقين", teacher: "منى مفرج" },
+                    { time: "07:30 - 09:30", category: "ذكور تلقين", teacher: "فلة ذياب" },
+                    { time: "09:30 - 11:30", category: "إناث تلقين", teacher: "فلة ذياب" },
+                    { time: "16:00 - 19:00", category: "إناث كبار", teacher: "رندة بلوصيف" },
+                    { time: "16:00 - 19:00", category: "إناث كبار", teacher: "أسماء بوعكاز" },
+                    { time: "07:00 - 10:00", category: "فئة الذكور", teacher: "نبيلة نعيجة" },
+                    { time: "09:00 - 11:00", category: "المرشدة الدينية", teacher: "ليلى ساعو" },
+                    { time: "15:00 - 17:00", category: "المرشدة الدينية", teacher: "ليلى ساعو" }
                 ],
                 wednesday: [
-                    { time: "07:00 - 10:00", category: "فئة الذكور كبار", section: "", teacher: "عبد السلام بلقط" },
-                    { time: "15:00 - 18:00", category: "فئة الذكور صغار", section: "", teacher: "عبد السلام بلقط" },
-                    { time: "07:00 - 10:00", category: "فئة الذكور كبار", section: "", teacher: "عبد الهادي عبادلية" },
-                    { time: "15:00 - 18:00", category: "فئة الذكور صغار", section: "", teacher: "عبد الهادي عبادلية" },
-                    { time: "07:00 - 10:00", category: "فئة الذكور كبار", section: "", teacher: "عبد القادر إسالمة" },
-                    { time: "15:00 - 18:00", category: "فئة الذكور صغار", section: "", teacher: "عبد القادر إسالمة" },
-                    { time: "07:00 - 10:00", category: "فئة الذكور (قرءان)", section: "", teacher: "إسماعيل قرناني" },
-                    { time: "15:00 - 18:00", category: "فئة الذكور صغار", section: "", teacher: "إسماعيل قرناني" },
-                    { time: "05:00 - 07:00", category: "فئة الذكور كبار", section: "", teacher: "اليزيد بوكركر" },
-                    { time: "16:30 - 18:30", category: "فئة الذكور صغار", section: "", teacher: "اليزيد بوكركر" },
-                    { time: "07:00 - 10:00", category: "فئة الذكور كبار", section: "", teacher: "ياسين عبدو" },
-                    { time: "15:00 - 18:00", category: "فئة الذكور صغار", section: "", teacher: "ياسين عبدو" },
-                    { time: "07:00 - 10:00", category: "فئة التلقين (قرءان)", section: "", teacher: "أحلام عباز" },
-                    { time: "16:00 - 19:00", category: "فئة التحفيظ (قرءان)", section: "", teacher: "أحلام عباز" },
-                    { time: "07:00 - 09:00", category: "إناث كبار", section: "", teacher: "إلهام شيباطي" },
-                    { time: "16:00 - 19:00", category: "إناث كبار", section: "", teacher: "إلهام شيباطي" },
-                    { time: "07:00 - 10:00", category: "إناث كبار", section: "", teacher: "أميرة سايح" },
-                    { time: "15:00 - 18:00", category: "إناث كبار", section: "", teacher: "أميرة سايح" },
-                    { time: "07:00 - 09:30", category: "إناث كبار", section: "", teacher: "فطيمة برتال" },
-                    { time: "09:30 - 12:00", category: "إناث تلقين", section: "", teacher: "فطيمة برتال" },
-                    { time: "07:00 - 09:30", category: "إناث (قرءان)", section: "", teacher: "مريم بلعتروس" },
-                    { time: "10:00 - 12:30", category: "إناث (قرءان)", section: "", teacher: "مريم بلعتروس" },
-                    { time: "07:00 - 10:00", category: "إناث كبار", section: "", teacher: "خولة رحموني" },
-                    { time: "10:00 - 12:30", category: "إناث صغار", section: "", teacher: "خولة رحموني" },
-                    { time: "07:00 - 09:00", category: "إناث تلقين", section: "", teacher: "لبنى بعزيز" },
-                    { time: "09:00 - 11:00", category: "إناث تلقين", section: "", teacher: "لبنى بعزيز" },
-                    { time: "15:00 - 17:00", category: "ذكور تلقين", section: "", teacher: "منى مفرج" },
-                    { time: "17:00 - 19:00", category: "إناث تلقين", section: "", teacher: "منى مفرج" },
-                    { time: "07:30 - 09:30", category: "ذكور تلقين", section: "", teacher: "فلة ذياب" },
-                    { time: "09:30 - 11:30", category: "إناث تلقين", section: "", teacher: "فلة ذياب" },
-                    { time: "16:00 - 19:00", category: "إناث كبار", section: "", teacher: "رندة بلوصيف" },
-                    { time: "16:00 - 19:00", category: "إناث كبار", section: "", teacher: "أسماء بوعكاز" },
-                    { time: "07:00 - 10:00", category: "فئة الذكور", section: "", teacher: "نبيلة نعيجة" },
-                    { time: "09:00 - 11:00", category: "المرشدة الدينية", section: "", teacher: "ليلى ساعو" }
+                    { time: "07:00 - 10:00", category: "فئة الذكور كبار", teacher: "عبد السلام بلقط" },
+                    { time: "15:00 - 18:00", category: "فئة الذكور صغار", teacher: "عبد السلام بلقط" },
+                    { time: "07:00 - 10:00", category: "فئة الذكور كبار", teacher: "عبد الهادي عبادلية" },
+                    { time: "15:00 - 18:00", category: "فئة الذكور صغار", teacher: "عبد الهادي عبادلية" },
+                    { time: "07:00 - 10:00", category: "فئة الذكور كبار", teacher: "عبد القادر إسالمة" },
+                    { time: "15:00 - 18:00", category: "فئة الذكور صغار", teacher: "عبد القادر إسالمة" },
+                    { time: "07:00 - 10:00", category: "فئة الذكور (قرءان)", teacher: "إسماعيل قرناني" },
+                    { time: "15:00 - 18:00", category: "فئة الذكور صغار", teacher: "إسماعيل قرناني" },
+                    { time: "05:00 - 07:00", category: "فئة الذكور كبار", teacher: "اليزيد بوكركر" },
+                    { time: "16:30 - 18:30", category: "فئة الذكور صغار", teacher: "اليزيد بوكركر" },
+                    { time: "07:00 - 10:00", category: "فئة الذكور كبار", teacher: "ياسين عبدو" },
+                    { time: "15:00 - 18:00", category: "فئة الذكور صغار", teacher: "ياسين عبدو" },
+                    { time: "07:00 - 10:00", category: "فئة التلقين (قرءان)", teacher: "أحلام عباز" },
+                    { time: "16:00 - 19:00", category: "فئة التحفيظ (قرءان)", teacher: "أحلام عباز" },
+                    { time: "07:00 - 09:00", category: "إناث كبار", teacher: "إلهام شيباطي" },
+                    { time: "16:00 - 19:00", category: "إناث كبار", teacher: "إلهام شيباطي" },
+                    { time: "07:00 - 10:00", category: "إناث كبار", teacher: "أميرة سايح" },
+                    { time: "15:00 - 18:00", category: "إناث كبار", teacher: "أميرة سايح" },
+                    { time: "07:00 - 09:30", category: "إناث كبار", teacher: "فطيمة برتال" },
+                    { time: "09:30 - 12:00", category: "إناث تلقين", teacher: "فطيمة برتال" },
+                    { time: "07:00 - 09:30", category: "إناث (قرءان)", teacher: "مريم بلعتروس" },
+                    { time: "10:00 - 12:30", category: "إناث (قرءان)", teacher: "مريم بلعتروس" },
+                    { time: "07:00 - 10:00", category: "إناث كبار", teacher: "خولة رحموني" },
+                    { time: "10:00 - 12:30", category: "إناث صغار", teacher: "خولة رحموني" },
+                    { time: "07:00 - 09:00", category: "إناث تلقين", teacher: "لبنى بعزيز" },
+                    { time: "09:00 - 11:00", category: "إناث تلقين", teacher: "لبنى بعزيز" },
+                    { time: "15:00 - 17:00", category: "ذكور تلقين", teacher: "منى مفرج" },
+                    { time: "17:00 - 19:00", category: "إناث تلقين", teacher: "منى مفرج" },
+                    { time: "07:30 - 09:30", category: "ذكور تلقين", teacher: "فلة ذياب" },
+                    { time: "09:30 - 11:30", category: "إناث تلقين", teacher: "فلة ذياب" },
+                    { time: "16:00 - 19:00", category: "إناث كبار", teacher: "رندة بلوصيف" },
+                    { time: "16:00 - 19:00", category: "إناث كبار", teacher: "أسماء بوعكاز" },
+                    { time: "07:00 - 10:00", category: "فئة الذكور", teacher: "نبيلة نعيجة" },
+                    { time: "09:00 - 11:00", category: "المرشدة الدينية", teacher: "ليلى ساعو" }
                 ]
             };
 
@@ -715,7 +737,7 @@
                 if (dayData.length === 0) {
                     timetableBody.innerHTML = `
                         <tr>
-                            <td colspan="5" style="text-align: center; padding: 20px;">
+                            <td colspan="4" style="text-align: center; padding: 20px;">
                                 لا توجد حصص مسجلة لهذا اليوم
                             </td>
                         </tr>
@@ -739,9 +761,8 @@
                     
                     row.innerHTML = `
                         <td>${index + 1}</td>
-                        <td class="class-time">${item.time}</td>
-                        <td class="${categoryClass}">${item.category}</td>
-                        <td class="class-section">${item.section}</td>
+                        <td><span class="class-time">${item.time}</span></td>
+                        <td><span class="${categoryClass}">${item.category}</span></td>
                         <td class="teacher-name">${item.teacher}</td>
                     `;
                     
@@ -780,7 +801,6 @@
                         <td>${index + 1}</td>
                         <td>${item.time}</td>
                         <td>${item.category}</td>
-                        <td>${item.section}</td>
                         <td>${item.teacher}</td>
                     `;
                     
