@@ -7,6 +7,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="icon" href="https://i.ibb.co/jZrxhFsf/1-min.png" type="image/png">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <style>
         :root {
             --primary-color: #1a4d2e;
@@ -22,6 +23,7 @@
             --info-color: #3498db;
             --warning-color: #f1c40f;
             --max-group-color: #e74c3c;
+            --excel-color: #1d6f42;
         }
 
         * {
@@ -126,7 +128,7 @@
             box-shadow: 0 3px 10px rgba(0,0,0,0.1);
             border: 1px solid #ddd;
             position: relative;
-            transition: transform 0.3s;
+            transition: transform 0.3s, box-shadow 0.3s;
         }
 
         .group-card.max-reached {
@@ -262,6 +264,15 @@
             transform: scale(1.1);
         }
 
+        .btn-excel {
+            background: var(--excel-color);
+        }
+
+        .btn-excel:hover {
+            background: #165834;
+            transform: scale(1.1);
+        }
+
         .controls {
             display: flex;
             justify-content: space-between;
@@ -335,6 +346,17 @@
 
         .btn-warning:hover {
             background-color: #f39c12;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        .btn-excel-action {
+            background-color: var(--excel-color);
+            color: white;
+        }
+
+        .btn-excel-action:hover {
+            background-color: #165834;
             transform: translateY(-2px);
             box-shadow: 0 4px 8px rgba(0,0,0,0.1);
         }
@@ -597,6 +619,18 @@
             display: none;
         }
 
+        .notification.error {
+            background: var(--error-color);
+        }
+
+        .notification.info {
+            background: var(--info-color);
+        }
+
+        .notification.warning {
+            background: var(--warning-color);
+        }
+
         .move-option {
             padding: 0.8rem;
             margin: 0.5rem 0;
@@ -635,6 +669,16 @@
 
         .group-status.available {
             color: var(--success-color);
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
         }
 
         @media (max-width: 992px) {
@@ -746,8 +790,8 @@
                     <button class="btn btn-primary" id="saveBtn">
                         <i class="fas fa-save"></i> حفظ التوزيع
                     </button>
-                    <button class="btn btn-info" id="printBtn">
-                        <i class="fas fa-print"></i> طباعة الأفواج
+                    <button class="btn btn-excel-action" id="exportAllBtn">
+                        <i class="fas fa-file-excel"></i> تصدير الكل لـ Excel
                     </button>
                 </div>
             </div>
@@ -949,7 +993,7 @@
             const reserveReason = document.getElementById('reserveReason');
             const confirmReserveRequest = document.getElementById('confirmReserveRequest');
             const cancelReserveRequest = document.getElementById('cancelReserveRequest');
-            const printBtn = document.getElementById('printBtn');
+            const exportAllBtn = document.getElementById('exportAllBtn');
             const printSection = document.getElementById('printSection');
             const printGroupTitle = document.getElementById('printGroupTitle');
             const printGroupTime = document.getElementById('printGroupTime');
@@ -976,7 +1020,7 @@
             showReserveBtn.addEventListener('click', toggleReserveSection);
             confirmReserveRequest.addEventListener('click', confirmReserve);
             cancelReserveRequest.addEventListener('click', () => reserveRequest.style.display = 'none');
-            printBtn.addEventListener('click', showPrintOptions);
+            exportAllBtn.addEventListener('click', exportAllGroupsToExcel);
             
             // دالة لتحميل الطلبة من قاعدة البيانات
             function loadStudents() {
@@ -1000,7 +1044,7 @@
                 }, (error) => {
                     console.error('Error loading students:', error);
                     loadingSpinner.style.display = 'none';
-                    showNotification('حدث خطأ أثناء تحميل بيانات الطلبة', 'error');
+                    showNotification('حدث خطأ أثناء تحميل بيانات الطلبة: ' + error.message, 'error');
                 });
             }
             
@@ -1084,15 +1128,14 @@
                 groupCount.textContent = students.length;
                 groupInfo.appendChild(groupCount);
                 
-                // زر طباعة الفوج
-                const printBtn = document.createElement('button');
-                printBtn.className = 'btn-action';
-                printBtn.style.backgroundColor = '#3498db';
-                printBtn.innerHTML = '<i class="fas fa-print"></i>';
-                printBtn.title = 'طباعة الفوج';
-                printBtn.style.marginLeft = '5px';
-                printBtn.addEventListener('click', () => printGroup(group.id));
-                groupInfo.appendChild(printBtn);
+                // زر تصدير الفوج لملف Excel
+                const exportBtn = document.createElement('button');
+                exportBtn.className = 'btn-action btn-excel';
+                exportBtn.innerHTML = '<i class="fas fa-file-excel"></i>';
+                exportBtn.title = 'تصدير قائمة الفوج لملف Excel';
+                exportBtn.style.marginLeft = '5px';
+                exportBtn.addEventListener('click', () => exportGroupToExcel(group.id));
+                groupInfo.appendChild(exportBtn);
                 
                 groupHeader.appendChild(groupTitle);
                 groupHeader.appendChild(groupInfo);
@@ -1381,7 +1424,7 @@
                     .catch(error => {
                         loadingSpinner.style.display = 'none';
                         console.error('Error saving assignments:', error);
-                        showNotification('حدث خطأ أثناء حفظ التوزيع', 'error');
+                        showNotification('حدث خطأ أثناء حفظ التوزيع: ' + error.message, 'error');
                     });
             }
             
@@ -1508,7 +1551,7 @@
                     })
                     .catch(error => {
                         console.error('Error saving reserve request:', error);
-                        showNotification('حدث خطأ أثناء إرسال طلب التغيير', 'error');
+                        showNotification(`حدث خطأ أثناء إرسال طلب التغيير: ${error.message || 'يرجى المحاولة لاحقاً'}`, 'error');
                     });
             }
             
@@ -1588,7 +1631,7 @@
                 })
                 .catch(error => {
                     console.error('Error approving reserve request:', error);
-                    showNotification('حدث خطأ أثناء الموافقة على طلب التغيير', 'error');
+                    showNotification('حدث خطأ أثناء الموافقة على طلب التغيير: ' + error.message, 'error');
                 });
             }
             
@@ -1608,51 +1651,12 @@
                 })
                 .catch(error => {
                     console.error('Error rejecting reserve request:', error);
-                    showNotification('حدث خطأ أثناء رفض طلب التغيير', 'error');
+                    showNotification('حدث خطأ أثناء رفض طلب التغيير: ' + error.message, 'error');
                 });
             }
             
-            // دالة لعرض خيارات الطباعة
-            function showPrintOptions() {
-                moveOptionsList.innerHTML = '';
-                
-                // إضافة خيار طباعة جميع الأفواج
-                const allOption = document.createElement('div');
-                allOption.className = 'move-option';
-                allOption.textContent = 'جميع الأفواج';
-                allOption.addEventListener('click', () => {
-                    printAllGroups();
-                    moveOptions.style.display = 'none';
-                });
-                moveOptionsList.appendChild(allOption);
-                
-                // إضافة خيارات طباعة كل فوج على حدة
-                groups.forEach(group => {
-                    const groupOption = document.createElement('div');
-                    groupOption.className = 'move-option';
-                    groupOption.textContent = `${group.name} (${group.time})`;
-                    groupOption.addEventListener('click', () => {
-                        printGroup(group.id);
-                        moveOptions.style.display = 'none';
-                    });
-                    moveOptionsList.appendChild(groupOption);
-                });
-                
-                // إضافة خيار طباعة الطلبة غير الموزعين
-                const unassignedOption = document.createElement('div');
-                unassignedOption.className = 'move-option';
-                unassignedOption.textContent = 'الطلبة غير الموزعين';
-                unassignedOption.addEventListener('click', () => {
-                    printUnassignedStudents();
-                    moveOptions.style.display = 'none';
-                });
-                moveOptionsList.appendChild(unassignedOption);
-                
-                moveOptions.style.display = 'flex';
-            }
-            
-            // دالة لطباعة فوج معين
-            function printGroup(groupId) {
+            // دالة لتصدير فوج معين إلى Excel
+            function exportGroupToExcel(groupId) {
                 const group = groups.find(g => g.id === groupId);
                 const students = allStudents.filter(s => s.group === groupId);
                 
@@ -1660,84 +1664,93 @@
                     showNotification('لا يوجد طلبة في هذا الفوج', 'info');
                     return;
                 }
+
+                // تحضير البيانات للتصدير
+                const data = [
+                    ["الإسم الكامل", "تاريخ الميلاد", "المرض", "الحالة الإجتماعية"],
+                    ...students.map(student => [
+                        `${student.firstName} ${student.lastName}`,
+                        student.birthDate ? new Date(student.birthDate).toLocaleDateString('ar-EG') : 'غير محدد',
+                        student.diseases || 'لا يوجد',
+                        student.maritalStatus || 'غير محدد'
+                    ])
+                ];
+
+                // إنشاء ملف Excel
+                const workbook = XLSX.utils.book_new();
+                const worksheet = XLSX.utils.aoa_to_sheet(data);
+                XLSX.utils.book_append_sheet(workbook, worksheet, group.name);
                 
-                preparePrintData(group.name, group.time, students);
-                window.print();
+                // تنزيل الملف
+                XLSX.writeFile(workbook, `قائمة_${group.name}.xlsx`);
+                showNotification(`تم تصدير قائمة ${group.name} بنجاح`, 'success');
             }
             
-            // دالة لطباعة جميع الأفواج
-            function printAllGroups() {
-                const allStudentsInGroups = allStudents.filter(s => s.group);
-                
-                if (allStudentsInGroups.length === 0) {
-                    showNotification('لا يوجد طلبة موزعين على الأفواج', 'info');
+            // دالة لتصدير جميع الأفواج إلى Excel
+            function exportAllGroupsToExcel() {
+                if (allStudents.length === 0) {
+                    showNotification('لا يوجد طلبة لتصدير بياناتهم', 'info');
                     return;
                 }
+
+                // إنشاء ملف Excel جديد
+                const workbook = XLSX.utils.book_new();
                 
-                preparePrintData('جميع الأفواج', '', allStudentsInGroups);
-                window.print();
-            }
-            
-            // دالة لطباعة الطلبة غير الموزعين
-            function printUnassignedStudents() {
-                const unassignedStudents = allStudents.filter(s => !s.group);
-                
-                if (unassignedStudents.length === 0) {
-                    showNotification('لا يوجد طلبة غير موزعين', 'info');
-                    return;
-                }
-                
-                preparePrintData('الطلبة غير الموزعين', '', unassignedStudents);
-                window.print();
-            }
-            
-            // دالة لإعداد بيانات الطباعة
-            function preparePrintData(groupName, groupTime, students) {
-                printGroupTitle.textContent = groupName;
-                printGroupTime.textContent = groupTime ? `وقت الفوج: ${groupTime}` : '';
-                printDate.textContent = new Date().toLocaleDateString('ar-EG');
-                
-                printTableBody.innerHTML = '';
-                
-                students.forEach((student, index) => {
-                    const row = document.createElement('tr');
-                    
-                    // تنسيق تاريخ الميلاد
-                    let birthDateFormatted = 'غير محدد';
-                    if (student.birthDate) {
-                        const date = new Date(student.birthDate);
-                        birthDateFormatted = date.toLocaleDateString('ar-EG');
+                // تصدير كل فوج في شيت منفصل
+                groups.forEach(group => {
+                    const groupStudents = allStudents.filter(s => s.group === group.id);
+                    if (groupStudents.length > 0) {
+                        const data = [
+                            ["الإسم الكامل", "تاريخ الميلاد", "المرض", "الحالة الإجتماعية"],
+                            ...groupStudents.map(student => [
+                                `${student.firstName} ${student.lastName}`,
+                                student.birthDate ? new Date(student.birthDate).toLocaleDateString('ar-EG') : 'غير محدد',
+                                student.diseases || 'لا يوجد',
+                                student.maritalStatus || 'غير محدد'
+                            ])
+                        ];
+                        const worksheet = XLSX.utils.aoa_to_sheet(data);
+                        XLSX.utils.book_append_sheet(workbook, worksheet, group.name);
                     }
-                    
-                    row.innerHTML = `
-                        <td>${index + 1}</td>
-                        <td>${student.firstName} ${student.lastName}</td>
-                        <td>${student.registrationNumber || 'غير محدد'}</td>
-                        <td>${birthDateFormatted}</td>
-                        <td>${student.birthPlace || 'غير محدد'}</td>
-                        <td>${student.fatherName || 'غير محدد'}</td>
-                        <td>${student.motherName || 'غير محدد'}</td>
-                        <td>${student.phone || 'غير محدد'}</td>
-                    `;
-                    
-                    printTableBody.appendChild(row);
                 });
+                
+                // تصدير الطلبة غير الموزعين إذا وجدوا
+                const unassignedStudents = allStudents.filter(s => !s.group);
+                if (unassignedStudents.length > 0) {
+                    const data = [
+                        ["الإسم الكامل", "تاريخ الميلاد", "المرض", "الحالة الإجتماعية"],
+                        ...unassignedStudents.map(student => [
+                            `${student.firstName} ${student.lastName}`,
+                            student.birthDate ? new Date(student.birthDate).toLocaleDateString('ar-EG') : 'غير محدد',
+                            student.diseases || 'لا يوجد',
+                            student.maritalStatus || 'غير محدد'
+                        ])
+                    ];
+                    const worksheet = XLSX.utils.aoa_to_sheet(data);
+                    XLSX.utils.book_append_sheet(workbook, worksheet, 'غير موزعين');
+                }
+                
+                // تنزيل الملف
+                XLSX.writeFile(workbook, 'قوائم_الأفواج.xlsx');
+                showNotification('تم تصدير جميع الأفواج بنجاح', 'success');
             }
             
             // دالة لعرض الإشعارات
             function showNotification(message, type) {
                 notification.textContent = message;
-                notification.style.display = 'block';
+                notification.className = 'notification';
                 
                 if (type === 'success') {
-                    notification.style.backgroundColor = '#2ecc71';
+                    notification.classList.add('success');
                 } else if (type === 'error') {
-                    notification.style.backgroundColor = '#e74c3c';
+                    notification.classList.add('error');
                 } else if (type === 'info') {
-                    notification.style.backgroundColor = '#3498db';
+                    notification.classList.add('info');
                 } else if (type === 'warning') {
-                    notification.style.backgroundColor = '#f39c12';
+                    notification.classList.add('warning');
                 }
+                
+                notification.style.display = 'block';
                 
                 setTimeout(() => {
                     notification.style.display = 'none';
