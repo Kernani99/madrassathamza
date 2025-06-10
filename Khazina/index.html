@@ -6,24 +6,20 @@
     <title>نظام إدارة ميزانية المدرسة القرآنية</title>
     <meta name="description" content="نظام متكامل لإدارة ميزانية المدرسة القرآنية وتتبع المعاملات المالية">
     
-    <!-- Font Awesome Icons -->
+    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    <!-- Google Fonts - Cairo for Arabic -->
+    <!-- Google Fonts - Cairo -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
     
-    <!-- Favicon -->
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📖</text></svg>">
-    
     <style>
-        /* CSS Variables for easy theming */
         :root {
-            --primary-color: #2E8B57; /* Sea Green */
-            --primary-dark: #006400; /* Dark Green */
+            --primary-color: #2E8B57;
+            --primary-dark: #006400;
             --primary-light: #3CB371;
-            --accent-color: #FFD700; /* Gold */
+            --accent-color: #FFD700;
             --danger-color: #DC3545;
             --warning-color: #FFC107;
             --info-color: #17A2B8;
@@ -32,20 +28,19 @@
             --light-bg: #F8F9FA;
             --dark-bg: #E9ECEF;
             --white: #FFFFFF;
-            --border-radius: 8px;
+            --border-radius: 12px;
             --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             --transition: all 0.3s ease;
         }
 
-        /* Base Styles */
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
+            font-family: 'Cairo', sans-serif;
         }
 
         body {
-            font-family: 'Cairo', sans-serif;
             background-color: var(--light-bg);
             color: var(--text-color);
             line-height: 1.6;
@@ -53,14 +48,12 @@
             min-height: 100vh;
         }
 
-        /* Container */
         .container {
             max-width: 1200px;
             margin: 0 auto;
             padding: 20px;
         }
 
-        /* Header */
         header {
             text-align: center;
             padding: 20px 0;
@@ -83,15 +76,33 @@
             font-size: 1.2em;
         }
 
-        /* Connection Status */
         .connection-status {
             display: inline-flex;
             align-items: center;
             padding: 8px 15px;
             border-radius: 20px;
-            background-color: var(--light-bg);
+            background-color: rgba(255, 255, 255, 0.9);
             margin-top: 10px;
             font-size: 0.9rem;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            transition: var(--transition);
+        }
+
+        .connection-status.connected {
+            background-color: rgba(46, 139, 87, 0.1);
+            color: var(--primary-dark);
+        }
+
+        .connection-status.disconnected {
+            background-color: rgba(220, 53, 69, 0.1);
+            color: var(--danger-color);
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.7; }
+            100% { opacity: 1; }
         }
 
         .status-indicator {
@@ -99,18 +110,42 @@
             height: 12px;
             border-radius: 50%;
             margin-right: 8px;
-            background-color: var(--warning-color);
+            position: relative;
         }
 
         .connection-status.connected .status-indicator {
             background-color: var(--primary-color);
+            box-shadow: 0 0 8px var(--primary-color);
         }
 
         .connection-status.disconnected .status-indicator {
             background-color: var(--danger-color);
+            box-shadow: 0 0 8px var(--danger-color);
         }
 
-        /* Current Balance */
+        .status-indicator::after {
+            content: '';
+            position: absolute;
+            top: -3px;
+            left: -3px;
+            right: -3px;
+            bottom: -3px;
+            border-radius: 50%;
+            border: 1px solid currentColor;
+            opacity: 0;
+            animation: ripple 1.5s infinite;
+        }
+
+        .connection-status.connected .status-indicator::after {
+            border-color: var(--primary-color);
+            animation: ripple 1.5s infinite;
+        }
+
+        @keyframes ripple {
+            0% { transform: scale(0.8); opacity: 0.5; }
+            100% { transform: scale(1.5); opacity: 0; }
+        }
+
         .current-balance {
             background: linear-gradient(135deg, var(--primary-dark), var(--primary-color));
             color: var(--white);
@@ -140,19 +175,13 @@
             font-weight: 600;
         }
 
-        .current-balance .balance-amount {
+        .balance-amount {
             font-size: 3rem;
             font-weight: 700;
             margin: 10px 0;
             font-feature-settings: "tnum";
         }
 
-        .current-balance .currency {
-            font-size: 1.5rem;
-            margin-right: 5px;
-        }
-
-        /* Action Buttons */
         .action-buttons {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -161,45 +190,108 @@
         }
 
         .action-button {
-            background-color: var(--white);
+            background: linear-gradient(145deg, #ffffff, #e6e6e6);
             color: var(--primary-dark);
-            padding: 25px 20px;
+            padding: 25px 15px;
             border-radius: var(--border-radius);
             text-align: center;
-            text-decoration: none;
             font-size: 1.1rem;
-            font-weight: 600;
+            font-weight: 700;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             transition: var(--transition);
-            box-shadow: var(--box-shadow);
-            border: 2px solid var(--primary-dark);
+            box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.1),
+                        -5px -5px 15px rgba(255, 255, 255, 0.7);
+            border: none;
             cursor: pointer;
             position: relative;
             overflow: hidden;
+            font-family: 'Cairo', sans-serif;
         }
 
         .action-button:hover {
             transform: translateY(-5px);
-            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
-            background-color: var(--primary-dark);
-            color: var(--white);
+            box-shadow: 8px 8px 20px rgba(0, 0, 0, 0.15),
+                        -8px -8px 20px rgba(255, 255, 255, 0.8);
         }
 
-        .action-button:hover i {
-            color: var(--accent-color);
+        .action-button:active {
+            transform: translateY(0);
+            box-shadow: inset 5px 5px 10px rgba(0, 0, 0, 0.1),
+                        inset -5px -5px 10px rgba(255, 255, 255, 0.7);
         }
 
         .action-button i {
             font-size: 2.5rem;
-            margin-bottom: 15px;
-            color: var(--primary-color);
+            margin-bottom: 10px;
             transition: var(--transition);
         }
 
-        /* Sections */
+        .action-button:hover i {
+            transform: scale(1.1);
+        }
+
+        .action-button small {
+            font-size: 0.8rem;
+            color: var(--text-light);
+            margin-top: 5px;
+            font-weight: 400;
+        }
+
+        .action-button::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                45deg,
+                rgba(255, 255, 255, 0.3) 0%,
+                rgba(255, 255, 255, 0) 100%
+            );
+            transform: translateX(-100%);
+            transition: transform 0.6s ease;
+        }
+
+        .action-button:hover::after {
+            transform: translateX(100%);
+        }
+
+        /* ألوان مختلفة لكل زر */
+        .action-button:nth-child(1) {
+            --primary-color: #2E8B57;
+        }
+
+        .action-button:nth-child(2) {
+            --primary-color: #FFA500;
+        }
+
+        .action-button:nth-child(3) {
+            --primary-color: #4169E1;
+        }
+
+        .action-button:nth-child(4) {
+            --primary-color: #9932CC;
+        }
+
+        .action-button i {
+            color: var(--primary-color);
+        }
+
+        .action-button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none !important;
+            box-shadow: none !important;
+        }
+
+        .action-button:disabled::after {
+            display: none;
+        }
+
         .section {
             background-color: var(--white);
             border-radius: var(--border-radius);
@@ -215,6 +307,7 @@
             text-align: center;
             position: relative;
             padding-bottom: 15px;
+            font-family: 'Cairo', sans-serif;
         }
 
         .section-title::after {
@@ -229,7 +322,6 @@
             border-radius: 2px;
         }
 
-        /* Forms */
         .form-group {
             margin-bottom: 20px;
         }
@@ -239,6 +331,7 @@
             margin-bottom: 8px;
             font-weight: 600;
             color: var(--primary-dark);
+            font-family: 'Cairo', sans-serif;
         }
 
         .form-control {
@@ -262,7 +355,6 @@
             resize: vertical;
         }
 
-        /* Buttons */
         .btn {
             display: inline-flex;
             align-items: center;
@@ -276,6 +368,7 @@
             transition: var(--transition);
             text-align: center;
             gap: 10px;
+            font-family: 'Cairo', sans-serif;
         }
 
         .btn-primary {
@@ -311,7 +404,6 @@
             width: 100%;
         }
 
-        /* Transaction List */
         .transaction-list {
             list-style: none;
             padding: 0;
@@ -349,6 +441,7 @@
             color: var(--text-light);
             min-width: 100px;
             text-align: right;
+            font-family: 'Cairo', sans-serif;
         }
 
         .transaction-description {
@@ -356,6 +449,7 @@
             padding: 0 15px;
             text-align: right;
             font-weight: 600;
+            font-family: 'Cairo', sans-serif;
         }
 
         .transaction-amount {
@@ -363,6 +457,7 @@
             min-width: 120px;
             text-align: left;
             font-feature-settings: "tnum";
+            font-family: 'Cairo', sans-serif;
         }
 
         .transaction-amount.deposit {
@@ -406,11 +501,11 @@
             color: var(--danger-color);
         }
 
-        /* Empty State */
         .empty-state {
             text-align: center;
             padding: 40px 20px;
             color: var(--text-light);
+            font-family: 'Cairo', sans-serif;
         }
 
         .empty-state i {
@@ -419,7 +514,6 @@
             color: var(--dark-bg);
         }
 
-        /* Modal */
         .modal {
             display: none;
             position: fixed;
@@ -448,7 +542,6 @@
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
             transform: translateY(-20px);
             transition: transform 0.3s ease;
-            position: relative;
         }
 
         .modal.show .modal-content {
@@ -467,6 +560,7 @@
             font-size: 1.5rem;
             color: var(--primary-dark);
             margin: 0;
+            font-family: 'Cairo', sans-serif;
         }
 
         .close-btn {
@@ -494,7 +588,6 @@
             gap: 10px;
         }
 
-        /* Responsive Design */
         @media (max-width: 768px) {
             .container {
                 padding: 15px;
@@ -530,41 +623,6 @@
                 margin-top: 10px;
                 align-self: flex-end;
             }
-        }
-
-        /* Animations */
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
-        .fade-in {
-            animation: fadeIn 0.5s ease-in;
-        }
-
-        /* Utility Classes */
-        .text-center {
-            text-align: center;
-        }
-
-        .text-right {
-            text-align: right;
-        }
-
-        .text-left {
-            text-align: left;
-        }
-
-        .mt-3 {
-            margin-top: 1rem;
-        }
-
-        .mb-3 {
-            margin-bottom: 1rem;
-        }
-
-        .hidden {
-            display: none !important;
         }
 
         /* Print Styles */
@@ -604,16 +662,19 @@
         <header>
             <h1><i class="fas fa-mosque"></i> نظام إدارة ميزانية المدرسة القرآنية</h1>
             <div id="connectionStatus" class="connection-status">
-                <span id="statusText">جاري الاتصال بقاعدة البيانات...</span>
                 <div class="status-indicator"></div>
+                <span id="statusText">جاري الاتصال بقاعدة البيانات...</span>
+                <button id="retryButton" class="retry-btn" style="display: none;">
+                    <i class="fas fa-sync-alt"></i> إعادة المحاولة
+                </button>
             </div>
         </header>
 
-        <section class="section current-balance fade-in">
+        <section class="section current-balance">
             <h2>الرصيد الحالي في الخزينة</h2>
             <p class="balance-amount">
                 <span id="currentBalance">0.00</span>
-                <span class="currency">د.ج</span>
+                <span>د.ج</span>
             </p>
         </section>
 
@@ -621,58 +682,75 @@
             <button id="prevYearBudgetBtn" class="action-button">
                 <i class="fas fa-calendar-alt"></i>
                 <span>ميزانية السنة السابقة</span>
+                <small>إضافة ميزانية السنة الماضية</small>
             </button>
             <button id="contributionsBtn" class="action-button">
                 <i class="fas fa-hand-holding-heart"></i>
                 <span>مساهمات المحسنين</span>
+                <small>إضافة تبرعات جديدة</small>
             </button>
-            <button id="addTransactionBtn" class="action-button">
-                <i class="fas fa-exchange-alt"></i>
-                <span>إضافة معاملة جديدة</span>
+            <button id="viewTransactionsBtn" class="action-button">
+                <i class="fas fa-history"></i>
+                <span>سجل المعاملات</span>
+                <small>عرض جميع العمليات</small>
             </button>
-            <button id="printReportBtn" class="action-button">
-                <i class="fas fa-print"></i>
-                <span>طباعة تقرير</span>
+            <button id="viewReportsBtn" class="action-button">
+                <i class="fas fa-chart-line"></i>
+                <span>التقارير</span>
+                <small>تحليل البيانات المالية</small>
             </button>
         </div>
 
         <!-- Previous Year Budget Section -->
-        <section id="previousYearBudgetSection" class="section hidden">
-            <h2 class="section-title">ميزانية السنة السابقة</h2>
+        <section id="prevYearBudgetSection" class="section hidden">
+            <h2 class="section-title">إضافة ميزانية السنة السابقة</h2>
+            
             <div class="form-group">
-                <label for="previousYearSelect">اختر السنة:</label>
-                <select id="previousYearSelect" class="form-control"></select>
+                <label for="prevYearAmount">المبلغ (د.ج):</label>
+                <input type="number" id="prevYearAmount" class="form-control" placeholder="أدخل مبلغ الميزانية" min="0" step="0.01">
             </div>
+            
             <div class="form-group">
-                <label for="previousYearAmount">المبلغ (د.ج):</label>
-                <input type="number" id="previousYearAmount" class="form-control" placeholder="أدخل مبلغ ميزانية السنة السابقة" min="0" step="0.01">
+                <label for="prevYear">السنة:</label>
+                <select id="prevYear" class="form-control"></select>
             </div>
-            <button id="savePreviousYearBudget" class="btn btn-primary btn-block">
+            
+            <div class="form-group">
+                <label for="prevYearNotes">ملاحظات (اختياري):</label>
+                <textarea id="prevYearNotes" class="form-control" placeholder="أي ملاحظات إضافية"></textarea>
+            </div>
+            
+            <button id="savePrevYearBudget" class="btn btn-primary btn-block">
                 <i class="fas fa-save"></i> حفظ ميزانية السنة السابقة
             </button>
         </section>
 
         <!-- Contributions Section -->
         <section id="contributionsSection" class="section hidden">
-            <h2 class="section-title">مساهمات المحسنين</h2>
+            <h2 class="section-title">إضافة مساهمة محسن</h2>
+            
             <div class="form-group">
-                <label for="contributorName">اسم المحسن (اختياري):</label>
+                <label for="contributorName">اسم المحسن:</label>
                 <input type="text" id="contributorName" class="form-control" placeholder="اسم المحسن أو المتبرع">
             </div>
+            
             <div class="form-group">
                 <label for="contributionAmount">المبلغ (د.ج):</label>
                 <input type="number" id="contributionAmount" class="form-control" placeholder="أدخل مبلغ المساهمة" min="0" step="0.01">
             </div>
+            
             <div class="form-group">
                 <label for="contributionDate">تاريخ المساهمة:</label>
                 <input type="date" id="contributionDate" class="form-control">
             </div>
+            
             <div class="form-group">
                 <label for="contributionNotes">ملاحظات (اختياري):</label>
                 <textarea id="contributionNotes" class="form-control" placeholder="أي ملاحظات إضافية عن المساهمة"></textarea>
             </div>
-            <button id="addContribution" class="btn btn-primary btn-block">
-                <i class="fas fa-plus-circle"></i> إضافة مساهمة
+            
+            <button id="saveContribution" class="btn btn-primary btn-block">
+                <i class="fas fa-save"></i> حفظ المساهمة
             </button>
         </section>
 
@@ -681,70 +759,23 @@
             <h2 class="section-title">سجل المعاملات المالية</h2>
             
             <div class="form-group">
-                <div class="input-group">
-                    <input type="text" id="searchTransactions" class="form-control" placeholder="ابحث في المعاملات...">
-                    <select id="filterTransactions" class="form-control">
-                        <option value="all">جميع المعاملات</option>
-                        <option value="deposit">الإيداعات</option>
-                        <option value="withdrawal">السحوبات</option>
-                    </select>
-                </div>
+                <input type="text" id="searchTransactions" class="form-control" placeholder="ابحث في المعاملات...">
             </div>
             
             <div id="transactionsList" class="transaction-list">
-                <!-- Transactions will be loaded here -->
                 <div class="empty-state">
                     <i class="fas fa-exchange-alt"></i>
-                    <p>لا توجد معاملات لعرضها</p>
+                    <p>جاري تحميل البيانات...</p>
                 </div>
             </div>
         </section>
-    </div>
-
-    <!-- Add Transaction Modal -->
-    <div id="addTransactionModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3 class="modal-title">إضافة معاملة جديدة</h3>
-                <button class="close-btn" id="closeAddModalBtn">&times;</button>
-            </div>
-            <div class="modal-body">
-                <div class="form-group">
-                    <label for="transactionType">نوع المعاملة:</label>
-                    <select id="transactionType" class="form-control">
-                        <option value="deposit">إيداع</option>
-                        <option value="withdrawal">سحب</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="transactionAmount">المبلغ (د.ج):</label>
-                    <input type="number" id="transactionAmount" class="form-control" placeholder="أدخل المبلغ" min="0" step="0.01">
-                </div>
-                <div class="form-group">
-                    <label for="transactionDate">تاريخ المعاملة:</label>
-                    <input type="date" id="transactionDate" class="form-control">
-                </div>
-                <div class="form-group">
-                    <label for="transactionDescription">وصف المعاملة:</label>
-                    <input type="text" id="transactionDescription" class="form-control" placeholder="وصف المعاملة">
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button id="cancelAddTransaction" class="btn btn-secondary">
-                    <i class="fas fa-times"></i> إلغاء
-                </button>
-                <button id="saveTransaction" class="btn btn-primary">
-                    <i class="fas fa-save"></i> حفظ المعاملة
-                </button>
-            </div>
-        </div>
     </div>
 
     <!-- Edit Transaction Modal -->
     <div id="editTransactionModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h3 class="modal-title">تعديل المعاملة</h3>
+                <h3 class="modal-title" id="modalEditTitle">تعديل المعاملة</h3>
                 <button class="close-btn" id="closeEditModalBtn">&times;</button>
             </div>
             <div class="modal-body">
@@ -753,30 +784,33 @@
                 <input type="hidden" id="editOriginalType">
                 
                 <div class="form-group">
+                    <label for="editTransactionAmount">المبلغ (د.ج):</label>
+                    <input type="number" id="editTransactionAmount" class="form-control" placeholder="أدخل المبلغ" min="0" step="0.01">
+                </div>
+                
+                <div class="form-group">
+                    <label for="editTransactionDate">تاريخ المعاملة:</label>
+                    <input type="date" id="editTransactionDate" class="form-control">
+                </div>
+                
+                <div class="form-group">
+                    <label for="editTransactionDescription">وصف المعاملة:</label>
+                    <input type="text" id="editTransactionDescription" class="form-control" placeholder="وصف المعاملة">
+                </div>
+                
+                <div class="form-group">
                     <label for="editTransactionType">نوع المعاملة:</label>
                     <select id="editTransactionType" class="form-control">
                         <option value="deposit">إيداع</option>
                         <option value="withdrawal">سحب</option>
                     </select>
                 </div>
-                <div class="form-group">
-                    <label for="editTransactionAmount">المبلغ (د.ج):</label>
-                    <input type="number" id="editTransactionAmount" class="form-control" placeholder="أدخل المبلغ" min="0" step="0.01">
-                </div>
-                <div class="form-group">
-                    <label for="editTransactionDate">تاريخ المعاملة:</label>
-                    <input type="date" id="editTransactionDate" class="form-control">
-                </div>
-                <div class="form-group">
-                    <label for="editTransactionDescription">وصف المعاملة:</label>
-                    <input type="text" id="editTransactionDescription" class="form-control" placeholder="وصف المعاملة">
-                </div>
             </div>
             <div class="modal-footer">
                 <button id="cancelEditTransaction" class="btn btn-secondary">
                     <i class="fas fa-times"></i> إلغاء
                 </button>
-                <button id="saveEditedTransaction" class="btn btn-primary">
+                <button id="saveEditTransaction" class="btn btn-primary">
                     <i class="fas fa-save"></i> حفظ التعديلات
                 </button>
                 <button id="deleteTransaction" class="btn btn-danger">
@@ -806,34 +840,102 @@
             endAt
         } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-database.js";
 
-        // Firebase configuration (replace with your actual config)
+        // Firebase configuration - استبدل بالقيم الفعلية لمشروعك
         const firebaseConfig = {
-            apiKey: "YOUR_API_KEY",
-            authDomain: "YOUR_AUTH_DOMAIN",
-            databaseURL: "YOUR_DATABASE_URL",
-            projectId: "YOUR_PROJECT_ID",
-            storageBucket: "YOUR_STORAGE_BUCKET",
-            messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-            appId: "YOUR_APP_ID"
+            apiKey: "AIzaSyB2Jb3v7Q4X9Q9Q9Q9Q9Q9Q9Q9Q9Q9Q9Q",
+            authDomain: "budget-fddd7.firebaseapp.com",
+            databaseURL: "https://budget-fddd7-default-rtdb.firebaseio.com/",
+            projectId: "budget-fddd7",
+            storageBucket: "budget-fddd7.appspot.com",
+            messagingSenderId: "1234567890",
+            appId: "1:1234567890:web:abcdef1234567890"
         };
 
-        // Initialize Firebase
-        let app, database;
-        try {
-            app = initializeApp(firebaseConfig);
-            database = getDatabase(app);
-            console.log("Firebase initialized successfully");
-        } catch (error) {
-            console.error("Firebase initialization error:", error);
-            updateConnectionStatus(false, "فشل تهيئة Firebase");
+        // Initialize Firebase with enhanced connection handling
+        let app;
+        let database;
+        let isConnected = false;
+        const maxRetries = 5;
+        let retryCount = 0;
+        let retryTimer;
+
+        function initializeFirebase() {
+            try {
+                // إغلاق أي اتصال سابق إذا كان موجوداً
+                if (app) {
+                    delete app;
+                }
+                
+                app = initializeApp(firebaseConfig);
+                database = getDatabase(app);
+                
+                // Setup connection state listener
+                const connectedRef = ref(database, '.info/connected');
+                onValue(connectedRef, (snapshot) => {
+                    isConnected = snapshot.val() === true;
+                    
+                    if (isConnected) {
+                        updateConnectionStatus(true, "متصل بقاعدة البيانات");
+                        retryCount = 0; // Reset retry counter
+                        clearTimeout(retryTimer);
+                        console.log("Successfully connected to Firebase");
+                        
+                        // Enable all buttons when connected
+                        document.querySelectorAll('.action-button').forEach(btn => {
+                            btn.disabled = false;
+                        });
+                    } else {
+                        updateConnectionStatus(false, "غير متصل. جاري إعادة المحاولة...");
+                        handleDisconnection();
+                    }
+                }, {
+                    onlyOnce: false
+                });
+                
+                return database;
+            } catch (error) {
+                console.error("Firebase initialization error:", error);
+                updateConnectionStatus(false, "خطأ في التهيئة");
+                handleDisconnection();
+                return null;
+            }
         }
+
+        function handleDisconnection() {
+            if (retryCount < maxRetries) {
+                retryCount++;
+                const delay = Math.min(30000, Math.pow(2, retryCount) * 1000); // Exponential backoff with max 30s
+                
+                console.log(`Retrying connection in ${delay/1000} seconds... (Attempt ${retryCount}/${maxRetries})`);
+                updateConnectionStatus(false, `غير متصل. جاري المحاولة ${retryCount}/${maxRetries}...`);
+                
+                // Disable all buttons when disconnected
+                document.querySelectorAll('.action-button').forEach(btn => {
+                    btn.disabled = true;
+                });
+                
+                retryTimer = setTimeout(() => {
+                    initializeFirebase();
+                }, delay);
+            } else {
+                updateConnectionStatus(false, "فشل الاتصال. يرجى إعادة تحميل الصفحة");
+                console.error("Max retry attempts reached");
+                
+                // Show manual retry button
+                document.getElementById('retryButton').style.display = 'inline-block';
+            }
+        }
+
+        // First initialization attempt
+        initializeFirebase();
 
         // Database references
         const dbRefs = {
-            currentBalance: ref(database, 'currentBalance'),
+            currentBalance: ref(database, 'system/currentBalance'),
+            transactions: ref(database, 'transactions'),
             previousYearBudgets: ref(database, 'previousYearBudgets'),
             contributions: ref(database, 'contributions'),
-            transactions: ref(database, 'transactions')
+            system: ref(database, 'system')
         };
 
         // DOM elements
@@ -841,6 +943,7 @@
             // Connection status
             connectionStatus: document.getElementById('connectionStatus'),
             statusText: document.getElementById('statusText'),
+            retryButton: document.getElementById('retryButton'),
             
             // Current balance
             currentBalance: document.getElementById('currentBalance'),
@@ -848,59 +951,46 @@
             // Action buttons
             prevYearBudgetBtn: document.getElementById('prevYearBudgetBtn'),
             contributionsBtn: document.getElementById('contributionsBtn'),
-            addTransactionBtn: document.getElementById('addTransactionBtn'),
-            printReportBtn: document.getElementById('printReportBtn'),
+            viewTransactionsBtn: document.getElementById('viewTransactionsBtn'),
+            viewReportsBtn: document.getElementById('viewReportsBtn'),
             
-            // Sections
-            previousYearBudgetSection: document.getElementById('previousYearBudgetSection'),
+            // Previous Year Budget Section
+            prevYearBudgetSection: document.getElementById('prevYearBudgetSection'),
+            prevYearAmount: document.getElementById('prevYearAmount'),
+            prevYear: document.getElementById('prevYear'),
+            prevYearNotes: document.getElementById('prevYearNotes'),
+            savePrevYearBudget: document.getElementById('savePrevYearBudget'),
+            
+            // Contributions Section
             contributionsSection: document.getElementById('contributionsSection'),
-            transactionsSection: document.getElementById('transactionsSection'),
-            
-            // Previous year budget form
-            previousYearSelect: document.getElementById('previousYearSelect'),
-            previousYearAmount: document.getElementById('previousYearAmount'),
-            savePreviousYearBudget: document.getElementById('savePreviousYearBudget'),
-            
-            // Contributions form
             contributorName: document.getElementById('contributorName'),
             contributionAmount: document.getElementById('contributionAmount'),
             contributionDate: document.getElementById('contributionDate'),
             contributionNotes: document.getElementById('contributionNotes'),
-            addContribution: document.getElementById('addContribution'),
+            saveContribution: document.getElementById('saveContribution'),
             
-            // Transactions list
+            // Transactions section
             transactionsList: document.getElementById('transactionsList'),
             searchTransactions: document.getElementById('searchTransactions'),
-            filterTransactions: document.getElementById('filterTransactions'),
             
-            // Add transaction modal
-            addTransactionModal: document.getElementById('addTransactionModal'),
-            closeAddModalBtn: document.getElementById('closeAddModalBtn'),
-            transactionType: document.getElementById('transactionType'),
-            transactionAmount: document.getElementById('transactionAmount'),
-            transactionDate: document.getElementById('transactionDate'),
-            transactionDescription: document.getElementById('transactionDescription'),
-            cancelAddTransaction: document.getElementById('cancelAddTransaction'),
-            saveTransaction: document.getElementById('saveTransaction'),
-            
-            // Edit transaction modal
+            // Edit Transaction Modal
             editTransactionModal: document.getElementById('editTransactionModal'),
             closeEditModalBtn: document.getElementById('closeEditModalBtn'),
+            modalEditTitle: document.getElementById('modalEditTitle'),
             editTransactionId: document.getElementById('editTransactionId'),
             editOriginalAmount: document.getElementById('editOriginalAmount'),
             editOriginalType: document.getElementById('editOriginalType'),
-            editTransactionType: document.getElementById('editTransactionType'),
             editTransactionAmount: document.getElementById('editTransactionAmount'),
             editTransactionDate: document.getElementById('editTransactionDate'),
             editTransactionDescription: document.getElementById('editTransactionDescription'),
+            editTransactionType: document.getElementById('editTransactionType'),
             cancelEditTransaction: document.getElementById('cancelEditTransaction'),
-            saveEditedTransaction: document.getElementById('saveEditedTransaction'),
+            saveEditTransaction: document.getElementById('saveEditTransaction'),
             deleteTransaction: document.getElementById('deleteTransaction')
         };
 
         // Utility functions
         const utils = {
-            // Format date to YYYY-MM-DD
             formatDate: (date) => {
                 const d = new Date(date);
                 const year = d.getFullYear();
@@ -909,7 +999,6 @@
                 return `${year}-${month}-${day}`;
             },
             
-            // Format number as currency
             formatCurrency: (amount) => {
                 return parseFloat(amount).toLocaleString('ar-DZ', {
                     minimumFractionDigits: 2,
@@ -917,41 +1006,37 @@
                 });
             },
             
-            // Parse currency string to number
             parseCurrency: (currencyString) => {
                 if (typeof currencyString === 'number') return currencyString;
                 return parseFloat(currencyString.replace(/[^\d.-]/g, '')) || 0;
             },
             
-            // Show modal with animation
             showModal: (modal) => {
                 modal.classList.add('show');
                 document.body.style.overflow = 'hidden';
             },
             
-            // Hide modal with animation
             hideModal: (modal) => {
                 modal.classList.remove('show');
                 document.body.style.overflow = '';
             },
             
-            // Reset form inputs
-            resetForm: (formElements) => {
-                formElements.forEach(el => {
-                    if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') {
-                        el.value = '';
-                    } else if (el.tagName === 'SELECT') {
-                        el.selectedIndex = 0;
+            showSection: (section) => {
+                document.querySelectorAll('.section').forEach(sec => {
+                    if (sec.id !== 'transactionsSection') {
+                        sec.classList.add('hidden');
                     }
                 });
+                section.classList.remove('hidden');
+                section.scrollIntoView({ behavior: 'smooth' });
             },
             
-            // Set today's date as default
-            setTodayDate: (dateInput) => {
-                dateInput.value = utils.formatDate(new Date());
+            setTodayDate: (element) => {
+                if (element) {
+                    element.value = utils.formatDate(new Date());
+                }
             },
             
-            // Generate years for select dropdown
             generateYears: (selectElement, yearsBack = 10) => {
                 const currentYear = new Date().getFullYear();
                 for (let i = 0; i <= yearsBack; i++) {
@@ -960,20 +1045,32 @@
                     option.textContent = currentYear - i;
                     selectElement.appendChild(option);
                 }
-                selectElement.value = currentYear - 1;
+                selectElement.value = currentYear - 1; // Default to previous year
+            },
+            
+            enableForm: (enabled) => {
+                const formElements = [
+                    'prevYearAmount', 'prevYear', 'prevYearNotes', 'savePrevYearBudget',
+                    'contributorName', 'contributionAmount', 'contributionDate', 'contributionNotes', 'saveContribution',
+                    'editTransactionAmount', 'editTransactionDate', 'editTransactionDescription', 'editTransactionType',
+                    'saveEditTransaction', 'cancelEditTransaction', 'deleteTransaction'
+                ];
+                
+                formElements.forEach(id => {
+                    const el = document.getElementById(id);
+                    if (el) el.disabled = !enabled;
+                });
             }
         };
 
         // Main application class
         class BudgetApp {
             constructor() {
-                this.initFirebaseListeners();
                 this.initEventListeners();
                 this.initForms();
-                this.checkConnection();
+                this.initFirebaseListeners();
             }
             
-            // Initialize Firebase realtime listeners
             initFirebaseListeners() {
                 // Current balance listener
                 onValue(dbRefs.currentBalance, (snapshot) => {
@@ -984,6 +1081,9 @@
                         // Initialize balance if null
                         set(dbRefs.currentBalance, 0);
                     }
+                }, (error) => {
+                    console.error("Error reading balance:", error);
+                    updateConnectionStatus(false, "خطأ في قراءة البيانات");
                 });
                 
                 // Transactions listener
@@ -997,52 +1097,44 @@
                     });
                     
                     this.displayTransactions(transactions);
+                }, (error) => {
+                    console.error("Error reading transactions:", error);
+                    updateConnectionStatus(false, "خطأ في قراءة المعاملات");
                 });
             }
             
-            // Initialize event listeners
             initEventListeners() {
-                // Navigation buttons
+                // Action buttons
                 elements.prevYearBudgetBtn.addEventListener('click', () => {
-                    this.toggleSection(elements.previousYearBudgetSection);
+                    utils.showSection(elements.prevYearBudgetSection);
                 });
                 
                 elements.contributionsBtn.addEventListener('click', () => {
-                    this.toggleSection(elements.contributionsSection);
+                    utils.showSection(elements.contributionsSection);
                 });
                 
-                elements.addTransactionBtn.addEventListener('click', () => {
-                    utils.showModal(elements.addTransactionModal);
+                elements.viewTransactionsBtn.addEventListener('click', () => {
+                    utils.showSection(elements.transactionsSection);
                 });
                 
-                elements.printReportBtn.addEventListener('click', () => {
-                    window.print();
+                // Manual retry button
+                elements.retryButton.addEventListener('click', () => {
+                    elements.retryButton.style.display = 'none';
+                    updateConnectionStatus(false, "جاري إعادة الاتصال...");
+                    initializeFirebase();
                 });
                 
-                // Previous year budget form
-                elements.savePreviousYearBudget.addEventListener('click', () => {
-                    this.savePreviousYearBudget();
+                // Previous Year Budget Form
+                elements.savePrevYearBudget.addEventListener('click', async () => {
+                    await this.savePreviousYearBudget();
                 });
                 
-                // Contributions form
-                elements.addContribution.addEventListener('click', () => {
-                    this.addContribution();
+                // Contributions Form
+                elements.saveContribution.addEventListener('click', async () => {
+                    await this.saveContribution();
                 });
                 
-                // Add transaction modal
-                elements.closeAddModalBtn.addEventListener('click', () => {
-                    utils.hideModal(elements.addTransactionModal);
-                });
-                
-                elements.cancelAddTransaction.addEventListener('click', () => {
-                    utils.hideModal(elements.addTransactionModal);
-                });
-                
-                elements.saveTransaction.addEventListener('click', () => {
-                    this.addTransaction();
-                });
-                
-                // Edit transaction modal
+                // Edit Transaction Modal
                 elements.closeEditModalBtn.addEventListener('click', () => {
                     utils.hideModal(elements.editTransactionModal);
                 });
@@ -1051,76 +1143,28 @@
                     utils.hideModal(elements.editTransactionModal);
                 });
                 
-                elements.saveEditedTransaction.addEventListener('click', () => {
-                    this.updateTransaction();
+                elements.saveEditTransaction.addEventListener('click', async () => {
+                    await this.saveEditedTransaction();
                 });
                 
-                elements.deleteTransaction.addEventListener('click', () => {
-                    this.deleteTransaction();
+                elements.deleteTransaction.addEventListener('click', async () => {
+                    await this.deleteTransaction();
                 });
                 
-                // Search and filter transactions
+                // Search transactions
                 elements.searchTransactions.addEventListener('input', (e) => {
                     this.searchTransactions(e.target.value);
                 });
-                
-                elements.filterTransactions.addEventListener('change', (e) => {
-                    this.filterTransactions(e.target.value);
-                });
-                
-                // Close modals when clicking outside
-                window.addEventListener('click', (e) => {
-                    if (e.target === elements.addTransactionModal) {
-                        utils.hideModal(elements.addTransactionModal);
-                    }
-                    if (e.target === elements.editTransactionModal) {
-                        utils.hideModal(elements.editTransactionModal);
-                    }
-                });
             }
             
-            // Initialize form defaults
             initForms() {
                 // Set today's date for date inputs
                 utils.setTodayDate(elements.contributionDate);
-                utils.setTodayDate(elements.transactionDate);
                 
                 // Generate years for previous year select
-                utils.generateYears(elements.previousYearSelect);
+                utils.generateYears(elements.prevYear);
             }
             
-            // Check Firebase connection status
-            checkConnection() {
-                onValue(ref(database, '.info/connected'), (snapshot) => {
-                    if (snapshot.val() === true) {
-                        updateConnectionStatus(true, "متصل بقاعدة البيانات");
-                    } else {
-                        updateConnectionStatus(false, "غير متصل. جاري إعادة المحاولة...");
-                    }
-                }, {
-                    onlyOnce: false
-                });
-            }
-            
-            // Toggle section visibility
-            toggleSection(section) {
-                // Hide all sections first
-                document.querySelectorAll('.section').forEach(sec => {
-                    if (sec.id !== 'transactionsSection') {
-                        sec.classList.add('hidden');
-                    }
-                });
-                
-                // Toggle the requested section
-                section.classList.toggle('hidden');
-                
-                // Scroll to the section
-                if (!section.classList.contains('hidden')) {
-                    section.scrollIntoView({ behavior: 'smooth' });
-                }
-            }
-            
-            // Display transactions in the list
             displayTransactions(transactions) {
                 // Sort transactions by date (newest first)
                 transactions.sort((a, b) => {
@@ -1131,7 +1175,6 @@
                 elements.transactionsList.innerHTML = '';
                 
                 if (transactions.length === 0) {
-                    // Show empty state
                     elements.transactionsList.innerHTML = `
                         <div class="empty-state">
                             <i class="fas fa-exchange-alt"></i>
@@ -1159,206 +1202,253 @@
                             <button class="action-btn edit-btn" data-id="${transaction.id}">
                                 <i class="fas fa-edit"></i>
                             </button>
+                            <button class="action-btn delete-btn" data-id="${transaction.id}">
+                                <i class="fas fa-trash"></i>
+                            </button>
                         </div>
                     `;
                     
-                    // Add click event for edit button
-                    const editBtn = transactionItem.querySelector('.edit-btn');
-                    editBtn.addEventListener('click', () => {
+                    // Add click events for action buttons
+                    transactionItem.querySelector('.edit-btn').addEventListener('click', () => {
                         this.openEditModal(transaction);
+                    });
+                    
+                    transactionItem.querySelector('.delete-btn').addEventListener('click', () => {
+                        this.confirmDeleteTransaction(transaction);
                     });
                     
                     elements.transactionsList.appendChild(transactionItem);
                 });
             }
             
-            // Open edit modal with transaction data
             openEditModal(transaction) {
                 elements.editTransactionId.value = transaction.id;
                 elements.editOriginalAmount.value = transaction.amount;
                 elements.editOriginalType.value = transaction.type;
                 
-                elements.editTransactionType.value = transaction.type;
                 elements.editTransactionAmount.value = transaction.amount;
                 elements.editTransactionDate.value = transaction.date;
                 elements.editTransactionDescription.value = transaction.description;
+                elements.editTransactionType.value = transaction.type;
                 
+                const title = transaction.type === 'deposit' 
+                    ? 'تعديل إيداع' 
+                    : 'تعديل سحب';
+                
+                elements.modalEditTitle.textContent = title;
                 utils.showModal(elements.editTransactionModal);
             }
             
-            // Save previous year budget
+            confirmDeleteTransaction(transaction) {
+                if (confirm(`هل أنت متأكد من حذف هذه المعاملة؟\n${transaction.description}\nالمبلغ: ${transaction.amount} د.ج`)) {
+                    this.deleteTransaction(transaction.id);
+                }
+            }
+            
             async savePreviousYearBudget() {
-                const year = elements.previousYearSelect.value;
-                const amount = utils.parseCurrency(elements.previousYearAmount.value);
+                const amount = utils.parseCurrency(elements.prevYearAmount.value);
+                const year = elements.prevYear.value;
+                const notes = elements.prevYearNotes.value.trim();
                 const currentDate = utils.formatDate(new Date());
                 
-                if (!year || amount <= 0) {
-                    alert('الرجاء إدخال سنة ومبلغ صحيحين');
+                if (!amount || amount <= 0 || !year) {
+                    alert('الرجاء إدخال المبلغ والسنة بشكل صحيح');
                     return;
                 }
                 
                 try {
+                    utils.enableForm(false);
+                    
                     // Save to previous year budgets
-                    await set(ref(database, `previousYearBudgets/${year}`), amount);
+                    await set(ref(database, `previousYearBudgets/${year}`), {
+                        amount,
+                        notes,
+                        date: currentDate,
+                        timestamp: Date.now()
+                    });
                     
                     // Add as a transaction
                     await push(dbRefs.transactions, {
                         date: currentDate,
-                        description: `ميزانية السنة السابقة ${year}`,
+                        description: `ميزانية السنة السابقة ${year}${notes ? ' - ' + notes : ''}`,
                         amount: amount,
                         type: 'deposit',
                         timestamp: Date.now()
                     });
                     
                     alert('تم حفظ ميزانية السنة السابقة بنجاح');
-                    elements.previousYearAmount.value = '';
-                    this.toggleSection(elements.previousYearBudgetSection);
+                    elements.prevYearAmount.value = '';
+                    elements.prevYearNotes.value = '';
+                    utils.showSection(elements.transactionsSection);
                     
                 } catch (error) {
-                    console.error('Error saving previous year budget:', error);
-                    alert('حدث خطأ أثناء حفظ ميزانية السنة السابقة');
+                    console.error("Error saving previous year budget:", error);
+                    alert(`حدث خطأ أثناء حفظ الميزانية: ${error.message}`);
+                } finally {
+                    utils.enableForm(true);
                 }
             }
             
-            // Add contribution
-            async addContribution() {
+            async saveContribution() {
                 const name = elements.contributorName.value.trim();
                 const amount = utils.parseCurrency(elements.contributionAmount.value);
                 const date = elements.contributionDate.value;
                 const notes = elements.contributionNotes.value.trim();
                 
-                if (amount <= 0 || !date) {
-                    alert('الرجاء إدخال مبلغ وتاريخ صحيحين');
+                if (!name || !amount || amount <= 0 || !date) {
+                    alert('الرجاء إدخال اسم المحسن والمبلغ والتاريخ بشكل صحيح');
                     return;
                 }
                 
                 try {
+                    utils.enableForm(false);
+                    
                     // Save to contributions
                     await push(dbRefs.contributions, {
-                        contributor: name || 'متبرع مجهول',
-                        amount: amount,
-                        date: date,
-                        notes: notes,
+                        contributor: name,
+                        amount,
+                        date,
+                        notes,
                         timestamp: Date.now()
                     });
                     
                     // Add as a transaction
                     await push(dbRefs.transactions, {
-                        date: date,
-                        description: `مساهمة من ${name || 'متبرع مجهول'}: ${notes || 'بدون ملاحظات'}`,
-                        amount: amount,
+                        date,
+                        description: `مساهمة من ${name}${notes ? ' - ' + notes : ''}`,
+                        amount,
                         type: 'deposit',
                         timestamp: Date.now()
                     });
                     
-                    alert('تم إضافة المساهمة بنجاح');
-                    utils.resetForm([
-                        elements.contributorName,
-                        elements.contributionAmount,
-                        elements.contributionNotes
-                    ]);
+                    alert('تم حفظ المساهمة بنجاح');
+                    elements.contributorName.value = '';
+                    elements.contributionAmount.value = '';
+                    elements.contributionNotes.value = '';
                     utils.setTodayDate(elements.contributionDate);
-                    this.toggleSection(elements.contributionsSection);
+                    utils.showSection(elements.transactionsSection);
                     
                 } catch (error) {
-                    console.error('Error adding contribution:', error);
-                    alert('حدث خطأ أثناء إضافة المساهمة');
+                    console.error("Error saving contribution:", error);
+                    alert(`حدث خطأ أثناء حفظ المساهمة: ${error.message}`);
+                } finally {
+                    utils.enableForm(true);
                 }
             }
             
-            // Add new transaction
-            async addTransaction() {
-                const type = elements.transactionType.value;
-                const amount = utils.parseCurrency(elements.transactionAmount.value);
-                const date = elements.transactionDate.value;
-                const description = elements.transactionDescription.value.trim();
-                
-                if (amount <= 0 || !date || !description) {
-                    alert('الرجاء إدخال جميع البيانات المطلوبة');
-                    return;
-                }
-                
-                try {
-                    await push(dbRefs.transactions, {
-                        date: date,
-                        description: description,
-                        amount: amount,
-                        type: type,
-                        timestamp: Date.now()
-                    });
-                    
-                    alert('تم إضافة المعاملة بنجاح');
-                    utils.hideModal(elements.addTransactionModal);
-                    utils.resetForm([
-                        elements.transactionType,
-                        elements.transactionAmount,
-                        elements.transactionDescription
-                    ]);
-                    utils.setTodayDate(elements.transactionDate);
-                    
-                } catch (error) {
-                    console.error('Error adding transaction:', error);
-                    alert('حدث خطأ أثناء إضافة المعاملة');
-                }
-            }
-            
-            // Update transaction
-            async updateTransaction() {
+            async saveEditedTransaction() {
                 const id = elements.editTransactionId.value;
                 const originalAmount = utils.parseCurrency(elements.editOriginalAmount.value);
                 const originalType = elements.editOriginalType.value;
-                const newType = elements.editTransactionType.value;
                 const newAmount = utils.parseCurrency(elements.editTransactionAmount.value);
                 const newDate = elements.editTransactionDate.value;
                 const newDescription = elements.editTransactionDescription.value.trim();
+                const newType = elements.editTransactionType.value;
                 
-                if (!id || newAmount <= 0 || !newDate || !newDescription) {
-                    alert('الرجاء إدخال جميع البيانات المطلوبة');
+                if (!newAmount || newAmount <= 0 || !newDate || !newDescription) {
+                    alert('الرجاء إدخال جميع البيانات المطلوبة بشكل صحيح');
                     return;
                 }
                 
                 try {
-                    // Update transaction
-                    await update(ref(database, `transactions/${id}`), {
+                    utils.enableForm(false);
+                    
+                    // Get current balance
+                    const currentBalance = await get(dbRefs.currentBalance);
+                    const balance = currentBalance.val() || 0;
+                    
+                    // Calculate new balance
+                    let newBalance = balance;
+                    
+                    // First reverse the original transaction
+                    if (originalType === 'deposit') {
+                        newBalance -= originalAmount;
+                    } else {
+                        newBalance += originalAmount;
+                    }
+                    
+                    // Then apply the new transaction
+                    if (newType === 'deposit') {
+                        newBalance += newAmount;
+                    } else {
+                        // Check if balance is sufficient for withdrawal
+                        if (newAmount > newBalance) {
+                            alert('الرصيد الحالي غير كافي لهذا السحب');
+                            return;
+                        }
+                        newBalance -= newAmount;
+                    }
+                    
+                    // Prepare transaction data
+                    const transactionData = {
+                        type: newType,
                         amount: newAmount,
                         date: newDate,
                         description: newDescription,
-                        type: newType,
                         timestamp: Date.now()
+                    };
+                    
+                    // Update database
+                    await update(ref(database, `transactions/${id}`), transactionData);
+                    await set(dbRefs.currentBalance, newBalance);
+                    await update(dbRefs.system, {
+                        lastUpdate: Date.now()
                     });
                     
-                    alert('تم تحديث المعاملة بنجاح');
+                    alert(`تم تحديث المعاملة بنجاح! الرصيد الجديد: ${utils.formatCurrency(newBalance)} د.ج`);
                     utils.hideModal(elements.editTransactionModal);
                     
                 } catch (error) {
-                    console.error('Error updating transaction:', error);
-                    alert('حدث خطأ أثناء تحديث المعاملة');
+                    console.error("Error updating transaction:", error);
+                    alert(`حدث خطأ أثناء تحديث المعاملة: ${error.message}`);
+                } finally {
+                    utils.enableForm(true);
                 }
             }
             
-            // Delete transaction
-            async deleteTransaction() {
-                const id = elements.editTransactionId.value;
-                
-                if (!id || !confirm('هل أنت متأكد من حذف هذه المعاملة؟ لا يمكن التراجع عن هذا الإجراء.')) {
+            async deleteTransaction(id) {
+                if (!confirm('هل أنت متأكد من حذف هذه المعاملة؟ لا يمكن التراجع عن هذا الإجراء.')) {
                     return;
                 }
                 
                 try {
+                    utils.enableForm(false);
+                    
+                    // Get transaction data
+                    const transactionSnapshot = await get(ref(database, `transactions/${id}`));
+                    const transaction = transactionSnapshot.val();
+                    
+                    // Get current balance
+                    const currentBalance = await get(dbRefs.currentBalance);
+                    const balance = currentBalance.val() || 0;
+                    
+                    // Calculate new balance
+                    let newBalance;
+                    if (transaction.type === 'deposit') {
+                        newBalance = balance - transaction.amount;
+                    } else {
+                        newBalance = balance + transaction.amount;
+                    }
+                    
+                    // Update database
                     await remove(ref(database, `transactions/${id}`));
-                    alert('تم حذف المعاملة بنجاح');
+                    await set(dbRefs.currentBalance, newBalance);
+                    await update(dbRefs.system, {
+                        lastUpdate: Date.now()
+                    });
+                    
+                    alert(`تم حذف المعاملة بنجاح! الرصيد الجديد: ${utils.formatCurrency(newBalance)} د.ج`);
                     utils.hideModal(elements.editTransactionModal);
                     
                 } catch (error) {
-                    console.error('Error deleting transaction:', error);
-                    alert('حدث خطأ أثناء حذف المعاملة');
+                    console.error("Error deleting transaction:", error);
+                    alert(`حدث خطأ أثناء حذف المعاملة: ${error.message}`);
+                } finally {
+                    utils.enableForm(true);
                 }
             }
             
-            // Search transactions
             searchTransactions(searchTerm) {
-                // This is a client-side search for simplicity
-                // For large datasets, consider using Firebase querying
                 const transactions = document.querySelectorAll('.transaction-item');
                 
                 transactions.forEach(transaction => {
@@ -1367,57 +1457,28 @@
                     transaction.style.display = matches ? '' : 'none';
                 });
             }
-            
-            // Filter transactions by type
-            filterTransactions(filterType) {
-                const transactions = document.querySelectorAll('.transaction-item');
-                
-                transactions.forEach(transaction => {
-                    if (filterType === 'all') {
-                        transaction.style.display = '';
-                    } else {
-                        const matches = transaction.classList.contains(filterType);
-                        transaction.style.display = matches ? '' : 'none';
-                    }
-                });
-            }
         }
 
         // Update connection status UI
         function updateConnectionStatus(isConnected, message) {
-            elements.statusText.textContent = message;
-            elements.connectionStatus.classList.remove('connected', 'disconnected');
-            elements.connectionStatus.classList.add(isConnected ? 'connected' : 'disconnected');
+            const statusElement = document.getElementById('connectionStatus');
+            const textElement = document.getElementById('statusText');
             
-            // Disable/enable form elements based on connection status
-            const formElements = [
-                elements.savePreviousYearBudget,
-                elements.addContribution,
-                elements.saveTransaction,
-                elements.saveEditedTransaction,
-                elements.deleteTransaction
-            ];
+            statusElement.classList.remove('connected', 'disconnected');
             
-            formElements.forEach(el => {
-                if (el) el.disabled = !isConnected;
-            });
+            if (isConnected) {
+                statusElement.classList.add('connected');
+                textElement.textContent = message;
+            } else {
+                statusElement.classList.add('disconnected');
+                textElement.textContent = message;
+            }
         }
 
-        // Initialize the application when DOM is loaded
+        // Initialize the application
         document.addEventListener('DOMContentLoaded', () => {
             new BudgetApp();
         });
-
-        // Service worker registration for PWA
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('/sw.js').then(registration => {
-                    console.log('ServiceWorker registration successful');
-                }).catch(err => {
-                    console.log('ServiceWorker registration failed: ', err);
-                });
-            });
-        }
     </script>
 </body>
 </html>
