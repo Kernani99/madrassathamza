@@ -3,515 +3,101 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>نظام إدارة ميزانية المدرسة القرآنية</title>
-    <meta name="description" content="نظام متكامل لإدارة ميزانية المدرسة القرآنية وتتبع المعاملات المالية">
-    
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <!-- Google Fonts - Cairo -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <title>نظام إدارة رواتب المعلمين</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
-    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
     <style>
         :root {
-            --primary-color: #2E8B57;
-            --primary-dark: #006400;
-            --primary-light: #3CB371;
-            --accent-color: #FFD700;
-            --danger-color: #DC3545;
-            --warning-color: #FFC107;
-            --info-color: #17A2B8;
+            --primary-color: #1a4d2e;
+            --primary-light: #4a785e;
+            --secondary-color: #f5f5dc;
+            --accent-color: #d4af37;
+            --accent-dark: #b38f2a;
             --text-color: #333;
-            --text-light: #6C757D;
-            --light-bg: #F8F9FA;
-            --dark-bg: #E9ECEF;
-            --white: #FFFFFF;
-            --border-radius: 12px;
+            --light-bg: #f9f9f7;
+            --border-radius: 8px;
             --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            --transition: all 0.3s ease;
+            --salary-color: #2e7d32;
+            --deduction-color: #c62828;
+            --bonus-color: #0277bd;
+            --budget-color: #6a1b9a;
         }
 
         * {
             box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Cairo', sans-serif;
         }
 
         body {
+            font-family: 'Cairo', sans-serif;
             background-color: var(--light-bg);
             color: var(--text-color);
+            margin: 0;
+            padding: 0;
             line-height: 1.6;
-            direction: rtl;
-            min-height: 100vh;
         }
 
         .container {
             max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
+            margin: 20px auto;
+            padding: 0 15px;
+            position: relative;
         }
 
-        header {
+        .header {
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-light));
+            color: white;
+            padding: 1.5rem;
             text-align: center;
-            padding: 20px 0;
-            margin-bottom: 30px;
-            position: relative;
-        }
-
-        header h1 {
-            color: var(--primary-dark);
-            font-size: 2.5rem;
-            margin-bottom: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 15px;
-        }
-
-        header h1 i {
-            color: var(--accent-color);
-            font-size: 1.2em;
-        }
-
-        .connection-status {
-            display: inline-flex;
-            align-items: center;
-            padding: 8px 15px;
-            border-radius: 20px;
-            background-color: rgba(255, 255, 255, 0.9);
-            margin-top: 10px;
-            font-size: 0.9rem;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-            transition: var(--transition);
-        }
-
-        .connection-status.connected {
-            background-color: rgba(46, 139, 87, 0.1);
-            color: var(--primary-dark);
-        }
-
-        .connection-status.disconnected {
-            background-color: rgba(220, 53, 69, 0.1);
-            color: var(--danger-color);
-            animation: pulse 1.5s infinite;
-        }
-
-        @keyframes pulse {
-            0% { opacity: 1; }
-            50% { opacity: 0.7; }
-            100% { opacity: 1; }
-        }
-
-        .status-indicator {
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            margin-right: 8px;
-            position: relative;
-        }
-
-        .connection-status.connected .status-indicator {
-            background-color: var(--primary-color);
-            box-shadow: 0 0 8px var(--primary-color);
-        }
-
-        .connection-status.disconnected .status-indicator {
-            background-color: var(--danger-color);
-            box-shadow: 0 0 8px var(--danger-color);
-        }
-
-        .status-indicator::after {
-            content: '';
-            position: absolute;
-            top: -3px;
-            left: -3px;
-            right: -3px;
-            bottom: -3px;
-            border-radius: 50%;
-            border: 1px solid currentColor;
-            opacity: 0;
-            animation: ripple 1.5s infinite;
-        }
-
-        .connection-status.connected .status-indicator::after {
-            border-color: var(--primary-color);
-            animation: ripple 1.5s infinite;
-        }
-
-        @keyframes ripple {
-            0% { transform: scale(0.8); opacity: 0.5; }
-            100% { transform: scale(1.5); opacity: 0; }
-        }
-
-        .current-balance {
-            background: linear-gradient(135deg, var(--primary-dark), var(--primary-color));
-            color: var(--white);
-            padding: 25px;
             border-radius: var(--border-radius);
-            margin-bottom: 30px;
-            text-align: center;
+            margin-bottom: 25px;
             box-shadow: var(--box-shadow);
             position: relative;
             overflow: hidden;
         }
 
-        .current-balance::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            right: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 70%);
-            pointer-events: none;
-        }
-
-        .current-balance h2 {
-            margin-bottom: 15px;
-            font-size: 1.5rem;
-            font-weight: 600;
-        }
-
-        .balance-amount {
-            font-size: 3rem;
-            font-weight: 700;
-            margin: 10px 0;
-            font-feature-settings: "tnum";
-        }
-
-        .action-buttons {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-            margin-bottom: 40px;
-        }
-
-        .action-button {
-            background: linear-gradient(145deg, #ffffff, #e6e6e6);
-            color: var(--primary-dark);
-            padding: 25px 15px;
-            border-radius: var(--border-radius);
-            text-align: center;
-            font-size: 1.1rem;
-            font-weight: 700;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            transition: var(--transition);
-            box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.1),
-                        -5px -5px 15px rgba(255, 255, 255, 0.7);
-            border: none;
-            cursor: pointer;
-            position: relative;
-            overflow: hidden;
-            font-family: 'Cairo', sans-serif;
-        }
-
-        .action-button:hover {
-            transform: translateY(-5px);
-            box-shadow: 8px 8px 20px rgba(0, 0, 0, 0.15),
-                        -8px -8px 20px rgba(255, 255, 255, 0.8);
-        }
-
-        .action-button:active {
-            transform: translateY(0);
-            box-shadow: inset 5px 5px 10px rgba(0, 0, 0, 0.1),
-                        inset -5px -5px 10px rgba(255, 255, 255, 0.7);
-        }
-
-        .action-button i {
-            font-size: 2.5rem;
-            margin-bottom: 10px;
-            transition: var(--transition);
-        }
-
-        .action-button:hover i {
-            transform: scale(1.1);
-        }
-
-        .action-button small {
-            font-size: 0.8rem;
-            color: var(--text-light);
-            margin-top: 5px;
-            font-weight: 400;
-        }
-
-        .action-button::after {
-            content: '';
+        .header::after {
+            content: "";
             position: absolute;
             top: 0;
             left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(
-                45deg,
-                rgba(255, 255, 255, 0.3) 0%,
-                rgba(255, 255, 255, 0) 100%
-            );
-            transform: translateX(-100%);
-            transition: transform 0.6s ease;
-        }
-
-        .action-button:hover::after {
-            transform: translateX(100%);
-        }
-
-        /* ألوان مختلفة لكل زر */
-        .action-button:nth-child(1) {
-            --primary-color: #2E8B57;
-        }
-
-        .action-button:nth-child(2) {
-            --primary-color: #FFA500;
-        }
-
-        .action-button:nth-child(3) {
-            --primary-color: #4169E1;
-        }
-
-        .action-button:nth-child(4) {
-            --primary-color: #9932CC;
-        }
-
-        .action-button i {
-            color: var(--primary-color);
-        }
-
-        .action-button:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-            transform: none !important;
-            box-shadow: none !important;
-        }
-
-        .action-button:disabled::after {
-            display: none;
-        }
-
-        .section {
-            background-color: var(--white);
-            border-radius: var(--border-radius);
-            padding: 25px;
-            margin-bottom: 30px;
-            box-shadow: var(--box-shadow);
-        }
-
-        .section-title {
-            color: var(--primary-dark);
-            font-size: 1.8rem;
-            margin-bottom: 25px;
-            text-align: center;
-            position: relative;
-            padding-bottom: 15px;
-            font-family: 'Cairo', sans-serif;
-        }
-
-        .section-title::after {
-            content: '';
-            position: absolute;
+            right: 0;
             bottom: 0;
-            right: 50%;
-            transform: translateX(50%);
-            width: 80px;
-            height: 4px;
-            background-color: var(--accent-color);
-            border-radius: 2px;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="rgba(255,255,255,0.1)"><path d="M30,10L50,30L70,10L90,30L70,50L90,70L70,90L50,70L30,90L10,70L30,50L10,30L30,10Z"/></svg>');
+            opacity: 0.2;
         }
 
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 600;
-            color: var(--primary-dark);
-            font-family: 'Cairo', sans-serif;
-        }
-
-        .form-control {
-            width: 100%;
-            padding: 12px 15px;
-            border: 1px solid #ddd;
-            border-radius: var(--border-radius);
-            font-size: 1rem;
-            font-family: 'Cairo', sans-serif;
-            transition: var(--transition);
-        }
-
-        .form-control:focus {
-            outline: none;
-            border-color: var(--primary-color);
-            box-shadow: 0 0 0 3px rgba(46, 139, 87, 0.2);
-        }
-
-        textarea.form-control {
-            min-height: 100px;
-            resize: vertical;
-        }
-
-        .btn {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            padding: 12px 25px;
-            border: none;
-            border-radius: var(--border-radius);
-            font-size: 1.1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: var(--transition);
-            text-align: center;
-            gap: 10px;
-            font-family: 'Cairo', sans-serif;
-        }
-
-        .btn-primary {
-            background-color: var(--primary-dark);
-            color: var(--white);
-        }
-
-        .btn-primary:hover {
-            background-color: var(--primary-color);
-            transform: translateY(-2px);
-        }
-
-        .btn-secondary {
-            background-color: var(--light-bg);
-            color: var(--text-color);
-        }
-
-        .btn-secondary:hover {
-            background-color: var(--dark-bg);
-        }
-
-        .btn-danger {
-            background-color: var(--danger-color);
-            color: var(--white);
-        }
-
-        .btn-danger:hover {
-            background-color: #C82333;
-        }
-
-        .btn-block {
-            display: flex;
-            width: 100%;
-        }
-
-        .transaction-list {
-            list-style: none;
-            padding: 0;
+        .header h1 {
             margin: 0;
+            font-size: 1.8rem;
+            position: relative;
+            z-index: 1;
         }
 
-        .transaction-item {
-            background-color: var(--white);
-            border-radius: var(--border-radius);
-            padding: 15px;
-            margin-bottom: 15px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-            transition: var(--transition);
-            border-left: 4px solid transparent;
+        .header p {
+            margin: 0.5rem 0 0;
+            opacity: 0.9;
+            font-size: 1rem;
+            position: relative;
+            z-index: 1;
         }
 
-        .transaction-item:hover {
-            transform: translateX(-5px);
-            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
-        }
-
-        .transaction-item.deposit {
-            border-left-color: var(--primary-color);
-        }
-
-        .transaction-item.withdrawal {
-            border-left-color: var(--danger-color);
-        }
-
-        .transaction-date {
-            font-size: 0.9rem;
-            color: var(--text-light);
-            min-width: 100px;
-            text-align: right;
-            font-family: 'Cairo', sans-serif;
-        }
-
-        .transaction-description {
-            flex: 1;
-            padding: 0 15px;
-            text-align: right;
-            font-weight: 600;
-            font-family: 'Cairo', sans-serif;
-        }
-
-        .transaction-amount {
-            font-weight: 700;
-            min-width: 120px;
-            text-align: left;
-            font-feature-settings: "tnum";
-            font-family: 'Cairo', sans-serif;
-        }
-
-        .transaction-amount.deposit {
-            color: var(--primary-color);
-        }
-
-        .transaction-amount.withdrawal {
-            color: var(--danger-color);
-        }
-
-        .transaction-actions {
-            display: flex;
-            gap: 10px;
-            margin-right: 10px;
-        }
-
-        .action-btn {
-            background: none;
-            border: none;
-            font-size: 1.1rem;
-            cursor: pointer;
-            padding: 5px;
+        .info-icon {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background-color: var(--accent-color);
+            color: white;
+            width: 30px;
+            height: 30px;
             border-radius: 50%;
-            width: 35px;
-            height: 35px;
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: var(--transition);
-        }
-
-        .action-btn:hover {
-            background-color: var(--light-bg);
-        }
-
-        .edit-btn {
-            color: var(--primary-color);
-        }
-
-        .delete-btn {
-            color: var(--danger-color);
-        }
-
-        .empty-state {
-            text-align: center;
-            padding: 40px 20px;
-            color: var(--text-light);
-            font-family: 'Cairo', sans-serif;
-        }
-
-        .empty-state i {
-            font-size: 3rem;
-            margin-bottom: 15px;
-            color: var(--dark-bg);
+            cursor: pointer;
+            z-index: 10;
         }
 
         .modal {
@@ -521,1005 +107,1294 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
-            z-index: 1000;
+            background-color: rgba(0,0,0,0.5);
+            z-index: 100;
             justify-content: center;
             align-items: center;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-
-        .modal.show {
-            display: flex;
-            opacity: 1;
         }
 
         .modal-content {
-            background-color: var(--white);
-            border-radius: var(--border-radius);
-            width: 90%;
-            max-width: 500px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-            transform: translateY(-20px);
-            transition: transform 0.3s ease;
-        }
-
-        .modal.show .modal-content {
-            transform: translateY(0);
-        }
-
-        .modal-header {
+            background-color: white;
             padding: 20px;
-            border-bottom: 1px solid var(--dark-bg);
+            border-radius: var(--border-radius);
+            width: 80%;
+            max-width: 500px;
+            text-align: center;
+        }
+
+        .close-modal {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: var(--border-radius);
+            margin-top: 15px;
+            cursor: pointer;
+        }
+
+        .card {
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            padding: 25px;
+            margin-bottom: 25px;
+        }
+
+        .card-title {
+            color: var(--primary-color);
+            margin-top: 0;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 2px solid var(--secondary-color);
+            font-size: 1.3rem;
+        }
+
+        .salary-form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 1.5rem;
+        }
+
+        .salary-input-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .salary-input-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+
+        .salary-input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: var(--border-radius);
+            font-family: 'Cairo', sans-serif;
+            font-size: 1rem;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+
+        .salary-input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(26, 77, 46, 0.2);
+        }
+
+        .budget-info {
+            background-color: #f3e5f5;
+            border: 1px solid #d1c4e9;
+            border-radius: var(--border-radius);
+            padding: 15px;
+            margin-bottom: 20px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .budget-item {
+            text-align: center;
+            padding: 10px;
+        }
+
+        .budget-item h4 {
+            margin-top: 0;
+            color: var(--budget-color);
+        }
+
+        .budget-item .amount {
+            font-size: 1.3rem;
+            font-weight: bold;
+        }
+
+        .salary-summary {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .salary-summary-item {
+            background-color: white;
+            border-radius: var(--border-radius);
+            padding: 15px;
+            box-shadow: var(--box-shadow);
+            text-align: center;
+        }
+
+        .salary-summary-item h4 {
+            margin-top: 0;
+            color: var(--primary-color);
+        }
+
+        .salary-summary-item .amount {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+
+        .salary-base {
+            color: var(--salary-color);
+        }
+
+        .salary-deductions {
+            color: var(--deduction-color);
+        }
+
+        .salary-bonuses {
+            color: var(--bonus-color);
+        }
+
+        .salary-net {
+            color: var(--primary-color);
+            font-size: 1.8rem !important;
+        }
+
+        .deductions-list, .bonuses-list {
+            margin-top: 15px;
+        }
+
+        .deduction-item, .bonus-item {
             display: flex;
             justify-content: space-between;
-            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid #eee;
         }
 
-        .modal-title {
-            font-size: 1.5rem;
-            color: var(--primary-dark);
-            margin: 0;
+        .deduction-item:last-child, .bonus-item:last-child {
+            border-bottom: none;
+        }
+
+        .add-item-btn {
+            background-color: var(--primary-light);
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            margin-top: 10px;
+            transition: all 0.3s;
             font-family: 'Cairo', sans-serif;
         }
 
-        .close-btn {
-            background: none;
+        .add-item-btn:hover {
+            background-color: var(--primary-color);
+        }
+
+        .remove-item-btn {
+            background-color: #f44336;
+            color: white;
             border: none;
-            font-size: 1.5rem;
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
             cursor: pointer;
-            color: var(--text-light);
-            transition: var(--transition);
-        }
-
-        .close-btn:hover {
-            color: var(--danger-color);
-        }
-
-        .modal-body {
-            padding: 20px;
-        }
-
-        .modal-footer {
-            padding: 15px 20px;
-            border-top: 1px solid var(--dark-bg);
             display: flex;
-            justify-content: flex-end;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .button-group {
+            display: flex;
             gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+
+        button, .btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            font-family: 'Cairo', sans-serif;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        button:hover, .btn:hover {
+            background-color: var(--primary-light);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        .btn-secondary {
+            background-color: #6c757d;
+        }
+
+        .btn-secondary:hover {
+            background-color: #5a6268;
+        }
+
+        .btn-accent {
+            background-color: var(--accent-color);
+        }
+
+        .btn-accent:hover {
+            background-color: var(--accent-dark);
+        }
+
+        .pay-all-btn {
+            background-color: #6a1b9a;
+        }
+
+        .pay-all-btn:hover {
+            background-color: #5a0a8a;
+        }
+
+        .message {
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: var(--border-radius);
+            display: none;
+            font-weight: 600;
+        }
+
+        .success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .warning {
+            background-color: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeeba;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .financial-report {
+            margin-top: 30px;
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            padding: 25px;
+        }
+
+        .report-controls {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .report-controls select, 
+        .report-controls input {
+            padding: 10px 15px;
+            border: 1px solid #ddd;
+            border-radius: var(--border-radius);
+            font-family: 'Cairo', sans-serif;
+        }
+
+        .report-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        .report-table th, 
+        .report-table td {
+            padding: 12px 15px;
+            text-align: right;
+            border-bottom: 1px solid #eee;
+        }
+
+        .report-table th {
+            background-color: var(--primary-light);
+            color: white;
+        }
+
+        .report-table tr:hover {
+            background-color: #f5f5f5;
+        }
+
+        .total-row {
+            font-weight: bold;
+            background-color: var(--secondary-color);
+        }
+
+        .search-box {
+            flex-grow: 1;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            padding: 20px 0;
+            color: #6c757d;
+            font-size: 0.9rem;
+            border-top: 1px solid #eee;
         }
 
         @media (max-width: 768px) {
-            .container {
-                padding: 15px;
-            }
-            
-            header h1 {
-                font-size: 2rem;
-            }
-            
-            .action-buttons {
+            .salary-form-grid, .budget-info, .salary-summary {
                 grid-template-columns: 1fr;
             }
             
-            .current-balance .balance-amount {
-                font-size: 2.5rem;
-            }
-            
-            .transaction-item {
+            .button-group {
                 flex-direction: column;
-                align-items: flex-start;
             }
             
-            .transaction-date,
-            .transaction-description,
-            .transaction-amount {
+            .button-group button {
                 width: 100%;
-                text-align: right;
-                margin-bottom: 5px;
-                padding: 0;
             }
             
-            .transaction-actions {
-                margin-top: 10px;
-                align-self: flex-end;
-            }
-        }
-
-        /* Print Styles */
-        @media print {
-            body {
-                background-color: white;
-                color: black;
-                font-size: 12pt;
-            }
-            
-            .container {
-                max-width: 100%;
-                padding: 0;
-            }
-            
-            .action-buttons,
-            .connection-status,
-            .action-btn {
-                display: none;
-            }
-            
-            .section {
-                box-shadow: none;
-                border: 1px solid #ddd;
-                page-break-inside: avoid;
-            }
-            
-            .transaction-item {
-                border-left: none;
-                border-bottom: 1px solid #eee;
+            .report-controls {
+                flex-direction: column;
             }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <header>
-            <h1><i class="fas fa-mosque"></i> نظام إدارة ميزانية المدرسة القرآنية</h1>
-            <div id="connectionStatus" class="connection-status">
-                <div class="status-indicator"></div>
-                <span id="statusText">جاري الاتصال بقاعدة البيانات...</span>
-                <button id="retryButton" class="retry-btn" style="display: none;">
-                    <i class="fas fa-sync-alt"></i> إعادة المحاولة
-                </button>
-            </div>
-        </header>
-
-        <section class="section current-balance">
-            <h2>الرصيد الحالي في الخزينة</h2>
-            <p class="balance-amount">
-                <span id="currentBalance">0.00</span>
-                <span>د.ج</span>
-            </p>
-        </section>
-
-        <div class="action-buttons">
-            <button id="prevYearBudgetBtn" class="action-button">
-                <i class="fas fa-calendar-alt"></i>
-                <span>ميزانية السنة السابقة</span>
-                <small>إضافة ميزانية السنة الماضية</small>
-            </button>
-            <button id="contributionsBtn" class="action-button">
-                <i class="fas fa-hand-holding-heart"></i>
-                <span>مساهمات المحسنين</span>
-                <small>إضافة تبرعات جديدة</small>
-            </button>
-            <button id="viewTransactionsBtn" class="action-button">
-                <i class="fas fa-history"></i>
-                <span>سجل المعاملات</span>
-                <small>عرض جميع العمليات</small>
-            </button>
-            <button id="viewReportsBtn" class="action-button">
-                <i class="fas fa-chart-line"></i>
-                <span>التقارير</span>
-                <small>تحليل البيانات المالية</small>
-            </button>
+        <!-- أيقونة المعلومات -->
+        <div class="info-icon" id="infoIcon">
+            <i class="fas fa-info"></i>
         </div>
 
-        <!-- Previous Year Budget Modal -->
-        <div id="prevYearBudgetModal" class="modal">
+        <!-- نافذة منبثقة للمعلومات -->
+        <div class="modal" id="infoModal">
             <div class="modal-content">
-                <div class="modal-header">
-                    <h3 class="modal-title">إضافة ميزانية السنة السابقة</h3>
-                    <button class="close-btn" id="closePrevYearBudgetModalBtn">&times;</button>
-                </div>
-                <div class="modal-body">
-                    <div class="form-group">
-                        <label for="prevYearAmount">المبلغ (د.ج):</label>
-                        <input type="number" id="prevYearAmount" class="form-control" placeholder="أدخل مبلغ الميزانية" min="0" step="0.01">
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="prevYear">السنة:</label>
-                        <select id="prevYear" class="form-control"></select>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="prevYearNotes">ملاحظات (اختياري):</label>
-                        <textarea id="prevYearNotes" class="form-control" placeholder="أي ملاحظات إضافية"></textarea>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button id="cancelPrevYearBudget" class="btn btn-secondary">
-                        <i class="fas fa-times"></i> إلغاء
-                    </button>
-                    <button id="savePrevYearBudget" class="btn btn-primary">
-                        <i class="fas fa-save"></i> حفظ
-                    </button>
-                </div>
+                <h3>تعليمات التعديل على الرواتب</h3>
+                <p>للتعديل في رواتب المعلمين أو إضافة معلم جديد، يمكنك التعديل على ملف Google Sheets التالي:</p>
+                <p><a href="https://docs.google.com/spreadsheets/d/1sVPEWOzXBXa7ALsswi5jE2Wh-t5b5KZ8zCCHgxzz7bw/edit?gid=0#gid=0" target="_blank">فتح ملف المعلمين</a></p>
+                <button class="close-modal" id="closeModal">حسناً</button>
             </div>
         </div>
 
-        <!-- Contributions Modal -->
-        <div id="contributionsModal" class="modal">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h3 class="modal-title">إضافة مساهمة محسن</h3>
-                    <button class="close-btn" id="closeContributionsModalBtn">&times;</button>
-                </div>
-                <div class="modal-body">
-                    <div class="form-group">
-                        <label for="contributorName">اسم المحسن:</label>
-                        <input type="text" id="contributorName" class="form-control" placeholder="اسم المحسن أو المتبرع">
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="contributionAmount">المبلغ (د.ج):</label>
-                        <input type="number" id="contributionAmount" class="form-control" placeholder="أدخل مبلغ المساهمة" min="0" step="0.01">
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="contributionDate">تاريخ المساهمة:</label>
-                        <input type="date" id="contributionDate" class="form-control">
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="contributionNotes">ملاحظات (اختياري):</label>
-                        <textarea id="contributionNotes" class="form-control" placeholder="أي ملاحظات إضافية عن المساهمة"></textarea>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button id="cancelContribution" class="btn btn-secondary">
-                        <i class="fas fa-times"></i> إلغاء
-                    </button>
-                    <button id="saveContribution" class="btn btn-primary">
-                        <i class="fas fa-save"></i> حفظ
-                    </button>
-                </div>
-            </div>
+        <div class="header">
+            <h1>نظام إدارة رواتب المعلمين</h1>
+            <p>نظام متكامل لحساب وإدارة رواتب المعلمين بالدينار الجزائري</p>
         </div>
 
-        <!-- Transactions Section -->
-        <section id="transactionsSection" class="section">
-            <h2 class="section-title">سجل المعاملات المالية</h2>
+        <div class="card">
+            <h2 class="card-title">بيانات الراتب</h2>
             
-            <div class="form-group">
-                <input type="text" id="searchTransactions" class="form-control" placeholder="ابحث في المعاملات...">
+            <div class="budget-info">
+                <div class="budget-item">
+                    <h4>الرواتب المدفوعة هذا الشهر</h4>
+                    <div class="amount" id="currentMonthSalaries">0 د.ج</div>
+                </div>
+                <div class="budget-item">
+                    <h4>الرواتب المدفوعة خلال الموسم</h4>
+                    <div class="amount" id="seasonSalaries">0 د.ج</div>
+                </div>
+                <div class="budget-item">
+                    <h4>المتبقي في الميزانية</h4>
+                    <div class="amount" id="remainingBudget">0 د.ج</div>
+                </div>
+                <div class="budget-item">
+                    <h4>المصروفات الأخرى</h4>
+                    <div class="amount" id="otherExpenses">0 د.ج</div>
+                </div>
             </div>
             
-            <div id="transactionsList" class="transaction-list">
-                <div class="empty-state">
-                    <i class="fas fa-exchange-alt"></i>
-                    <p>جاري تحميل البيانات...</p>
+            <div class="salary-form-grid">
+                <div class="form-group">
+                    <label for="teacherSelect">اختر المعلم</label>
+                    <div class="input-icon">
+                        <i class="fas fa-chalkboard-teacher"></i>
+                        <select id="teacherSelect" class="salary-input" required>
+                            <option value="">-- اختر المعلم --</option>
+                            <option value="all">جميع المعلمين</option>
+                        </select>
+                    </div>
                 </div>
-            </div>
-        </section>
-    </div>
 
-    <!-- Edit Transaction Modal -->
-    <div id="editTransactionModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3 class="modal-title" id="modalEditTitle">تعديل المعاملة</h3>
-                <button class="close-btn" id="closeEditModalBtn">&times;</button>
-            </div>
-            <div class="modal-body">
-                <input type="hidden" id="editTransactionId">
-                <input type="hidden" id="editOriginalAmount">
-                <input type="hidden" id="editOriginalType">
-                
                 <div class="form-group">
-                    <label for="editTransactionAmount">المبلغ (د.ج):</label>
-                    <input type="number" id="editTransactionAmount" class="form-control" placeholder="أدخل المبلغ" min="0" step="0.01">
+                    <label for="monthSelect">الشهر</label>
+                    <div class="input-icon">
+                        <i class="fas fa-calendar-alt"></i>
+                        <select id="monthSelect" class="salary-input" required>
+                            <option value="">-- اختر الشهر --</option>
+                            <option value="1">يناير</option>
+                            <option value="2">فبراير</option>
+                            <option value="3">مارس</option>
+                            <option value="4">أبريل</option>
+                            <option value="5">مايو</option>
+                            <option value="6">يونيو</option>
+                            <option value="7">يوليو</option>
+                            <option value="8">أغسطس</option>
+                            <option value="9">سبتمبر</option>
+                            <option value="10">أكتوبر</option>
+                            <option value="11">نوفمبر</option>
+                            <option value="12">ديسمبر</option>
+                        </select>
+                    </div>
                 </div>
-                
+
                 <div class="form-group">
-                    <label for="editTransactionDate">تاريخ المعاملة:</label>
-                    <input type="date" id="editTransactionDate" class="form-control">
-                </div>
-                
-                <div class="form-group">
-                    <label for="editTransactionDescription">وصف المعاملة:</label>
-                    <input type="text" id="editTransactionDescription" class="form-control" placeholder="وصف المعاملة">
-                </div>
-                
-                <div class="form-group">
-                    <label for="editTransactionType">نوع المعاملة:</label>
-                    <select id="editTransactionType" class="form-control">
-                        <option value="deposit">إيداع</option>
-                        <option value="withdrawal">سحب</option>
-                    </select>
+                    <label for="yearSelect">السنة</label>
+                    <div class="input-icon">
+                        <i class="fas fa-calendar"></i>
+                        <input type="number" id="yearSelect" class="salary-input" min="2020" max="2030" required>
+                    </div>
                 </div>
             </div>
-            <div class="modal-footer">
-                <button id="cancelEditTransaction" class="btn btn-secondary">
-                    <i class="fas fa-times"></i> إلغاء
+
+            <div class="salary-input-group">
+                <label for="baseSalary">الراتب الأساسي (د.ج)</label>
+                <div class="input-icon">
+                    <i class="fas fa-money-bill-wave"></i>
+                    <input type="number" id="baseSalary" class="salary-input" placeholder="أدخل الراتب الأساسي" required>
+                </div>
+            </div>
+
+            <div class="deductions-list">
+                <h4>الخصومات (د.ج)</h4>
+                <div id="deductionsContainer">
+                    <!-- سيتم إضافة الخصومات ديناميكياً -->
+                </div>
+                <button type="button" class="add-item-btn" id="addDeductionBtn">
+                    <i class="fas fa-plus"></i> إضافة خصم
                 </button>
-                <button id="saveEditTransaction" class="btn btn-primary">
-                    <i class="fas fa-save"></i> حفظ التعديلات
+            </div>
+
+            <div class="bonuses-list">
+                <h4>العلاوات والمكافآت (د.ج)</h4>
+                <div id="bonusesContainer">
+                    <!-- سيتم إضافة العلاوات ديناميكياً -->
+                </div>
+                <button type="button" class="add-item-btn" id="addBonusBtn">
+                    <i class="fas fa-plus"></i> إضافة علاوة
                 </button>
-                <button id="deleteTransaction" class="btn btn-danger">
-                    <i class="fas fa-trash"></i> حذف
+            </div>
+
+            <div class="salary-summary">
+                <div class="salary-summary-item">
+                    <h4>الراتب الأساسي</h4>
+                    <div class="amount salary-base" id="baseSalaryDisplay">0 د.ج</div>
+                </div>
+                <div class="salary-summary-item">
+                    <h4>إجمالي الخصومات</h4>
+                    <div class="amount salary-deductions" id="totalDeductionsDisplay">0 د.ج</div>
+                </div>
+                <div class="salary-summary-item">
+                    <h4>إجمالي العلاوات</h4>
+                    <div class="amount salary-bonuses" id="totalBonusesDisplay">0 د.ج</div>
+                </div>
+                <div class="salary-summary-item">
+                    <h4>صافي الراتب</h4>
+                    <div class="amount salary-net" id="netSalaryDisplay">0 د.ج</div>
+                </div>
+            </div>
+
+            <div class="button-group">
+                <button id="saveSalaryBtn" class="btn">
+                    <i class="fas fa-save"></i> حفظ الراتب
                 </button>
+                <button id="payAllBtn" class="btn pay-all-btn">
+                    <i class="fas fa-users"></i> دفع جميع الرواتب
+                </button>
+                <button id="printSalaryBtn" class="btn btn-accent">
+                    <i class="fas fa-print"></i> طباعة الراتب
+                </button>
+            </div>
+        </div>
+
+        <div id="message" class="message"></div>
+
+        <!-- قسم التقرير المالي -->
+        <div class="financial-report">
+            <h2 class="card-title">التقرير المالي</h2>
+            
+            <div class="report-controls">
+                <select id="reportMonthSelect" class="salary-input">
+                    <option value="">كل الأشهر</option>
+                    <option value="1">يناير</option>
+                    <option value="2">فبراير</option>
+                    <option value="3">مارس</option>
+                    <option value="4">أبريل</option>
+                    <option value="5">مايو</option>
+                    <option value="6">يونيو</option>
+                    <option value="7">يوليو</option>
+                    <option value="8">أغسطس</option>
+                    <option value="9">سبتمبر</option>
+                    <option value="10">أكتوبر</option>
+                    <option value="11">نوفمبر</option>
+                    <option value="12">ديسمبر</option>
+                </select>
+                
+                <select id="reportYearSelect" class="salary-input">
+                    <option value="">كل السنوات</option>
+                </select>
+                
+                <input type="text" id="teacherSearch" class="salary-input search-box" placeholder="بحث باسم المعلم...">
+                
+                <button id="refreshReportBtn" class="btn btn-secondary">
+                    <i class="fas fa-sync-alt"></i> تحديث
+                </button>
+            </div>
+            
+            <div class="table-responsive">
+                <table class="report-table">
+                    <thead>
+                        <tr>
+                            <th>اسم المعلم</th>
+                            <th>الشهر</th>
+                            <th>السنة</th>
+                            <th>الراتب الأساسي</th>
+                            <th>الخصومات</th>
+                            <th>العلاوات</th>
+                            <th>صافي الراتب</th>
+                            <th>تاريخ الدفع</th>
+                        </tr>
+                    </thead>
+                    <tbody id="reportTableBody">
+                        <!-- سيتم ملؤها ديناميكياً -->
+                    </tbody>
+                    <tfoot>
+                        <tr class="total-row">
+                            <td colspan="3">الإجمالي</td>
+                            <td id="totalBaseSalary">0 د.ج</td>
+                            <td id="totalDeductions">0 د.ج</td>
+                            <td id="totalBonuses">0 د.ج</td>
+                            <td id="totalNetSalary">0 د.ج</td>
+                            <td></td>
+                        </tr>
+                    </tfoot>
+                </table>
             </div>
         </div>
     </div>
 
-    <!-- Firebase SDK -->
-    <script type="module">
-        // Import Firebase modules
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js";
-        import { 
-            getDatabase, 
-            ref, 
-            onValue, 
-            push, 
-            set, 
-            update, 
-            remove,
-            get,
-            query,
-            orderByChild,
-            equalTo,
-            startAt,
-            endAt
-        } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-database.js";
+    <div class="footer">
+        <p>جميع الحقوق محفوظة &copy; <span id="currentYear"></span> - نظام إدارة الرواتب</p>
+    </div>
 
-        // Firebase configuration
+    <script>
+        // تهيئة Firebase
         const firebaseConfig = {
-            databaseURL: "https://budget-fddd7-default-rtdb.firebaseio.com/"
+            apiKey: "AIzaSyDv0Qk5j4Q6Q9XQ9XQ9XQ9XQ9XQ9XQ9XQ",
+            authDomain: "budget-fddd7.firebaseapp.com",
+            databaseURL: "https://budget-fddd7-default-rtdb.firebaseio.com",
+            projectId: "budget-fddd7",
+            storageBucket: "budget-fddd7.appspot.com",
+            messagingSenderId: "123456789012",
+            appId: "1:123456789012:web:abcdef1234567890abcdef"
         };
 
-        // Initialize Firebase with enhanced connection handling
-        let app;
-        let database;
-        let isConnected = false;
-        const maxRetries = 5;
-        let retryCount = 0;
-        let retryTimer;
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
 
-        function initializeFirebase() {
-            try {
-                // إغلاق أي اتصال سابق إذا كان موجوداً
-                if (app) {
-                    delete app;
-                }
-                
-                app = initializeApp(firebaseConfig);
-                database = getDatabase(app);
-                
-                // Setup connection state listener
-                const connectedRef = ref(database, '.info/connected');
-                onValue(connectedRef, (snapshot) => {
-                    isConnected = snapshot.val() === true;
-                    
-                    if (isConnected) {
-                        updateConnectionStatus(true, "متصل بقاعدة البيانات");
-                        retryCount = 0; // Reset retry counter
-                        clearTimeout(retryTimer);
-                        console.log("Successfully connected to Firebase");
-                        
-                        // Enable all buttons when connected
-                        document.querySelectorAll('.action-button').forEach(btn => {
-                            btn.disabled = false;
-                        });
-                    } else {
-                        updateConnectionStatus(false, "غير متصل. جاري إعادة المحاولة...");
-                        handleDisconnection();
-                    }
-                }, {
-                    onlyOnce: false
-                });
-                
-                return database;
-            } catch (error) {
-                console.error("Firebase initialization error:", error);
-                updateConnectionStatus(false, "خطأ في التهيئة");
-                handleDisconnection();
-                return null;
-            }
-        }
-
-        function handleDisconnection() {
-            if (retryCount < maxRetries) {
-                retryCount++;
-                const delay = Math.min(30000, Math.pow(2, retryCount) * 1000); // Exponential backoff with max 30s
-                
-                console.log(`Retrying connection in ${delay/1000} seconds... (Attempt ${retryCount}/${maxRetries})`);
-                updateConnectionStatus(false, `غير متصل. جاري المحاولة ${retryCount}/${maxRetries}...`);
-                
-                // Disable all buttons when disconnected
-                document.querySelectorAll('.action-button').forEach(btn => {
-                    btn.disabled = true;
-                });
-                
-                retryTimer = setTimeout(() => {
-                    initializeFirebase();
-                }, delay);
-            } else {
-                updateConnectionStatus(false, "فشل الاتصال. يرجى إعادة تحميل الصفحة");
-                console.error("Max retry attempts reached");
-                
-                // Show manual retry button
-                document.getElementById('retryButton').style.display = 'inline-block';
-            }
-        }
-
-        // First initialization attempt
-        initializeFirebase();
-
-        // Database references
-        const dbRefs = {
-            currentBalance: ref(database, 'system/currentBalance'),
-            transactions: ref(database, 'transactions'),
-            previousYearBudgets: ref(database, 'previousYearBudgets'),
-            contributions: ref(database, 'contributions'),
-            system: ref(database, 'system')
-        };
-
-        // DOM elements
-        const elements = {
-            // Connection status
-            connectionStatus: document.getElementById('connectionStatus'),
-            statusText: document.getElementById('statusText'),
-            retryButton: document.getElementById('retryButton'),
+        document.addEventListener('DOMContentLoaded', function() {
+            // تعيين السنة الحالية في التذييل
+            const currentYear = new Date().getFullYear();
+            document.getElementById('currentYear').textContent = currentYear;
             
-            // Current balance
-            currentBalance: document.getElementById('currentBalance'),
+            // تعيين الشهر والسنة الحاليين تلقائياً
+            const currentMonth = new Date().getMonth() + 1;
+            document.getElementById('monthSelect').value = currentMonth;
+            document.getElementById('yearSelect').value = currentYear;
             
-            // Action buttons
-            prevYearBudgetBtn: document.getElementById('prevYearBudgetBtn'),
-            contributionsBtn: document.getElementById('contributionsBtn'),
-            viewTransactionsBtn: document.getElementById('viewTransactionsBtn'),
-            viewReportsBtn: document.getElementById('viewReportsBtn'),
+            // روابط البيانات
+            const TEACHERS_SHEET_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQqw5oqA3vMBBIDqLd7OvhcxaPU807iKdv3txmrEhl-9Ln6snO5g7JtgJDxZHcRPUdBF4sbwzbsDAUC/pub?output=csv';
+            const BUDGET_FIREBASE_PATH = 'currentBalance';
+            const SALARIES_FIREBASE_PATH = 'salaries';
             
-            // Modals
-            prevYearBudgetModal: document.getElementById('prevYearBudgetModal'),
-            contributionsModal: document.getElementById('contributionsModal'),
-            editTransactionModal: document.getElementById('editTransactionModal'),
+            // العناصر الرئيسية
+            const teacherSelect = document.getElementById('teacherSelect');
+            const monthSelect = document.getElementById('monthSelect');
+            const yearSelect = document.getElementById('yearSelect');
+            const baseSalaryInput = document.getElementById('baseSalary');
+            const deductionsContainer = document.getElementById('deductionsContainer');
+            const bonusesContainer = document.getElementById('bonusesContainer');
+            const addDeductionBtn = document.getElementById('addDeductionBtn');
+            const addBonusBtn = document.getElementById('addBonusBtn');
+            const saveSalaryBtn = document.getElementById('saveSalaryBtn');
+            const payAllBtn = document.getElementById('payAllBtn');
+            const printSalaryBtn = document.getElementById('printSalaryBtn');
+            const messageDiv = document.getElementById('message');
             
-            // Modal buttons
-            closePrevYearBudgetModalBtn: document.getElementById('closePrevYearBudgetModalBtn'),
-            closeContributionsModalBtn: document.getElementById('closeContributionsModalBtn'),
-            closeEditModalBtn: document.getElementById('closeEditModalBtn'),
-            cancelPrevYearBudget: document.getElementById('cancelPrevYearBudget'),
-            cancelContribution: document.getElementById('cancelContribution'),
-            cancelEditTransaction: document.getElementById('cancelEditTransaction'),
+            // عناصر الميزانية
+            const currentMonthSalariesEl = document.getElementById('currentMonthSalaries');
+            const seasonSalariesEl = document.getElementById('seasonSalaries');
+            const remainingBudgetEl = document.getElementById('remainingBudget');
+            const otherExpensesEl = document.getElementById('otherExpenses');
             
-            // Form inputs
-            prevYearAmount: document.getElementById('prevYearAmount'),
-            prevYear: document.getElementById('prevYear'),
-            prevYearNotes: document.getElementById('prevYearNotes'),
-            contributorName: document.getElementById('contributorName'),
-            contributionAmount: document.getElementById('contributionAmount'),
-            contributionDate: document.getElementById('contributionDate'),
-            contributionNotes: document.getElementById('contributionNotes'),
+            // عناصر التقرير المالي
+            const reportMonthSelect = document.getElementById('reportMonthSelect');
+            const reportYearSelect = document.getElementById('reportYearSelect');
+            const teacherSearch = document.getElementById('teacherSearch');
+            const refreshReportBtn = document.getElementById('refreshReportBtn');
+            const reportTableBody = document.getElementById('reportTableBody');
             
-            // Edit transaction inputs
-            editTransactionId: document.getElementById('editTransactionId'),
-            editOriginalAmount: document.getElementById('editOriginalAmount'),
-            editOriginalType: document.getElementById('editOriginalType'),
-            editTransactionAmount: document.getElementById('editTransactionAmount'),
-            editTransactionDate: document.getElementById('editTransactionDate'),
-            editTransactionDescription: document.getElementById('editTransactionDescription'),
-            editTransactionType: document.getElementById('editTransactionType'),
+            // عناصر النافذة المنبثقة
+            const infoIcon = document.getElementById('infoIcon');
+            const infoModal = document.getElementById('infoModal');
+            const closeModal = document.getElementById('closeModal');
             
-            // Save buttons
-            savePrevYearBudget: document.getElementById('savePrevYearBudget'),
-            saveContribution: document.getElementById('saveContribution'),
-            saveEditTransaction: document.getElementById('saveEditTransaction'),
-            deleteTransaction: document.getElementById('deleteTransaction'),
+            // متغيرات التخزين
+            let teachersData = [];
+            let budgetData = {
+                monthly: 0,
+                paid: 0,
+                expenses: 0,
+                remaining: 0,
+                currentMonthSalaries: 0,
+                seasonSalaries: 0
+            };
+            let salaryRecords = [];
             
-            // Transactions section
-            transactionsList: document.getElementById('transactionsList'),
-            searchTransactions: document.getElementById('searchTransactions'),
+            // أحداث النموذج
+            addDeductionBtn.addEventListener('click', addDeductionField);
+            addBonusBtn.addEventListener('click', addBonusField);
+            saveSalaryBtn.addEventListener('click', saveSalary);
+            payAllBtn.addEventListener('click', payAllSalaries);
+            printSalaryBtn.addEventListener('click', printSalary);
+            refreshReportBtn.addEventListener('click', loadSalaryData);
+            baseSalaryInput.addEventListener('input', calculateNetSalary);
+            teacherSearch.addEventListener('input', filterSalaryReport);
+            reportMonthSelect.addEventListener('change', filterSalaryReport);
+            reportYearSelect.addEventListener('change', filterSalaryReport);
+            infoIcon.addEventListener('click', () => infoModal.style.display = 'flex');
+            closeModal.addEventListener('click', () => infoModal.style.display = 'none');
             
-            // Modal titles
-            modalEditTitle: document.getElementById('modalEditTitle')
-        };
-
-        // Utility functions
-        const utils = {
-            formatDate: (date) => {
-                const d = new Date(date);
-                const year = d.getFullYear();
-                const month = String(d.getMonth() + 1).padStart(2, '0');
-                const day = String(d.getDate()).padStart(2, '0');
-                return `${year}-${month}-${day}`;
-            },
+            // تحميل البيانات الأولية
+            loadTeachersData();
+            loadBudgetData();
+            loadSalaryData();
+            populateYearSelect();
             
-            formatCurrency: (amount) => {
-                return parseFloat(amount).toLocaleString('ar-DZ', {
-                    minimumFractionDigits: 2,
-                    maximumFractionDigits: 2
-                });
-            },
-            
-            parseCurrency: (currencyString) => {
-                if (typeof currencyString === 'number') return currencyString;
-                return parseFloat(currencyString.replace(/[^\d.-]/g, '')) || 0;
-            },
-            
-            showModal: (modal) => {
-                modal.classList.add('show');
-                document.body.style.overflow = 'hidden';
-            },
-            
-            hideModal: (modal) => {
-                modal.classList.remove('show');
-                document.body.style.overflow = '';
-            },
-            
-            setTodayDate: (element) => {
-                if (element) {
-                    element.value = utils.formatDate(new Date());
-                }
-            },
-            
-            generateYears: (selectElement, yearsBack = 10) => {
+            // تعبئة قائمة السنوات للتقرير
+            function populateYearSelect() {
+                reportYearSelect.innerHTML = '<option value="">كل السنوات</option>';
                 const currentYear = new Date().getFullYear();
-                for (let i = 0; i <= yearsBack; i++) {
+                for (let year = 2020; year <= currentYear; year++) {
                     const option = document.createElement('option');
-                    option.value = currentYear - i;
-                    option.textContent = currentYear - i;
-                    selectElement.appendChild(option);
-                }
-                selectElement.value = currentYear - 1; // Default to previous year
-            },
-            
-            enableForm: (enabled) => {
-                const formElements = [
-                    'prevYearAmount', 'prevYear', 'prevYearNotes', 'savePrevYearBudget',
-                    'contributorName', 'contributionAmount', 'contributionDate', 'contributionNotes', 'saveContribution',
-                    'editTransactionAmount', 'editTransactionDate', 'editTransactionDescription', 'editTransactionType',
-                    'saveEditTransaction', 'cancelEditTransaction', 'deleteTransaction'
-                ];
-                
-                formElements.forEach(id => {
-                    const el = document.getElementById(id);
-                    if (el) el.disabled = !enabled;
-                });
-            }
-        };
-
-        // Main application class
-        class BudgetApp {
-            constructor() {
-                this.initEventListeners();
-                this.initForms();
-                this.initFirebaseListeners();
-            }
-            
-            initFirebaseListeners() {
-                // Current balance listener
-                onValue(dbRefs.currentBalance, (snapshot) => {
-                    const balance = snapshot.val();
-                    if (balance !== null) {
-                        elements.currentBalance.textContent = utils.formatCurrency(balance);
-                    } else {
-                        // Initialize balance if null
-                        set(dbRefs.currentBalance, 0);
-                    }
-                }, (error) => {
-                    console.error("Error reading balance:", error);
-                    updateConnectionStatus(false, "خطأ في قراءة البيانات");
-                });
-                
-                // Transactions listener
-                onValue(dbRefs.transactions, (snapshot) => {
-                    const transactions = [];
-                    snapshot.forEach(childSnapshot => {
-                        transactions.push({
-                            id: childSnapshot.key,
-                            ...childSnapshot.val()
-                        });
-                    });
-                    
-                    this.displayTransactions(transactions);
-                }, (error) => {
-                    console.error("Error reading transactions:", error);
-                    updateConnectionStatus(false, "خطأ في قراءة المعاملات");
-                });
-            }
-            
-            initEventListeners() {
-                // Action buttons
-                elements.prevYearBudgetBtn.addEventListener('click', () => {
-                    this.openPrevYearBudgetModal();
-                });
-                
-                elements.contributionsBtn.addEventListener('click', () => {
-                    this.openContributionsModal();
-                });
-                
-                elements.viewTransactionsBtn.addEventListener('click', () => {
-                    // Already showing transactions by default
-                    elements.transactionsSection.scrollIntoView({ behavior: 'smooth' });
-                });
-                
-                // Modal close buttons
-                elements.closePrevYearBudgetModalBtn.addEventListener('click', () => {
-                    utils.hideModal(elements.prevYearBudgetModal);
-                });
-                
-                elements.closeContributionsModalBtn.addEventListener('click', () => {
-                    utils.hideModal(elements.contributionsModal);
-                });
-                
-                elements.closeEditModalBtn.addEventListener('click', () => {
-                    utils.hideModal(elements.editTransactionModal);
-                });
-                
-                // Cancel buttons
-                elements.cancelPrevYearBudget.addEventListener('click', () => {
-                    utils.hideModal(elements.prevYearBudgetModal);
-                });
-                
-                elements.cancelContribution.addEventListener('click', () => {
-                    utils.hideModal(elements.contributionsModal);
-                });
-                
-                elements.cancelEditTransaction.addEventListener('click', () => {
-                    utils.hideModal(elements.editTransactionModal);
-                });
-                
-                // Manual retry button
-                elements.retryButton.addEventListener('click', () => {
-                    elements.retryButton.style.display = 'none';
-                    updateConnectionStatus(false, "جاري إعادة الاتصال...");
-                    initializeFirebase();
-                });
-                
-                // Previous Year Budget Form
-                elements.savePrevYearBudget.addEventListener('click', async () => {
-                    await this.savePreviousYearBudget();
-                });
-                
-                // Contributions Form
-                elements.saveContribution.addEventListener('click', async () => {
-                    await this.saveContribution();
-                });
-                
-                // Edit Transaction Form
-                elements.saveEditTransaction.addEventListener('click', async () => {
-                    await this.saveEditedTransaction();
-                });
-                
-                elements.deleteTransaction.addEventListener('click', async () => {
-                    await this.deleteTransaction();
-                });
-                
-                // Search transactions
-                elements.searchTransactions.addEventListener('input', (e) => {
-                    this.searchTransactions(e.target.value);
-                });
-            }
-            
-            initForms() {
-                // Set today's date for date inputs
-                utils.setTodayDate(elements.contributionDate);
-                utils.setTodayDate(elements.editTransactionDate);
-                
-                // Generate years for previous year select
-                utils.generateYears(elements.prevYear);
-            }
-            
-            openPrevYearBudgetModal() {
-                utils.showModal(elements.prevYearBudgetModal);
-            }
-            
-            openContributionsModal() {
-                utils.showModal(elements.contributionsModal);
-            }
-            
-            displayTransactions(transactions) {
-                // Sort transactions by date (newest first)
-                transactions.sort((a, b) => {
-                    return new Date(b.date) - new Date(a.date);
-                });
-                
-                // Clear existing transactions
-                elements.transactionsList.innerHTML = '';
-                
-                if (transactions.length === 0) {
-                    elements.transactionsList.innerHTML = `
-                        <div class="empty-state">
-                            <i class="fas fa-exchange-alt"></i>
-                            <p>لا توجد معاملات لعرضها</p>
-                        </div>
-                    `;
-                    return;
-                }
-                
-                // Create transaction items
-                transactions.forEach(transaction => {
-                    const transactionItem = document.createElement('div');
-                    transactionItem.className = `transaction-item ${transaction.type}`;
-                    
-                    const sign = transaction.type === 'deposit' ? '+' : '-';
-                    const amountClass = transaction.type === 'deposit' ? 'deposit' : 'withdrawal';
-                    
-                    transactionItem.innerHTML = `
-                        <div class="transaction-date">${transaction.date}</div>
-                        <div class="transaction-description">${transaction.description}</div>
-                        <div class="transaction-amount ${amountClass}">
-                            ${sign} ${utils.formatCurrency(transaction.amount)} د.ج
-                        </div>
-                        <div class="transaction-actions">
-                            <button class="action-btn edit-btn" data-id="${transaction.id}">
-                                <i class="fas fa-edit"></i>
-                            </button>
-                            <button class="action-btn delete-btn" data-id="${transaction.id}">
-                                <i class="fas fa-trash"></i>
-                            </button>
-                        </div>
-                    `;
-                    
-                    // Add click events for action buttons
-                    transactionItem.querySelector('.edit-btn').addEventListener('click', () => {
-                        this.openEditModal(transaction);
-                    });
-                    
-                    transactionItem.querySelector('.delete-btn').addEventListener('click', () => {
-                        this.confirmDeleteTransaction(transaction);
-                    });
-                    
-                    elements.transactionsList.appendChild(transactionItem);
-                });
-            }
-            
-            openEditModal(transaction) {
-                elements.editTransactionId.value = transaction.id;
-                elements.editOriginalAmount.value = transaction.amount;
-                elements.editOriginalType.value = transaction.type;
-                
-                elements.editTransactionAmount.value = transaction.amount;
-                elements.editTransactionDate.value = transaction.date;
-                elements.editTransactionDescription.value = transaction.description;
-                elements.editTransactionType.value = transaction.type;
-                
-                const title = transaction.type === 'deposit' 
-                    ? 'تعديل إيداع' 
-                    : 'تعديل سحب';
-                
-                elements.modalEditTitle.textContent = title;
-                utils.showModal(elements.editTransactionModal);
-            }
-            
-            confirmDeleteTransaction(transaction) {
-                if (confirm(`هل أنت متأكد من حذف هذه المعاملة؟\n${transaction.description}\nالمبلغ: ${transaction.amount} د.ج`)) {
-                    this.deleteTransaction(transaction.id);
+                    option.value = year;
+                    option.textContent = year;
+                    reportYearSelect.appendChild(option);
                 }
             }
             
-            async savePreviousYearBudget() {
-                const amount = utils.parseCurrency(elements.prevYearAmount.value);
-                const year = elements.prevYear.value;
-                const notes = elements.prevYearNotes.value.trim();
-                const currentDate = utils.formatDate(new Date());
-                
-                if (!amount || amount <= 0 || !year) {
-                    alert('الرجاء إدخال المبلغ والسنة بشكل صحيح');
-                    return;
-                }
-                
+            // دالة جلب بيانات المعلمين من Google Sheets
+            async function loadTeachersData() {
                 try {
-                    utils.enableForm(false);
+                    showMessage('جاري تحميل بيانات المعلمين...', 'warning');
                     
-                    // Save to previous year budgets
-                    await set(ref(database, `previousYearBudgets/${year}`), {
-                        amount,
-                        notes,
-                        date: currentDate,
-                        timestamp: Date.now()
-                    });
+                    const response = await fetch(TEACHERS_SHEET_URL);
                     
-                    // Add as a transaction
-                    await push(dbRefs.transactions, {
-                        date: currentDate,
-                        description: `ميزانية السنة السابقة ${year}${notes ? ' - ' + notes : ''}`,
-                        amount: amount,
-                        type: 'deposit',
-                        timestamp: Date.now()
-                    });
+                    if (!response.ok) throw new Error('فشل في جلب بيانات المعلمين');
                     
-                    alert('تم حفظ ميزانية السنة السابقة بنجاح');
-                    elements.prevYearAmount.value = '';
-                    elements.prevYearNotes.value = '';
-                    utils.hideModal(elements.prevYearBudgetModal);
+                    const csvData = await response.text();
+                    teachersData = parseTeachersCSVData(csvData);
+                    
+                    populateTeacherSelect();
+                    showMessage('تم تحميل بيانات المعلمين بنجاح', 'success');
                     
                 } catch (error) {
-                    console.error("Error saving previous year budget:", error);
-                    alert(`حدث خطأ أثناء حفظ الميزانية: ${error.message}`);
-                } finally {
-                    utils.enableForm(true);
+                    console.error('Error loading teachers:', error);
+                    showMessage(`حدث خطأ: ${error.message}`, 'error');
                 }
             }
             
-            async saveContribution() {
-                const name = elements.contributorName.value.trim();
-                const amount = utils.parseCurrency(elements.contributionAmount.value);
-                const date = elements.contributionDate.value;
-                const notes = elements.contributionNotes.value.trim();
+            // دالة تحليل بيانات المعلمين من CSV
+            function parseTeachersCSVData(csv) {
+                const lines = csv.split('\n');
+                const headers = lines[0].split(',').map(h => h.trim());
                 
-                if (!name || !amount || amount <= 0 || !date) {
-                    alert('الرجاء إدخال اسم المحسن والمبلغ والتاريخ بشكل صحيح');
-                    return;
+                // البحث عن أعمدة الاسم والراتب
+                const nameIndex = headers.findIndex(h => h.includes('اسم') || h.includes('الاسم') || h.includes('Name'));
+                const salaryIndex = headers.findIndex(h => h.includes('راتب') || h.includes('الراتب') || h.includes('Salary'));
+                
+                if (nameIndex === -1 || salaryIndex === -1) {
+                    throw new Error('هيكل الجدول غير متطابق - تأكد من وجود أعمدة الاسم والراتب');
                 }
                 
-                try {
-                    utils.enableForm(false);
-                    
-                    // Save to contributions
-                    await push(dbRefs.contributions, {
-                        contributor: name,
-                        amount,
-                        date,
-                        notes,
-                        timestamp: Date.now()
-                    });
-                    
-                    // Add as a transaction
-                    await push(dbRefs.transactions, {
-                        date,
-                        description: `مساهمة من ${name}${notes ? ' - ' + notes : ''}`,
-                        amount,
-                        type: 'deposit',
-                        timestamp: Date.now()
-                    });
-                    
-                    alert('تم حفظ المساهمة بنجاح');
-                    elements.contributorName.value = '';
-                    elements.contributionAmount.value = '';
-                    elements.contributionNotes.value = '';
-                    utils.setTodayDate(elements.contributionDate);
-                    utils.hideModal(elements.contributionsModal);
-                    
-                } catch (error) {
-                    console.error("Error saving contribution:", error);
-                    alert(`حدث خطأ أثناء حفظ المساهمة: ${error.message}`);
-                } finally {
-                    utils.enableForm(true);
-                }
-            }
-            
-            async saveEditedTransaction() {
-                const id = elements.editTransactionId.value;
-                const originalAmount = utils.parseCurrency(elements.editOriginalAmount.value);
-                const originalType = elements.editOriginalType.value;
-                const newAmount = utils.parseCurrency(elements.editTransactionAmount.value);
-                const newDate = elements.editTransactionDate.value;
-                const newDescription = elements.editTransactionDescription.value.trim();
-                const newType = elements.editTransactionType.value;
-                
-                if (!newAmount || newAmount <= 0 || !newDate || !newDescription) {
-                    alert('الرجاء إدخال جميع البيانات المطلوبة بشكل صحيح');
-                    return;
-                }
-                
-                try {
-                    utils.enableForm(false);
-                    
-                    // Get current balance
-                    const currentBalance = await get(dbRefs.currentBalance);
-                    const balance = currentBalance.val() || 0;
-                    
-                    // Calculate new balance
-                    let newBalance = balance;
-                    
-                    // First reverse the original transaction
-                    if (originalType === 'deposit') {
-                        newBalance -= originalAmount;
-                    } else {
-                        newBalance += originalAmount;
-                    }
-                    
-                    // Then apply the new transaction
-                    if (newType === 'deposit') {
-                        newBalance += newAmount;
-                    } else {
-                        // Check if balance is sufficient for withdrawal
-                        if (newAmount > newBalance) {
-                            alert('الرصيد الحالي غير كافي لهذا السحب');
-                            return;
+                const teachers = [];
+                for (let i = 1; i < lines.length; i++) {
+                    const cells = lines[i].split(',');
+                    if (cells.length > Math.max(nameIndex, salaryIndex)) {
+                        const name = cells[nameIndex].trim();
+                        const salary = parseFloat(cells[salaryIndex]) || 0;
+                        
+                        if (name) {
+                            teachers.push({
+                                id: i,
+                                name: name,
+                                baseSalary: salary
+                            });
                         }
-                        newBalance -= newAmount;
+                    }
+                }
+                
+                return teachers;
+            }
+            
+            // دالة جلب بيانات الميزانية من Firebase
+            async function loadBudgetData() {
+                try {
+                    showMessage('جاري تحميل بيانات الميزانية...', 'warning');
+                    
+                    const snapshot = await database.ref(BUDGET_FIREBASE_PATH).once('value');
+                    
+                    if (snapshot.exists()) {
+                        const currentMonth = new Date().getMonth() + 1;
+                        const currentYear = new Date().getFullYear();
+                        
+                        // حساب الرواتب لهذا الشهر
+                        const currentMonthSalaries = salaryRecords
+                            .filter(s => s.month == currentMonth && s.year == currentYear)
+                            .reduce((sum, s) => sum + s.netSalary, 0);
+                        
+                        // حساب الرواتب للموسم الحالي (السنة الحالية)
+                        const seasonSalaries = salaryRecords
+                            .filter(s => s.year == currentYear)
+                            .reduce((sum, s) => sum + s.netSalary, 0);
+                        
+                        budgetData = {
+                            monthly: snapshot.val().monthly || 0,
+                            paid: snapshot.val().paid || 0,
+                            expenses: snapshot.val().expenses || 0,
+                            remaining: snapshot.val().remaining || 0,
+                            currentMonthSalaries: currentMonthSalaries,
+                            seasonSalaries: seasonSalaries
+                        };
+                    } else {
+                        // قيم افتراضية إذا لم تكن البيانات موجودة
+                        budgetData = {
+                            monthly: 0,
+                            paid: 0,
+                            expenses: 0,
+                            remaining: 0,
+                            currentMonthSalaries: 0,
+                            seasonSalaries: 0
+                        };
                     }
                     
-                    // Prepare transaction data
-                    const transactionData = {
-                        type: newType,
-                        amount: newAmount,
-                        date: newDate,
-                        description: newDescription,
-                        timestamp: Date.now()
-                    };
-                    
-                    // Update database
-                    await update(ref(database, `transactions/${id}`), transactionData);
-                    await set(dbRefs.currentBalance, newBalance);
-                    await update(dbRefs.system, {
-                        lastUpdate: Date.now()
-                    });
-                    
-                    alert(`تم تحديث المعاملة بنجاح! الرصيد الجديد: ${utils.formatCurrency(newBalance)} د.ج`);
-                    utils.hideModal(elements.editTransactionModal);
+                    updateBudgetDisplay();
+                    showMessage('تم تحميل بيانات الميزانية بنجاح', 'success');
                     
                 } catch (error) {
-                    console.error("Error updating transaction:", error);
-                    alert(`حدث خطأ أثناء تحديث المعاملة: ${error.message}`);
-                } finally {
-                    utils.enableForm(true);
+                    console.error('Error loading budget:', error);
+                    showMessage(`حدث خطأ: ${error.message}`, 'error');
                 }
             }
             
-            async deleteTransaction(id) {
-                if (!confirm('هل أنت متأكد من حذف هذه المعاملة؟ لا يمكن التراجع عن هذا الإجراء.')) {
+            // دالة تعبئة قائمة المعلمين
+            function populateTeacherSelect() {
+                teacherSelect.innerHTML = '<option value="">-- اختر المعلم --</option><option value="all">جميع المعلمين</option>';
+                teachersData.forEach(teacher => {
+                    const option = document.createElement('option');
+                    option.value = teacher.id;
+                    option.textContent = `${teacher.name} (${teacher.baseSalary.toFixed(2)} د.ج)`;
+                    option.dataset.salary = teacher.baseSalary;
+                    teacherSelect.appendChild(option);
+                });
+                
+                // إضافة حدث لتحديث الراتب عند اختيار المعلم
+                teacherSelect.addEventListener('change', function() {
+                    if (this.value === "all") {
+                        baseSalaryInput.value = "";
+                        baseSalaryInput.placeholder = "سيتم استخدام رواتب المعلمين";
+                        return;
+                    }
+                    
+                    const selectedOption = this.options[this.selectedIndex];
+                    if (selectedOption.dataset.salary) {
+                        baseSalaryInput.value = selectedOption.dataset.salary;
+                        calculateNetSalary();
+                    }
+                });
+            }
+            
+            // دالة تحديث عرض الميزانية
+            function updateBudgetDisplay() {
+                currentMonthSalariesEl.textContent = `${(budgetData.currentMonthSalaries || 0).toFixed(2)} د.ج`;
+                seasonSalariesEl.textContent = `${(budgetData.seasonSalaries || 0).toFixed(2)} د.ج`;
+                remainingBudgetEl.textContent = `${(budgetData.remaining || 0).toFixed(2)} د.ج`;
+                otherExpensesEl.textContent = `${(budgetData.expenses || 0).toFixed(2)} د.ج`;
+            }
+            
+            // دالة إضافة حقل خصم جديد
+            function addDeductionField() {
+                const deductionId = Date.now();
+                const deductionField = document.createElement('div');
+                deductionField.className = 'deduction-item';
+                deductionField.innerHTML = `
+                    <div style="display: flex; gap: 10px; width: 100%;">
+                        <input type="text" class="salary-input" placeholder="وصف الخصم" id="deductionDesc_${deductionId}" style="flex: 2;">
+                        <input type="number" class="salary-input" placeholder="المبلغ" id="deductionAmount_${deductionId}" style="flex: 1;">
+                    </div>
+                    <button type="button" class="remove-item-btn" data-id="${deductionId}">
+                        <i class="fas fa-times"></i>
+                    </button>
+                `;
+                deductionsContainer.appendChild(deductionField);
+                
+                // إضافة حدث لحذف الخصم
+                deductionField.querySelector('.remove-item-btn').addEventListener('click', function() {
+                    deductionsContainer.removeChild(deductionField);
+                    calculateNetSalary();
+                });
+                
+                // إضافة حدث لحساب الراتب عند تغيير المبلغ
+                deductionField.querySelector(`#deductionAmount_${deductionId}`).addEventListener('input', calculateNetSalary);
+            }
+            
+            // دالة إضافة حقل علاوة جديدة
+            function addBonusField() {
+                const bonusId = Date.now();
+                const bonusField = document.createElement('div');
+                bonusField.className = 'bonus-item';
+                bonusField.innerHTML = `
+                    <div style="display: flex; gap: 10px; width: 100%;">
+                        <input type="text" class="salary-input" placeholder="وصف العلاوة" id="bonusDesc_${bonusId}" style="flex: 2;">
+                        <input type="number" class="salary-input" placeholder="المبلغ" id="bonusAmount_${bonusId}" style="flex: 1;">
+                    </div>
+                    <button type="button" class="remove-item-btn" data-id="${bonusId}">
+                        <i class="fas fa-times"></i>
+                    </button>
+                `;
+                bonusesContainer.appendChild(bonusField);
+                
+                // إضافة حدث لحذف العلاوة
+                bonusField.querySelector('.remove-item-btn').addEventListener('click', function() {
+                    bonusesContainer.removeChild(bonusField);
+                    calculateNetSalary();
+                });
+                
+                // إضافة حدث لحساب الراتب عند تغيير المبلغ
+                bonusField.querySelector(`#bonusAmount_${bonusId}`).addEventListener('input', calculateNetSalary);
+            }
+            
+            // دالة حساب صافي الراتب
+            function calculateNetSalary() {
+                const baseSalary = parseFloat(baseSalaryInput.value) || 0;
+                
+                // حساب إجمالي الخصومات
+                let totalDeductions = 0;
+                const deductionAmounts = deductionsContainer.querySelectorAll('input[type="number"]');
+                deductionAmounts.forEach(input => {
+                    totalDeductions += parseFloat(input.value) || 0;
+                });
+                
+                // حساب إجمالي العلاوات
+                let totalBonuses = 0;
+                const bonusAmounts = bonusesContainer.querySelectorAll('input[type="number"]');
+                bonusAmounts.forEach(input => {
+                    totalBonuses += parseFloat(input.value) || 0;
+                });
+                
+                // حساب صافي الراتب
+                const netSalary = baseSalary - totalDeductions + totalBonuses;
+                
+                // تحديث العرض
+                document.getElementById('baseSalaryDisplay').textContent = baseSalary.toFixed(2) + ' د.ج';
+                document.getElementById('totalDeductionsDisplay').textContent = totalDeductions.toFixed(2) + ' د.ج';
+                document.getElementById('totalBonusesDisplay').textContent = totalBonuses.toFixed(2) + ' د.ج';
+                document.getElementById('netSalaryDisplay').textContent = netSalary.toFixed(2) + ' د.ج';
+                
+                // التحقق من الميزانية
+                checkBudget(netSalary);
+            }
+            
+            // دالة التحقق من الميزانية
+            function checkBudget(netSalary) {
+                const remainingBudget = budgetData.remaining || 0;
+                
+                if (netSalary > remainingBudget) {
+                    showMessage('تحذير: صافي الراتب يتجاوز الميزانية المتبقية', 'warning');
+                    document.getElementById('netSalaryDisplay').style.color = 'var(--deduction-color)';
+                } else {
+                    document.getElementById('netSalaryDisplay').style.color = 'var(--primary-color)';
+                }
+            }
+            
+            // دالة حفظ الراتب في Firebase
+            async function saveSalary() {
+                const teacherId = teacherSelect.value;
+                const month = monthSelect.value;
+                const year = yearSelect.value;
+                
+                if (teacherId === "all") {
+                    showMessage('الرجاء اختيار معلم واحد لحفظ راتبه', 'error');
                     return;
                 }
                 
-                try {
-                    utils.enableForm(false);
-                    
-                    // Get transaction data
-                    const transactionSnapshot = await get(ref(database, `transactions/${id}`));
-                    const transaction = transactionSnapshot.val();
-                    
-                    // Get current balance
-                    const currentBalance = await get(dbRefs.currentBalance);
-                    const balance = currentBalance.val() || 0;
-                    
-                    // Calculate new balance
-                    let newBalance;
-                    if (transaction.type === 'deposit') {
-                        newBalance = balance - transaction.amount;
-                    } else {
-                        newBalance = balance + transaction.amount;
+                if (!teacherId || !month || !year) {
+                    showMessage('الرجاء إدخال جميع البيانات المطلوبة بشكل صحيح', 'error');
+                    return;
+                }
+                
+                const teacherName = teacherSelect.options[teacherSelect.selectedIndex].text.split(' (')[0];
+                const monthName = monthSelect.options[monthSelect.selectedIndex].text;
+                const baseSalary = parseFloat(baseSalaryInput.value) || 0;
+                
+                // جمع بيانات الخصومات
+                const deductionsData = [];
+                const deductionItems = deductionsContainer.querySelectorAll('.deduction-item');
+                deductionItems.forEach(item => {
+                    const desc = item.querySelector('input[type="text"]').value;
+                    const amount = parseFloat(item.querySelector('input[type="number"]').value) || 0;
+                    if (desc && amount > 0) {
+                        deductionsData.push({ desc, amount });
                     }
+                });
+                
+                // جمع بيانات العلاوات
+                const bonusesData = [];
+                const bonusItems = bonusesContainer.querySelectorAll('.bonus-item');
+                bonusItems.forEach(item => {
+                    const desc = item.querySelector('input[type="text"]').value;
+                    const amount = parseFloat(item.querySelector('input[type="number"]').value) || 0;
+                    if (desc && amount > 0) {
+                        bonusesData.push({ desc, amount });
+                    }
+                });
+                
+                // حساب الإجماليات
+                const totalDeductions = deductionsData.reduce((sum, item) => sum + item.amount, 0);
+                const totalBonuses = bonusesData.reduce((sum, item) => sum + item.amount, 0);
+                const netSalary = baseSalary - totalDeductions + totalBonuses;
+                
+                // إنشاء كائن الراتب
+                const salaryRecord = {
+                    teacherId,
+                    teacherName,
+                    month,
+                    monthName,
+                    year,
+                    baseSalary,
+                    deductions: deductionsData,
+                    totalDeductions,
+                    bonuses: bonusesData,
+                    totalBonuses,
+                    netSalary,
+                    createdAt: new Date().toISOString()
+                };
+                
+                try {
+                    showMessage('جاري حفظ بيانات الراتب...', 'warning');
                     
-                    // Update database
-                    await remove(ref(database, `transactions/${id}`));
-                    await set(dbRefs.currentBalance, newBalance);
-                    await update(dbRefs.system, {
-                        lastUpdate: Date.now()
+                    // حفظ الراتب في Firebase
+                    const newSalaryRef = database.ref(SALARIES_FIREBASE_PATH).push();
+                    await newSalaryRef.set(salaryRecord);
+                    
+                    // تحديث الميزانية في Firebase
+                    const newPaidSalaries = (budgetData.paid || 0) + netSalary;
+                    const newRemainingBudget = (budgetData.monthly || 0) - newPaidSalaries - (budgetData.expenses || 0);
+                    
+                    // حساب الرواتب لهذا الشهر وللموسم
+                    const currentMonth = new Date().getMonth() + 1;
+                    const currentYear = new Date().getFullYear();
+                    const isCurrentMonth = month == currentMonth && year == currentYear;
+                    const isCurrentSeason = year == currentYear;
+                    
+                    await database.ref(BUDGET_FIREBASE_PATH).update({
+                        paid: newPaidSalaries,
+                        remaining: newRemainingBudget,
+                        currentMonthSalaries: isCurrentMonth ? 
+                            (budgetData.currentMonthSalaries || 0) + netSalary : 
+                            budgetData.currentMonthSalaries,
+                        seasonSalaries: isCurrentSeason ? 
+                            (budgetData.seasonSalaries || 0) + netSalary : 
+                            budgetData.seasonSalaries
                     });
                     
-                    alert(`تم حذف المعاملة بنجاح! الرصيد الجديد: ${utils.formatCurrency(newBalance)} د.ج`);
-                    utils.hideModal(elements.editTransactionModal);
+                    // تحديث البيانات المحلية
+                    budgetData.paid = newPaidSalaries;
+                    budgetData.remaining = newRemainingBudget;
+                    
+                    if (isCurrentMonth) {
+                        budgetData.currentMonthSalaries = (budgetData.currentMonthSalaries || 0) + netSalary;
+                    }
+                    
+                    if (isCurrentSeason) {
+                        budgetData.seasonSalaries = (budgetData.seasonSalaries || 0) + netSalary;
+                    }
+                    
+                    updateBudgetDisplay();
+                    
+                    // إضافة إلى السجلات المحلية
+                    salaryRecords.push(salaryRecord);
+                    updateSalaryReport();
+                    
+                    showMessage('تم حفظ بيانات الراتب بنجاح', 'success');
+                    resetSalaryForm();
                     
                 } catch (error) {
-                    console.error("Error deleting transaction:", error);
-                    alert(`حدث خطأ أثناء حذف المعاملة: ${error.message}`);
-                } finally {
-                    utils.enableForm(true);
+                    console.error('Error saving salary:', error);
+                    showMessage(`حدث خطأ أثناء حفظ الراتب: ${error.message}`, 'error');
                 }
             }
             
-            searchTransactions(searchTerm) {
-                const transactions = document.querySelectorAll('.transaction-item');
+            // دالة دفع رواتب جميع المعلمين
+            async function payAllSalaries() {
+                const month = monthSelect.value;
+                const year = yearSelect.value;
                 
-                transactions.forEach(transaction => {
-                    const description = transaction.querySelector('.transaction-description').textContent.toLowerCase();
-                    const matches = description.includes(searchTerm.toLowerCase());
-                    transaction.style.display = matches ? '' : 'none';
+                if (!month || !year) {
+                    showMessage('الرجاء تحديد الشهر والسنة', 'error');
+                    return;
+                }
+                
+                if (teachersData.length === 0) {
+                    showMessage('لا يوجد معلمين لدفع رواتبهم', 'error');
+                    return;
+                }
+                
+                // جمع بيانات الخصومات والعلاوات العامة
+                const generalDeductions = [];
+                const deductionItems = deductionsContainer.querySelectorAll('.deduction-item');
+                deductionItems.forEach(item => {
+                    const desc = item.querySelector('input[type="text"]').value;
+                    const amount = parseFloat(item.querySelector('input[type="number"]').value) || 0;
+                    if (desc && amount > 0) {
+                        generalDeductions.push({ desc, amount });
+                    }
                 });
+                
+                const generalBonuses = [];
+                const bonusItems = bonusesContainer.querySelectorAll('.bonus-item');
+                bonusItems.forEach(item => {
+                    const desc = item.querySelector('input[type="text"]').value;
+                    const amount = parseFloat(item.querySelector('input[type="number"]').value) || 0;
+                    if (desc && amount > 0) {
+                        generalBonuses.push({ desc, amount });
+                    }
+                });
+                
+                // حساب إجمالي الخصومات والعلاوات العامة
+                const totalGeneralDeductions = generalDeductions.reduce((sum, item) => sum + item.amount, 0);
+                const totalGeneralBonuses = generalBonuses.reduce((sum, item) => sum + item.amount, 0);
+                
+                try {
+                    showMessage('جاري دفع رواتب جميع المعلمين...', 'warning');
+                    
+                    let totalNetSalaries = 0;
+                    const monthName = monthSelect.options[monthSelect.selectedIndex].text;
+                    
+                    // دفع راتب كل معلم
+                    for (const teacher of teachersData) {
+                        const baseSalary = teacher.baseSalary;
+                        const netSalary = baseSalary - totalGeneralDeductions + totalGeneralBonuses;
+                        
+                        // إنشاء كائن الراتب
+                        const salaryRecord = {
+                            teacherId: teacher.id,
+                            teacherName: teacher.name,
+                            month,
+                            monthName,
+                            year,
+                            baseSalary,
+                            deductions: generalDeductions,
+                            totalDeductions: totalGeneralDeductions,
+                            bonuses: generalBonuses,
+                            totalBonuses: totalGeneralBonuses,
+                            netSalary,
+                            createdAt: new Date().toISOString()
+                        };
+                        
+                        // حفظ الراتب في Firebase
+                        const newSalaryRef = database.ref(SALARIES_FIREBASE_PATH).push();
+                        await newSalaryRef.set(salaryRecord);
+                        
+                        totalNetSalaries += netSalary;
+                        salaryRecords.push(salaryRecord);
+                    }
+                    
+                    // تحديث الميزانية في Firebase
+                    const newPaidSalaries = (budgetData.paid || 0) + totalNetSalaries;
+                    const newRemainingBudget = (budgetData.monthly || 0) - newPaidSalaries - (budgetData.expenses || 0);
+                    
+                    // حساب الرواتب لهذا الشهر وللموسم
+                    const currentMonth = new Date().getMonth() + 1;
+                    const currentYear = new Date().getFullYear();
+                    const isCurrentMonth = month == currentMonth && year == currentYear;
+                    const isCurrentSeason = year == currentYear;
+                    
+                    await database.ref(BUDGET_FIREBASE_PATH).update({
+                        paid: newPaidSalaries,
+                        remaining: newRemainingBudget,
+                        currentMonthSalaries: isCurrentMonth ? 
+                            (budgetData.currentMonthSalaries || 0) + totalNetSalaries : 
+                            budgetData.currentMonthSalaries,
+                        seasonSalaries: isCurrentSeason ? 
+                            (budgetData.seasonSalaries || 0) + totalNetSalaries : 
+                            budgetData.seasonSalaries
+                    });
+                    
+                    // تحديث البيانات المحلية
+                    budgetData.paid = newPaidSalaries;
+                    budgetData.remaining = newRemainingBudget;
+                    
+                    if (isCurrentMonth) {
+                        budgetData.currentMonthSalaries = (budgetData.currentMonthSalaries || 0) + totalNetSalaries;
+                    }
+                    
+                    if (isCurrentSeason) {
+                        budgetData.seasonSalaries = (budgetData.seasonSalaries || 0) + totalNetSalaries;
+                    }
+                    
+                    updateBudgetDisplay();
+                    updateSalaryReport();
+                    
+                    showMessage(`تم دفع رواتب جميع المعلمين (${teachersData.length} معلم) بنجاح`, 'success');
+                    resetSalaryForm();
+                    
+                } catch (error) {
+                    console.error('Error paying all salaries:', error);
+                    showMessage(`حدث خطأ أثناء دفع الرواتب: ${error.message}`, 'error');
+                }
             }
-        }
-
-        // Update connection status UI
-        function updateConnectionStatus(isConnected, message) {
-            const statusElement = document.getElementById('connectionStatus');
-            const textElement = document.getElementById('statusText');
             
-            statusElement.classList.remove('connected', 'disconnected');
-            
-            if (isConnected) {
-                statusElement.classList.add('connected');
-                textElement.textContent = message;
-            } else {
-                statusElement.classList.add('disconnected');
-                textElement.textContent = message;
+            // دالة تحميل بيانات الرواتب من Firebase
+            async function loadSalaryData() {
+                try {
+                    showMessage('جاري تحميل سجلات الرواتب...', 'warning');
+                    
+                    const snapshot = await database.ref(SALARIES_FIREBASE_PATH).once('value');
+                    salaryRecords = [];
+                    
+                    if (snapshot.exists()) {
+                        snapshot.forEach(childSnapshot => {
+                            salaryRecords.push(childSnapshot.val());
+                        });
+                    }
+                    
+                    // تحديث بيانات الميزانية بعد تحميل الرواتب
+                    const currentMonth = new Date().getMonth() + 1;
+                    const currentYear = new Date().getFullYear();
+                    
+                    budgetData.currentMonthSalaries = salaryRecords
+                        .filter(s => s.month == currentMonth && s.year == currentYear)
+                        .reduce((sum, s) => sum + s.netSalary, 0);
+                    
+                    budgetData.seasonSalaries = salaryRecords
+                        .filter(s => s.year == currentYear)
+                        .reduce((sum, s) => sum + s.netSalary, 0);
+                    
+                    updateBudgetDisplay();
+                    updateSalaryReport();
+                    showMessage('تم تحميل سجلات الرواتب بنجاح', 'success');
+                    
+                } catch (error) {
+                    console.error('Error loading salaries:', error);
+                    showMessage(`حدث خطأ أثناء تحميل سجلات الرواتب: ${error.message}`, 'error');
+                }
             }
-        }
-
-        // Initialize the application
-        document.addEventListener('DOMContentLoaded', () => {
-            new BudgetApp();
+            
+            // دالة تحديث التقرير المالي
+            function updateSalaryReport() {
+                reportTableBody.innerHTML = '';
+                
+                let totalBase = 0;
+                let totalDeductions = 0;
+                let totalBonuses = 0;
+                let totalNet = 0;
+                
+                salaryRecords.forEach(record => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${record.teacherName}</td>
+                        <td>${record.monthName}</td>
+                        <td>${record.year}</td>
+                        <td>${record.baseSalary.toFixed(2)} د.ج</td>
+                        <td>${record.totalDeductions.toFixed(2)} د.ج</td>
+                        <td>${record.totalBonuses.toFixed(2)} د.ج</td>
+                        <td>${record.netSalary.toFixed(2)} د.ج</td>
+                        <td>${new Date(record.createdAt).toLocaleDateString('ar-EG')}</td>
+                    `;
+                    reportTableBody.appendChild(row);
+                    
+                    totalBase += record.baseSalary;
+                    totalDeductions += record.totalDeductions;
+                    totalBonuses += record.totalBonuses;
+                    totalNet += record.netSalary;
+                });
+                
+                // تحديث الإجماليات
+                document.getElementById('totalBaseSalary').textContent = totalBase.toFixed(2) + ' د.ج';
+                document.getElementById('totalDeductions').textContent = totalDeductions.toFixed(2) + ' د.ج';
+                document.getElementById('totalBonuses').textContent = totalBonuses.toFixed(2) + ' د.ج';
+                document.getElementById('totalNetSalary').textContent = totalNet.toFixed(2) + ' د.ج';
+            }
+            
+            // دالة تصفية التقرير المالي
+            function filterSalaryReport() {
+                const monthFilter = reportMonthSelect.value;
+                const yearFilter = reportYearSelect.value;
+                const searchTerm = teacherSearch.value.toLowerCase();
+                
+                const rows = reportTableBody.querySelectorAll('tr');
+                let totalBase = 0;
+                let totalDeductions = 0;
+                let totalBonuses = 0;
+                let totalNet = 0;
+                
+                rows.forEach(row => {
+                    const cells = row.querySelectorAll('td');
+                    const teacherName = cells[0].textContent.toLowerCase();
+                    const month = cells[1].textContent;
+                    const year = cells[2].textContent;
+                    
+                    const monthMatch = !monthFilter || month === monthSelect.options[monthFilter].text;
+                    const yearMatch = !yearFilter || year === yearFilter;
+                    const searchMatch = !searchTerm || teacherName.includes(searchTerm);
+                    
+                    if (monthMatch && yearMatch && searchMatch) {
+                        row.style.display = '';
+                        
+                        // تحديث الإجماليات للصفوف المرئية فقط
+                        totalBase += parseFloat(cells[3].textContent);
+                        totalDeductions += parseFloat(cells[4].textContent);
+                        totalBonuses += parseFloat(cells[5].textContent);
+                        totalNet += parseFloat(cells[6].textContent);
+                    } else {
+                        row.style.display = 'none';
+                    }
+                });
+                
+                // تحديث الإجماليات
+                document.getElementById('totalBaseSalary').textContent = totalBase.toFixed(2) + ' د.ج';
+                document.getElementById('totalDeductions').textContent = totalDeductions.toFixed(2) + ' د.ج';
+                document.getElementById('totalBonuses').textContent = totalBonuses.toFixed(2) + ' د.ج';
+                document.getElementById('totalNetSalary').textContent = totalNet.toFixed(2) + ' د.ج';
+            }
+            
+            // دالة طباعة الراتب
+            function printSalary() {
+                window.print();
+            }
+            
+            // دالة عرض رسائل للمستخدم
+            function showMessage(msg, type) {
+                messageDiv.textContent = msg;
+                messageDiv.className = `message ${type}`;
+                messageDiv.style.display = 'block';
+                
+                setTimeout(() => {
+                    messageDiv.style.display = 'none';
+                }, 5000);
+            }
+            
+            // دالة إعادة تعيين نموذج الراتب
+            function resetSalaryForm() {
+                baseSalaryInput.value = '';
+                deductionsContainer.innerHTML = '';
+                bonusesContainer.innerHTML = '';
+                calculateNetSalary();
+            }
         });
     </script>
 </body>
