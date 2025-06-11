@@ -6,6 +6,9 @@
     <title>نظام إدارة رواتب المعلمين</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
     <style>
         :root {
             --primary-color: #1a4d2e;
@@ -483,14 +486,29 @@
     </div>
 
     <script>
+        // تهيئة Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyDv0Qk5j4Q6Q9XQ9XQ9XQ9XQ9XQ9XQ9XQ",
+            authDomain: "budget-fddd7.firebaseapp.com",
+            databaseURL: "https://budget-fddd7-default-rtdb.firebaseio.com",
+            projectId: "budget-fddd7",
+            storageBucket: "budget-fddd7.appspot.com",
+            messagingSenderId: "123456789012",
+            appId: "1:123456789012:web:abcdef1234567890abcdef"
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+
         document.addEventListener('DOMContentLoaded', function() {
             // تعيين السنة الحالية في التذييل
             document.getElementById('currentYear').textContent = new Date().getFullYear();
             
-            // تعريف معرف ملف Google Sheets
-            const SHEET_ID = '1esP8qSmlkCt0R4Pu2P20XI2Pl2mL2WgPrZqmW__O7jE';
-            const TEACHERS_SHEET = 'المعلمين';
-            const BUDGET_SHEET = 'الميزانية';
+            // روابط البيانات
+            const TEACHERS_SHEET_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQqw5oqA3vMBBIDqLd7OvhcxaPU807iKdv3txmrEhl-9Ln6snO5g7JtgJDxZHcRPUdBF4sbwzbsDAUC/pubhtml';
+            const BUDGET_FIREBASE_PATH = 'currentBalance';
+            const SALARIES_FIREBASE_PATH = 'salaries';
             
             // العناصر الرئيسية
             const teacherSelect = document.getElementById('teacherSelect');
@@ -514,7 +532,12 @@
             
             // متغيرات التخزين
             let teachersData = [];
-            let budgetData = {};
+            let budgetData = {
+                monthly: 0,
+                paid: 0,
+                expenses: 0,
+                remaining: 0
+            };
             let salaryRecords = [];
             
             // أحداث النموذج
@@ -533,16 +556,17 @@
             // دالة جلب بيانات المعلمين من Google Sheets
             async function loadTeachersData() {
                 try {
-                    const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${TEACHERS_SHEET}`;
-                    const response = await fetch(url);
+                    showMessage('جاري تحميل بيانات المعلمين...', 'warning');
+                    
+                    const response = await fetch(`https://docs.google.com/spreadsheets/d/e/2PACX-1vQqw5oqA3vMBBIDqLd7OvhcxaPU807iKdv3txmrEhl-9Ln6snO5g7JtgJDxZHcRPUdBF4sbwzbsDAUC/pub?output=csv`);
                     
                     if (!response.ok) throw new Error('فشل في جلب بيانات المعلمين');
                     
-                    const text = await response.text();
-                    const json = parseGoogleSheetsData(text);
-                    teachersData = extractTeachersData(json);
+                    const csvData = await response.text();
+                    teachersData = parseTeachersCSVData(csvData);
                     
                     populateTeacherSelect();
+                    showMessage('تم تحميل بيانات المعلمين بنجاح', 'success');
                     
                 } catch (error) {
                     console.error('Error loading teachers:', error);
@@ -550,103 +574,70 @@
                 }
             }
             
-            // دالة جلب بيانات الميزانية من Google Sheets
+            // دالة تحليل بيانات المعلمين من CSV
+            function parseTeachersCSVData(csv) {
+                const lines = csv.split('\n');
+                const headers = lines[0].split(',').map(h => h.trim());
+                
+                // البحث عن أعمدة الاسم والراتب
+                const nameIndex = headers.findIndex(h => h.includes('اسم') || h.includes('الاسم') || h.includes('Name'));
+                const salaryIndex = headers.findIndex(h => h.includes('راتب') || h.includes('الراتب') || h.includes('Salary'));
+                
+                if (nameIndex === -1 || salaryIndex === -1) {
+                    throw new Error('هيكل الجدول غير متطابق - تأكد من وجود أعمدة الاسم والراتب');
+                }
+                
+                const teachers = [];
+                for (let i = 1; i < lines.length; i++) {
+                    const cells = lines[i].split(',');
+                    if (cells.length > Math.max(nameIndex, salaryIndex)) {
+                        const name = cells[nameIndex].trim();
+                        const salary = parseFloat(cells[salaryIndex]) || 0;
+                        
+                        if (name) {
+                            teachers.push({
+                                id: i,
+                                name: name,
+                                baseSalary: salary
+                            });
+                        }
+                    }
+                }
+                
+                return teachers;
+            }
+            
+            // دالة جلب بيانات الميزانية من Firebase
             async function loadBudgetData() {
                 try {
-                    const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${BUDGET_SHEET}`;
-                    const response = await fetch(url);
+                    showMessage('جاري تحميل بيانات الميزانية...', 'warning');
                     
-                    if (!response.ok) throw new Error('فشل في جلب بيانات الميزانية');
+                    const snapshot = await database.ref('currentBalance').once('value');
                     
-                    const text = await response.text();
-                    const json = parseGoogleSheetsData(text);
-                    budgetData = extractBudgetData(json);
+                    if (snapshot.exists()) {
+                        budgetData = {
+                            monthly: snapshot.val().monthly || 0,
+                            paid: snapshot.val().paid || 0,
+                            expenses: snapshot.val().expenses || 0,
+                            remaining: snapshot.val().remaining || 0
+                        };
+                    } else {
+                        // قيم افتراضية إذا لم تكن البيانات موجودة
+                        budgetData = {
+                            monthly: 0,
+                            paid: 0,
+                            expenses: 0,
+                            remaining: 0
+                        };
+                    }
                     
                     updateBudgetDisplay();
+                    showMessage('تم تحميل بيانات الميزانية بنجاح', 'success');
                     
                 } catch (error) {
                     console.error('Error loading budget:', error);
                     showMessage(`حدث خطأ: ${error.message}`, 'error');
                 }
-            }
-            
-            // دالة تحليل بيانات Google Sheets
-            function parseGoogleSheetsData(text) {
-                try {
-                    const jsonStart = text.indexOf('{');
-                    const jsonEnd = text.lastIndexOf('}') + 1;
-                    return JSON.parse(text.substring(jsonStart, jsonEnd));
-                } catch (e) {
-                    throw new Error('تعذر تحليل بيانات الجدول');
-                }
-            }
-            
-            // دالة استخراج بيانات المعلمين
-            function extractTeachersData(data) {
-                const teachers = [];
-                const nameColIndex = findColumnIndex(data, ['الاسم', 'اسم المعلم']);
-                const salaryColIndex = findColumnIndex(data, ['الراتب', 'الراتب الأساسي']);
-                
-                if (nameColIndex === -1 || salaryColIndex === -1) {
-                    throw new Error('هيكل الجدول غير متطابق');
-                }
-                
-                data.table.rows.forEach((row, index) => {
-                    if (row.c && row.c[nameColIndex] && row.c[nameColIndex].v) {
-                        const name = row.c[nameColIndex].v.toString().trim();
-                        const salary = row.c[salaryColIndex]?.v || 0;
-                        
-                        teachers.push({
-                            id: index + 1,
-                            name: name,
-                            baseSalary: parseFloat(salary) || 0
-                        });
-                    }
-                });
-                
-                return teachers;
-            }
-            
-            // دالة استخراج بيانات الميزانية
-            function extractBudgetData(data) {
-                const budget = {};
-                const descColIndex = findColumnIndex(data, ['البند', 'الوصف']);
-                const amountColIndex = findColumnIndex(data, ['المبلغ', 'القيمة']);
-                
-                if (descColIndex === -1 || amountColIndex === -1) {
-                    throw new Error('هيكل الجدول غير متطابق');
-                }
-                
-                data.table.rows.forEach(row => {
-                    if (row.c && row.c[descColIndex] && row.c[descColIndex].v) {
-                        const desc = row.c[descColIndex].v.toString().trim();
-                        const amount = row.c[amountColIndex]?.v || 0;
-                        
-                        if (desc.includes('الميزانية')) {
-                            budget.monthly = parseFloat(amount) || 0;
-                        } else if (desc.includes('المدفوعة')) {
-                            budget.paid = parseFloat(amount) || 0;
-                        } else if (desc.includes('المصروفات')) {
-                            budget.expenses = parseFloat(amount) || 0;
-                        }
-                    }
-                });
-                
-                // حساب المتبقي
-                budget.remaining = (budget.monthly || 0) - (budget.paid || 0) - (budget.expenses || 0);
-                
-                return budget;
-            }
-            
-            // دالة مساعدة للعثور على العمود
-            function findColumnIndex(data, possibleNames) {
-                for (let name of possibleNames) {
-                    const index = data.table.cols.findIndex(col => 
-                        col.label && col.label.toString().includes(name)
-                    );
-                    if (index !== -1) return index;
-                }
-                return -1;
             }
             
             // دالة تعبئة قائمة المعلمين
@@ -773,8 +764,8 @@
                 }
             }
             
-            // دالة حفظ الراتب
-            function saveSalary() {
+            // دالة حفظ الراتب في Firebase
+            async function saveSalary() {
                 const teacherId = teacherSelect.value;
                 const teacherName = teacherSelect.options[teacherSelect.selectedIndex].text.split(' (')[0];
                 const month = monthSelect.value;
@@ -816,7 +807,6 @@
                 
                 // إنشاء كائن الراتب
                 const salaryRecord = {
-                    id: Date.now(),
                     teacherId,
                     teacherName,
                     month,
@@ -831,46 +821,63 @@
                     createdAt: new Date().toISOString()
                 };
                 
-                // إضافة إلى بيانات الرواتب
-                salaryRecords.push(salaryRecord);
-                
-                // حفظ في localStorage
-                localStorage.setItem('teacherSalaries', JSON.stringify(salaryRecords));
-                
-                // تحديث الميزانية
-                updateBudgetAfterSalary(netSalary);
-                
-                showMessage('تم حفظ بيانات الراتب بنجاح', 'success');
-                resetSalaryForm();
+                try {
+                    showMessage('جاري حفظ بيانات الراتب...', 'warning');
+                    
+                    // حفظ الراتب في Firebase
+                    const newSalaryRef = database.ref('salaries').push();
+                    await newSalaryRef.set(salaryRecord);
+                    
+                    // تحديث الميزانية في Firebase
+                    const newPaidSalaries = (budgetData.paid || 0) + netSalary;
+                    const newRemainingBudget = (budgetData.monthly || 0) - newPaidSalaries - (budgetData.expenses || 0);
+                    
+                    await database.ref('currentBalance').update({
+                        paid: newPaidSalaries,
+                        remaining: newRemainingBudget
+                    });
+                    
+                    // تحديث البيانات المحلية
+                    budgetData.paid = newPaidSalaries;
+                    budgetData.remaining = newRemainingBudget;
+                    updateBudgetDisplay();
+                    
+                    // إضافة إلى السجلات المحلية
+                    salaryRecords.push(salaryRecord);
+                    
+                    showMessage('تم حفظ بيانات الراتب بنجاح', 'success');
+                    resetSalaryForm();
+                    
+                } catch (error) {
+                    console.error('Error saving salary:', error);
+                    showMessage(`حدث خطأ أثناء حفظ الراتب: ${error.message}`, 'error');
+                }
             }
             
-            // دالة تحديث الميزانية بعد حفظ الراتب
-            function updateBudgetAfterSalary(netSalary) {
-                budgetData.paid = (budgetData.paid || 0) + netSalary;
-                budgetData.remaining = (budgetData.monthly || 0) - (budgetData.paid || 0) - (budgetData.expenses || 0);
-                
-                updateBudgetDisplay();
-                
-                // هنا يمكنك إضافة كود لحفظ بيانات الميزانية المحدثة في Google Sheets
+            // دالة تحميل بيانات الرواتب من Firebase
+            async function loadSalaryData() {
+                try {
+                    const snapshot = await database.ref('salaries').once('value');
+                    if (snapshot.exists()) {
+                        salaryRecords = [];
+                        snapshot.forEach(childSnapshot => {
+                            salaryRecords.push(childSnapshot.val());
+                        });
+                    }
+                } catch (error) {
+                    console.error('Error loading salaries:', error);
+                    showMessage(`حدث خطأ أثناء تحميل سجلات الرواتب: ${error.message}`, 'error');
+                }
             }
             
             // دالة طباعة الراتب
             function printSalary() {
-                // يمكن تطوير هذه الدالة لإنشاء نموذج طباعة متكامل
                 alert('سيتم تطوير وظيفة الطباعة في النسخة الكاملة من النظام');
             }
             
             // دالة عرض التقرير المالي
             function showFinancialReport() {
                 alert('سيتم تطوير التقرير المالي في النسخة الكاملة من النظام');
-            }
-            
-            // دالة تحميل بيانات الرواتب من localStorage
-            function loadSalaryData() {
-                const savedData = localStorage.getItem('teacherSalaries');
-                if (savedData) {
-                    salaryRecords = JSON.parse(savedData);
-                }
             }
             
             // دالة عرض رسائل للمستخدم
