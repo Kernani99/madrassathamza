@@ -664,6 +664,34 @@
             color: var(--primary-color);
         }
 
+        /* نافذة إضافة معلم جديد */
+        .add-teacher-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            z-index: 100;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .add-teacher-content {
+            background-color: white;
+            padding: 30px;
+            border-radius: var(--border-radius);
+            width: 90%;
+            max-width: 500px;
+        }
+
+        .add-teacher-content h3 {
+            color: var(--primary-color);
+            margin-top: 0;
+            text-align: center;
+        }
+
         @media (max-width: 768px) {
             .salary-form-grid, .budget-info, .salary-summary {
                 grid-template-columns: 1fr;
@@ -776,6 +804,7 @@
                                     <th>النوع</th>
                                     <th>المبلغ (د.ج)</th>
                                     <th>الملاحظات</th>
+                                    <th>إجراءات</th>
                                 </tr>
                             </thead>
                             <tbody id="budgetHistoryBody">
@@ -815,6 +844,32 @@
                 <div class="button-group">
                     <button id="closePrintModalBtn" class="btn btn-secondary">
                         <i class="fas fa-times"></i> إغلاق
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- نافذة إضافة معلم جديد -->
+        <div class="add-teacher-modal" id="addTeacherModal">
+            <div class="add-teacher-content">
+                <h3>إضافة معلم جديد</h3>
+                
+                <div class="salary-input-group">
+                    <label for="newTeacherName">اسم المعلم</label>
+                    <input type="text" id="newTeacherName" class="salary-input" placeholder="أدخل اسم المعلم">
+                </div>
+                
+                <div class="salary-input-group">
+                    <label for="newTeacherSalary">الراتب الأساسي (د.ج)</label>
+                    <input type="number" id="newTeacherSalary" class="salary-input" placeholder="أدخل الراتب الأساسي">
+                </div>
+                
+                <div class="button-group">
+                    <button id="saveNewTeacherBtn" class="btn">
+                        <i class="fas fa-save"></i> حفظ
+                    </button>
+                    <button id="cancelNewTeacherBtn" class="btn btn-secondary">
+                        <i class="fas fa-times"></i> إلغاء
                     </button>
                 </div>
             </div>
@@ -860,6 +915,7 @@
                         <select id="teacherSelect" class="salary-input" required>
                             <option value="">-- اختر المعلم --</option>
                             <option value="all">جميع المعلمين</option>
+                            <option value="add">+ إضافة معلم جديد</option>
                         </select>
                     </div>
                 </div>
@@ -1064,6 +1120,7 @@
             const SALARIES_FIREBASE_PATH = 'salaries';
             const BUDGET_HISTORY_PATH = 'budgetHistory';
             const LAST_YEAR_BUDGET_PATH = 'lastYearBudget';
+            const TEACHERS_FIREBASE_PATH = 'teachers';
             
             // العناصر الرئيسية
             const teacherSelect = document.getElementById('teacherSelect');
@@ -1117,6 +1174,11 @@
             const printCustomReport = document.getElementById('printCustomReport');
             const closePrintModalBtn = document.getElementById('closePrintModalBtn');
             const financialReport = document.getElementById('financialReport');
+            const addTeacherModal = document.getElementById('addTeacherModal');
+            const newTeacherName = document.getElementById('newTeacherName');
+            const newTeacherSalary = document.getElementById('newTeacherSalary');
+            const saveNewTeacherBtn = document.getElementById('saveNewTeacherBtn');
+            const cancelNewTeacherBtn = document.getElementById('cancelNewTeacherBtn');
             
             // متغيرات التخزين
             let teachersData = [];
@@ -1132,6 +1194,7 @@
             let salaryRecords = [];
             let currentEditingSalaryId = null;
             let selectedTeachersToPay = [];
+            let budgetHistoryRecords = [];
             
             // أحداث النموذج
             addDeductionBtn.addEventListener('click', addDeductionField);
@@ -1159,6 +1222,9 @@
             closePrintModalBtn.addEventListener('click', () => printReportModal.style.display = 'none');
             transferFromLastYearInput.addEventListener('input', updateTotalBudget);
             donationsAmountInput.addEventListener('input', updateTotalBudget);
+            teacherSelect.addEventListener('change', handleTeacherSelectChange);
+            saveNewTeacherBtn.addEventListener('click', saveNewTeacher);
+            cancelNewTeacherBtn.addEventListener('click', () => addTeacherModal.style.display = 'none');
             
             // تحميل البيانات الأولية
             loadTeachersData();
@@ -1178,17 +1244,34 @@
                 }
             }
             
-            // دالة جلب بيانات المعلمين من Google Sheets
+            // دالة جلب بيانات المعلمين من Firebase و Google Sheets
             async function loadTeachersData() {
                 try {
                     showMessage('جاري تحميل بيانات المعلمين...', 'warning');
                     
-                    const response = await fetch(TEACHERS_SHEET_URL);
+                    // جلب المعلمين من Firebase أولاً
+                    const firebaseSnapshot = await database.ref(TEACHERS_FIREBASE_PATH).once('value');
+                    const firebaseTeachers = [];
                     
+                    if (firebaseSnapshot.exists()) {
+                        firebaseSnapshot.forEach(childSnapshot => {
+                            firebaseTeachers.push({
+                                id: childSnapshot.key,
+                                name: childSnapshot.val().name,
+                                baseSalary: childSnapshot.val().baseSalary || 0
+                            });
+                        });
+                    }
+                    
+                    // جلب المعلمين من Google Sheets
+                    const response = await fetch(TEACHERS_SHEET_URL);
                     if (!response.ok) throw new Error('فشل في جلب بيانات المعلمين');
                     
                     const csvData = await response.text();
-                    teachersData = parseTeachersCSVData(csvData);
+                    const sheetTeachers = parseTeachersCSVData(csvData);
+                    
+                    // دمج البيانات من المصدرين
+                    teachersData = [...firebaseTeachers, ...sheetTeachers];
                     
                     populateTeacherSelect();
                     showMessage('تم تحميل بيانات المعلمين بنجاح', 'success');
@@ -1221,7 +1304,7 @@
                         
                         if (name) {
                             teachers.push({
-                                id: i,
+                                id: `sheet_${i}`,
                                 name: name,
                                 baseSalary: salary
                             });
@@ -1308,34 +1391,64 @@
                 try {
                     const snapshot = await database.ref(BUDGET_HISTORY_PATH).once('value');
                     budgetHistoryBody.innerHTML = '';
+                    budgetHistoryRecords = [];
                     
                     if (snapshot.exists()) {
-                        const historyData = [];
                         snapshot.forEach(childSnapshot => {
-                            historyData.push({
+                            const record = {
                                 id: childSnapshot.key,
                                 ...childSnapshot.val()
-                            });
+                            };
+                            budgetHistoryRecords.push(record);
                         });
                         
                         // ترتيب السجل من الأحدث إلى الأقدم
-                        historyData.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+                        budgetHistoryRecords.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
                         
                         // عرض السجل
-                        historyData.forEach(record => {
+                        budgetHistoryRecords.forEach(record => {
                             const row = document.createElement('tr');
                             row.innerHTML = `
                                 <td>${formatDate(record.timestamp)}</td>
                                 <td>${record.type}</td>
                                 <td>${record.amount.toFixed(2)} د.ج</td>
                                 <td>${record.notes || ''}</td>
+                                <td>
+                                    <button class="delete-budget-history-btn" data-id="${record.id}" style="background-color: #f44336; padding: 5px 10px; border-radius: 4px; color: white; border: none; cursor: pointer;">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </td>
                             `;
                             budgetHistoryBody.appendChild(row);
+                            
+                            // إضافة حدث لحذف السجل
+                            row.querySelector('.delete-budget-history-btn').addEventListener('click', function() {
+                                const recordId = this.getAttribute('data-id');
+                                deleteBudgetHistoryRecord(recordId);
+                            });
                         });
                     }
                 } catch (error) {
                     console.error('Error loading budget history:', error);
                     showMessage(`حدث خطأ أثناء تحميل سجل الميزانية: ${error.message}`, 'error');
+                }
+            }
+            
+            // دالة حذف سجل من تاريخ الميزانية
+            async function deleteBudgetHistoryRecord(recordId) {
+                if (!confirm('هل أنت متأكد من حذف هذا السجل؟ لا يمكن التراجع عن هذه العملية.')) {
+                    return;
+                }
+                
+                try {
+                    await database.ref(`${BUDGET_HISTORY_PATH}/${recordId}`).remove();
+                    
+                    // إعادة تحميل السجل
+                    await loadBudgetHistory();
+                    showMessage('تم حذف سجل الميزانية بنجاح', 'success');
+                } catch (error) {
+                    console.error('Error deleting budget history record:', error);
+                    showMessage('حدث خطأ أثناء حذف سجل الميزانية', 'error');
                 }
             }
             
@@ -1354,7 +1467,7 @@
             
             // دالة تعبئة قائمة المعلمين
             function populateTeacherSelect() {
-                teacherSelect.innerHTML = '<option value="">-- اختر المعلم --</option><option value="all">جميع المعلمين</option>';
+                teacherSelect.innerHTML = '<option value="">-- اختر المعلم --</option><option value="all">جميع المعلمين</option><option value="add">+ إضافة معلم جديد</option>';
                 teachersData.forEach(teacher => {
                     const option = document.createElement('option');
                     option.value = teacher.id;
@@ -1362,21 +1475,71 @@
                     option.dataset.salary = teacher.baseSalary;
                     teacherSelect.appendChild(option);
                 });
+            }
+            
+            // دالة معالجة اختيار المعلم
+            function handleTeacherSelectChange() {
+                if (this.value === "all") {
+                    baseSalaryInput.value = "";
+                    baseSalaryInput.placeholder = "سيتم استخدام رواتب المعلمين";
+                    return;
+                }
                 
-                // إضافة حدث لتحديث الراتب عند اختيار المعلم
-                teacherSelect.addEventListener('change', function() {
-                    if (this.value === "all") {
-                        baseSalaryInput.value = "";
-                        baseSalaryInput.placeholder = "سيتم استخدام رواتب المعلمين";
-                        return;
-                    }
+                if (this.value === "add") {
+                    addTeacherModal.style.display = 'flex';
+                    teacherSelect.value = "";
+                    return;
+                }
+                
+                const selectedOption = this.options[this.selectedIndex];
+                if (selectedOption.dataset.salary) {
+                    baseSalaryInput.value = selectedOption.dataset.salary;
+                    calculateNetSalary();
+                }
+            }
+            
+            // دالة حفظ معلم جديد
+            async function saveNewTeacher() {
+                const name = newTeacherName.value.trim();
+                const salary = parseFloat(newTeacherSalary.value) || 0;
+                
+                if (!name) {
+                    showMessage('الرجاء إدخال اسم المعلم', 'error');
+                    return;
+                }
+                
+                if (salary <= 0) {
+                    showMessage('الرجاء إدخال راتب أساسي صحيح', 'error');
+                    return;
+                }
+                
+                try {
+                    const newTeacherRef = database.ref(TEACHERS_FIREBASE_PATH).push();
+                    await newTeacherRef.set({
+                        name: name,
+                        baseSalary: salary
+                    });
                     
-                    const selectedOption = this.options[this.selectedIndex];
-                    if (selectedOption.dataset.salary) {
-                        baseSalaryInput.value = selectedOption.dataset.salary;
-                        calculateNetSalary();
-                    }
-                });
+                    // إضافة المعلم الجديد إلى القائمة المحلية
+                    teachersData.push({
+                        id: newTeacherRef.key,
+                        name: name,
+                        baseSalary: salary
+                    });
+                    
+                    // تحديث قائمة المعلمين
+                    populateTeacherSelect();
+                    
+                    // إغلاق النافذة المنبثقة
+                    addTeacherModal.style.display = 'none';
+                    newTeacherName.value = '';
+                    newTeacherSalary.value = '';
+                    
+                    showMessage('تم إضافة المعلم الجديد بنجاح', 'success');
+                } catch (error) {
+                    console.error('Error saving new teacher:', error);
+                    showMessage('حدث خطأ أثناء إضافة المعلم الجديد', 'error');
+                }
             }
             
             // دالة تحديث عرض الميزانية
@@ -1879,6 +2042,9 @@
                             <button class="edit-salary-btn" data-id="${record.id}" style="background-color: var(--accent-color); padding: 5px 10px; border-radius: 4px; color: white; border: none; cursor: pointer;">
                                 <i class="fas fa-edit"></i>
                             </button>
+                            <button class="delete-salary-btn" data-id="${record.id}" style="background-color: #f44336; padding: 5px 10px; border-radius: 4px; color: white; border: none; cursor: pointer; margin-right: 5px;">
+                                <i class="fas fa-trash"></i>
+                            </button>
                         </td>
                     `;
                     reportTableBody.appendChild(row);
@@ -1896,6 +2062,12 @@
                             editSalaryForm(salaryRecord);
                         }
                     });
+                    
+                    // إضافة حدث لحذف الراتب
+                    row.querySelector('.delete-salary-btn').addEventListener('click', function() {
+                        const salaryId = this.getAttribute('data-id');
+                        deleteSalaryRecord(salaryId);
+                    });
                 });
                 
                 // تحديث الإجماليات
@@ -1903,6 +2075,65 @@
                 document.getElementById('totalDeductions').textContent = totalDeductions.toFixed(2) + ' د.ج';
                 document.getElementById('totalBonuses').textContent = totalBonuses.toFixed(2) + ' د.ج';
                 document.getElementById('totalNetSalary').textContent = totalNet.toFixed(2) + ' د.ج';
+            }
+            
+            // دالة حذف سجل الراتب
+            async function deleteSalaryRecord(salaryId) {
+                if (!confirm('هل أنت متأكد من حذف هذا السجل؟ لا يمكن التراجع عن هذه العملية.')) {
+                    return;
+                }
+                
+                try {
+                    const salaryRecord = salaryRecords.find(r => r.id === salaryId);
+                    if (!salaryRecord) return;
+                    
+                    // حذف السجل من Firebase
+                    await database.ref(`${SALARIES_FIREBASE_PATH}/${salaryId}`).remove();
+                    
+                    // تحديث الميزانية في Firebase
+                    const newPaidSalaries = (budgetData.paid || 0) - salaryRecord.netSalary;
+                    const newRemainingBudget = (budgetData.monthly || 0) - newPaidSalaries - (budgetData.expenses || 0);
+                    
+                    // حساب الرواتب لهذا الشهر وللموسم
+                    const currentMonth = new Date().getMonth() + 1;
+                    const currentYear = new Date().getFullYear();
+                    const isCurrentMonth = salaryRecord.month == currentMonth && salaryRecord.year == currentYear;
+                    const isCurrentSeason = salaryRecord.year == currentYear;
+                    
+                    await database.ref(BUDGET_FIREBASE_PATH).update({
+                        paid: newPaidSalaries,
+                        remaining: newRemainingBudget,
+                        currentMonthSalaries: isCurrentMonth ? 
+                            (budgetData.currentMonthSalaries || 0) - salaryRecord.netSalary : 
+                            budgetData.currentMonthSalaries,
+                        seasonSalaries: isCurrentSeason ? 
+                            (budgetData.seasonSalaries || 0) - salaryRecord.netSalary : 
+                            budgetData.seasonSalaries
+                    });
+                    
+                    // تحديث البيانات المحلية
+                    budgetData.paid = newPaidSalaries;
+                    budgetData.remaining = newRemainingBudget;
+                    
+                    if (isCurrentMonth) {
+                        budgetData.currentMonthSalaries = (budgetData.currentMonthSalaries || 0) - salaryRecord.netSalary;
+                    }
+                    
+                    if (isCurrentSeason) {
+                        budgetData.seasonSalaries = (budgetData.seasonSalaries || 0) - salaryRecord.netSalary;
+                    }
+                    
+                    updateBudgetDisplay();
+                    
+                    // إعادة تحميل سجلات الرواتب
+                    await loadSalaryData();
+                    
+                    showMessage('تم حذف سجل الراتب بنجاح', 'success');
+                    
+                } catch (error) {
+                    console.error('Error deleting salary record:', error);
+                    showMessage('حدث خطأ أثناء حذف سجل الراتب', 'error');
+                }
             }
             
             // دالة تعبئة النموذج لتعديل الراتب
